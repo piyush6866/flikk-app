@@ -121,12 +121,15 @@
   </head>
 
   <body class="bg-slate-50 antialiased">
-    <!-- Page Loader with K drop animation -->
-    <div id="page-loader" class="page-loader">
-      <div class="loader-logo-container">
-        <span class="loader-k">k</span><span class="loader-k loader-k-flipped">k</span>
+    <% # Only show loader on homepage for guests (initial landing) %>
+    <% if controller_name == 'pages' && action_name == 'home' && !user_signed_in? %>
+      <!-- Page Loader with K drop animation - Homepage only for guests -->
+      <div id="page-loader" class="page-loader">
+        <div class="loader-logo-container">
+          <span class="loader-k">k</span><span class="loader-k loader-k-flipped">k</span>
+        </div>
       </div>
-    </div>
+    <% end %>
 
     <!-- Navigation -->
     <%= render 'shared/navbar' %>
@@ -170,30 +173,30 @@
     <%= render 'shared/footer' %>
     
     <script>
-      // Hide loader function
+      // Hide loader function - only runs on homepage for initial load
       function hideLoader() {
-        setTimeout(function() {
-          const loader = document.getElementById('page-loader');
-          if (loader) {
-            loader.classList.add('hidden');
-          }
-        }, 800);
-      }
-      
-      // Show loader function (for Turbo before navigation)
-      function showLoader() {
         const loader = document.getElementById('page-loader');
         if (loader) {
-          loader.classList.remove('hidden');
+          setTimeout(function() {
+            loader.classList.add('hidden');
+          }, 800);
         }
       }
       
-      // Hide loader after page loads
-      window.addEventListener('load', hideLoader);
-      document.addEventListener('turbo:load', hideLoader);
+      // Immediately hide loader on any Turbo navigation (no animation delay)
+      function forceHideLoader() {
+        const loader = document.getElementById('page-loader');
+        if (loader) {
+          loader.classList.add('hidden');
+        }
+      }
       
-      // Show loader before Turbo navigation
-      document.addEventListener('turbo:before-visit', showLoader);
+      // Hide loader after initial page load (homepage only)
+      window.addEventListener('load', hideLoader);
+      
+      // Immediately hide loader on Turbo navigations
+      document.addEventListener('turbo:before-render', forceHideLoader);
+      document.addEventListener('turbo:load', forceHideLoader);
       
       // Toast dismiss function
       function dismissToast(element) {
