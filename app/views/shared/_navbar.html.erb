@@ -1,0 +1,43 @@
+<nav class="fixed top-0 left-0 right-0 z-40 bg-white/80 backdrop-blur-xl border-b border-slate-100">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between items-center h-16">
+      <!-- Logo -->
+      <%= link_to root_path, class: "flex items-center gap-2 group" do %>
+        <div class="w-9 h-9 bg-gradient-to-br from-indigo-600 to-violet-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/20 group-hover:shadow-indigo-500/40 transition-all duration-300">
+          <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+          </svg>
+        </div>
+        <span class="text-xl font-bold bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">Flikk</span>
+      <% end %>
+
+      <!-- Navigation Links -->
+      <div class="hidden md:flex items-center gap-8">
+        <a href="#how-it-works" class="text-slate-600 hover:text-indigo-600 transition-colors font-medium text-sm">How it Works</a>
+        <a href="#pricing" class="text-slate-600 hover:text-indigo-600 transition-colors font-medium text-sm">Pricing</a>
+        <a href="#creators" class="text-slate-600 hover:text-indigo-600 transition-colors font-medium text-sm">For Creators</a>
+      </div>
+
+      <!-- Auth Buttons -->
+      <div class="flex items-center gap-3">
+        <% if user_signed_in? %>
+          <% if current_user.brand? %>
+            <%= link_to "Dashboard", brand_dashboard_path, class: "text-slate-600 hover:text-indigo-600 transition-colors font-medium text-sm" %>
+          <% else %>
+            <%= link_to "Dashboard", creator_dashboard_path, class: "text-slate-600 hover:text-indigo-600 transition-colors font-medium text-sm" %>
+          <% end %>
+          <%= button_to "Sign Out", destroy_user_session_path, method: :delete, class: "px-4 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors" %>
+        <% else %>
+          <%= link_to "Log In", new_user_session_path, class: "px-4 py-2 text-sm font-medium text-slate-600 hover:text-indigo-600 transition-colors" %>
+          <%= link_to new_user_registration_path(role: 'creator'), class: "text-sm font-medium text-indigo-600 hover:text-indigo-700 transition-colors hidden sm:block" do %>
+            Join as Creator
+          <% end %>
+          <%= link_to new_user_registration_path(role: 'brand'), class: "px-5 py-2.5 text-sm font-semibold text-white bg-gradient-to-r from-indigo-600 to-violet-600 rounded-xl hover:from-indigo-700 hover:to-violet-700 transition-all duration-300 shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40" do %>
+            Get Started
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</nav>
+

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Flikk - The #1 UGC Video Marketplace in India</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="description" content="Connect brands with talented video creators. Get authentic UGC video ads that convert.">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    
+    <!-- Google Fonts - Outfit (Modern, clean, professional) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+    
+    <style>
+      :root {
+        --color-primary: #4f46e5;
+        --color-primary-dark: #4338ca;
+        --color-accent: #06b6d4;
+        --color-surface: #f8fafc;
+      }
+      body {
+        font-family: 'Outfit', sans-serif;
+      }
+    </style>
+  </head>
+
+  <body class="bg-slate-50 antialiased">
+    <!-- Navigation -->
+    <%= render 'shared/navbar' %>
+    
+    <!-- Flash Messages -->
+    <% if notice %>
+      <div class="fixed top-20 right-4 z-50 animate-slide-in">
+        <div class="bg-emerald-50 border border-emerald-200 text-emerald-800 px-6 py-4 rounded-xl shadow-lg flex items-center gap-3">
+          <svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+          <span><%= notice %></span>
+        </div>
+      </div>
+    <% end %>
+    
+    <% if alert %>
+      <div class="fixed top-20 right-4 z-50 animate-slide-in">
+        <div class="bg-rose-50 border border-rose-200 text-rose-800 px-6 py-4 rounded-xl shadow-lg flex items-center gap-3">
+          <svg class="w-5 h-5 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <span><%= alert %></span>
+        </div>
+      </div>
+    <% end %>
+
+    <main>
+      <%= yield %>
+    </main>
+
+    <!-- Footer -->
+    <%= render 'shared/footer' %>
+  </body>
+</html>
