@@ -99,35 +99,35 @@
       </div>
 
       <!-- Right Content - iPhone Mockup with Video + Stats -->
-      <div class="relative hidden lg:flex items-center justify-center gap-6">
-        <!-- iPhone Mockup -->
+      <div class="relative flex items-center justify-center gap-4 lg:gap-6 mt-8 lg:mt-0">
+        <!-- iPhone Mockup - Smaller on mobile -->
         <div class="relative">
           <!-- iPhone Frame -->
-          <div class="relative w-[260px] h-[520px] bg-slate-900 rounded-[3rem] p-3 shadow-2xl shadow-slate-400/30">
+          <div class="relative w-[180px] h-[360px] lg:w-[260px] lg:h-[520px] bg-slate-900 rounded-[2rem] lg:rounded-[3rem] p-2 lg:p-3 shadow-2xl shadow-slate-400/30">
             <!-- iPhone Notch -->
-            <div class="absolute top-0 left-1/2 -translate-x-1/2 w-28 h-6 bg-slate-900 rounded-b-xl z-20"></div>
+            <div class="absolute top-0 left-1/2 -translate-x-1/2 w-16 lg:w-28 h-4 lg:h-6 bg-slate-900 rounded-b-xl z-20"></div>
             <!-- iPhone Screen -->
-            <div class="relative w-full h-full bg-gradient-to-b from-slate-100 to-slate-200 rounded-[2.2rem] overflow-hidden">
+            <div class="relative w-full h-full bg-gradient-to-b from-slate-100 to-slate-200 rounded-[1.5rem] lg:rounded-[2.2rem] overflow-hidden">
               <!-- Video Placeholder -->
               <div class="absolute inset-0 flex items-center justify-center">
                 <div class="text-center">
                   <!-- Play Button -->
-                  <div class="w-16 h-16 bg-gradient-to-br from-indigo-500 to-violet-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-xl shadow-indigo-500/40 cursor-pointer hover:scale-110 transition-transform">
-                    <svg class="w-7 h-7 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
+                  <div class="w-12 h-12 lg:w-16 lg:h-16 bg-gradient-to-br from-indigo-500 to-violet-600 rounded-full flex items-center justify-center mx-auto mb-2 lg:mb-4 shadow-xl shadow-indigo-500/40 cursor-pointer hover:scale-110 transition-transform">
+                    <svg class="w-5 h-5 lg:w-7 lg:h-7 text-white ml-0.5 lg:ml-1" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M8 5v14l11-7z"></path>
                     </svg>
                   </div>
-                  <p class="text-slate-500 font-medium text-sm">Watch Creator Video</p>
+                  <p class="text-slate-500 font-medium text-xs lg:text-sm">Watch Creator Video</p>
                 </div>
               </div>
               
               <!-- Creator Info Overlay -->
-              <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/70 via-black/40 to-transparent">
-                <div class="flex items-center gap-3">
-                  <div class="w-10 h-10 rounded-full bg-gradient-to-br from-pink-400 to-rose-500 flex items-center justify-center text-white font-bold text-sm border-2 border-white">P</div>
+              <div class="absolute bottom-0 left-0 right-0 p-2 lg:p-4 bg-gradient-to-t from-black/70 via-black/40 to-transparent">
+                <div class="flex items-center gap-2 lg:gap-3">
+                  <div class="w-7 h-7 lg:w-10 lg:h-10 rounded-full bg-gradient-to-br from-pink-400 to-rose-500 flex items-center justify-center text-white font-bold text-xs lg:text-sm border-2 border-white">P</div>
                   <div class="text-white">
-                    <p class="font-semibold text-sm">@priya_creates</p>
-                    <p class="text-xs text-white/70">Mumbai • 120K followers</p>
+                    <p class="font-semibold text-xs lg:text-sm">@priya_creates</p>
+                    <p class="text-[10px] lg:text-xs text-white/70">Mumbai • 120K</p>
                   </div>
                 </div>
               </div>
@@ -136,48 +136,48 @@
         </div>
 
         <!-- Stats Cards - Stacked vertically, right of iPhone -->
-        <div class="flex flex-col gap-4">
+        <div class="flex flex-col gap-2 lg:gap-4">
           <!-- Stat Card 1 - ROAS -->
-          <div class="bg-white rounded-xl shadow-lg shadow-slate-200/50 p-4 w-36">
-            <div class="flex items-center gap-3">
-              <div class="w-10 h-10 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-lg flex items-center justify-center">
-                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div class="bg-white rounded-lg lg:rounded-xl shadow-lg shadow-slate-200/50 p-2 lg:p-4 w-24 lg:w-36">
+            <div class="flex items-center gap-2 lg:gap-3">
+              <div class="w-7 h-7 lg:w-10 lg:h-10 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-md lg:rounded-lg flex items-center justify-center">
+                <svg class="w-3.5 h-3.5 lg:w-5 lg:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
                 </svg>
               </div>
               <div>
-                <p class="text-xl font-bold text-slate-900">3.2x</p>
-                <p class="text-xs text-slate-500">Avg. ROAS</p>
+                <p class="text-sm lg:text-xl font-bold text-slate-900">3.2x</p>
+                <p class="text-[10px] lg:text-xs text-slate-500">Avg. ROAS</p>
               </div>
             </div>
           </div>
 
           <!-- Stat Card 2 - Creators -->
-          <div class="bg-white rounded-xl shadow-lg shadow-slate-200/50 p-4 w-36">
-            <div class="flex items-center gap-3">
-              <div class="w-10 h-10 bg-gradient-to-br from-violet-400 to-purple-500 rounded-lg flex items-center justify-center">
-                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div class="bg-white rounded-lg lg:rounded-xl shadow-lg shadow-slate-200/50 p-2 lg:p-4 w-24 lg:w-36">
+            <div class="flex items-center gap-2 lg:gap-3">
+              <div class="w-7 h-7 lg:w-10 lg:h-10 bg-gradient-to-br from-violet-400 to-purple-500 rounded-md lg:rounded-lg flex items-center justify-center">
+                <svg class="w-3.5 h-3.5 lg:w-5 lg:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
                 </svg>
               </div>
               <div>
-                <p class="text-xl font-bold text-slate-900">10K+</p>
-                <p class="text-xs text-slate-500">Creators</p>
+                <p class="text-sm lg:text-xl font-bold text-slate-900">10K+</p>
+                <p class="text-[10px] lg:text-xs text-slate-500">Creators</p>
               </div>
             </div>
           </div>
 
           <!-- Stat Card 3 - Delivery -->
-          <div class="bg-white rounded-xl shadow-lg shadow-slate-200/50 p-4 w-36">
-            <div class="flex items-center gap-3">
-              <div class="w-10 h-10 bg-gradient-to-br from-amber-400 to-orange-500 rounded-lg flex items-center justify-center">
-                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div class="bg-white rounded-lg lg:rounded-xl shadow-lg shadow-slate-200/50 p-2 lg:p-4 w-24 lg:w-36">
+            <div class="flex items-center gap-2 lg:gap-3">
+              <div class="w-7 h-7 lg:w-10 lg:h-10 bg-gradient-to-br from-amber-400 to-orange-500 rounded-md lg:rounded-lg flex items-center justify-center">
+                <svg class="w-3.5 h-3.5 lg:w-5 lg:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
               </div>
               <div>
-                <p class="text-xl font-bold text-slate-900">48hrs</p>
-                <p class="text-xs text-slate-500">Delivery</p>
+                <p class="text-sm lg:text-xl font-bold text-slate-900">48hrs</p>
+                <p class="text-[10px] lg:text-xs text-slate-500">Delivery</p>
               </div>
             </div>
           </div>

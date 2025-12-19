@@ -1,0 +1,166 @@
+<div class="min-h-screen pt-24 pb-16 bg-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Page Header (like Billo's Creators page) -->
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-gray-900 mb-2">Campaigns</h1>
+      <p class="text-gray-500">Find new campaigns, explore brands, and discover your favorites. All in one place.</p>
+    </div>
+
+    <!-- Filter creators section (like Billo) -->
+    <div class="mb-6">
+      <p class="text-sm font-medium text-gray-700 mb-3">Filter campaigns</p>
+      <div class="flex flex-wrap gap-2">
+        <%= link_to campaigns_path, 
+            class: "px-5 py-2 text-sm font-medium rounded-full border transition-colors #{params[:scenario].blank? ? 'bg-purple-600 text-white border-purple-600' : 'bg-white text-gray-700 border-gray-300 hover:border-gray-400'}" do %>
+          Discover
+        <% end %>
+        <% Campaign::SCENARIOS.each do |scenario| %>
+          <%= link_to campaigns_path(scenario: scenario), 
+              class: "px-5 py-2 text-sm font-medium rounded-full border transition-colors #{params[:scenario] == scenario ? 'bg-purple-600 text-white border-purple-600' : 'bg-white text-gray-700 border-gray-300 hover:border-gray-400'}" do %>
+            <%= scenario %>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- All Filters button (like Billo) -->
+    <div class="mb-8">
+      <button class="inline-flex items-center gap-2 px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-full hover:bg-gray-800 transition-colors">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path>
+        </svg>
+        All filters
+      </button>
+    </div>
+
+    <!-- Campaign Grid (Card style like Billo's creator cards) -->
+    <% if @campaigns.any? %>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <% @campaigns.each do |campaign| %>
+          <div class="bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-lg transition-shadow group">
+            <!-- Card Header with Brand info -->
+            <div class="p-4 pb-3">
+              <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center gap-2">
+                  <!-- Brand Avatar -->
+                  <div class="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center text-white font-semibold text-sm">
+                    <%= campaign.user.display_name.first.upcase %>
+                  </div>
+                  <div>
+                    <h3 class="text-sm font-semibold text-gray-900 line-clamp-1"><%= campaign.user.display_name %></h3>
+                    <% if campaign.scenario.present? %>
+                      <span class="inline-flex items-center text-xs text-gray-500">
+                        <% case campaign.scenario %>
+                        <% when 'Unboxing' %>
+                          📦
+                        <% when 'Testimonial' %>
+                          💬
+                        <% when 'How-to' %>
+                          💡
+                        <% when 'Lifestyle' %>
+                          ✨
+                        <% end %>
+                        <span class="ml-1"><%= campaign.scenario %></span>
+                      </span>
+                    <% end %>
+                  </div>
+                </div>
+                <!-- Favorite heart (like Billo) -->
+                <button class="p-2 text-gray-400 hover:text-red-500 transition-colors">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                  </svg>
+                </button>
+              </div>
+
+              <!-- Campaign Stats (like Billo's creator stats) -->
+              <div class="flex items-center gap-3 text-xs text-gray-500 mb-3">
+                <span class="inline-flex items-center gap-1">
+                  🇮🇳 IN
+                </span>
+                <span class="inline-flex items-center gap-1">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                  </svg>
+                  <%= campaign.duration_label %>
+                </span>
+                <span class="inline-flex items-center gap-1">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                  </svg>
+                  <%= campaign.aspect_ratio %>
+                </span>
+              </div>
+            </div>
+
+            <!-- Product Preview Card (like Billo's video thumbnail) -->
+            <div class="relative mx-4 mb-4">
+              <div class="aspect-[3/4] bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl overflow-hidden flex flex-col items-center justify-center relative">
+                <!-- Product Display -->
+                <div class="text-center p-6">
+                  <div class="w-16 h-16 bg-white rounded-2xl shadow-lg flex items-center justify-center mx-auto mb-4">
+                    <% case campaign.scenario %>
+                    <% when 'Unboxing' %>
+                      <span class="text-3xl">📦</span>
+                    <% when 'Testimonial' %>
+                      <span class="text-3xl">💬</span>
+                    <% when 'How-to' %>
+                      <span class="text-3xl">💡</span>
+                    <% when 'Lifestyle' %>
+                      <span class="text-3xl">✨</span>
+                    <% else %>
+                      <span class="text-3xl">🎬</span>
+                    <% end %>
+                  </div>
+                  <h4 class="font-semibold text-gray-900 text-sm line-clamp-2 mb-1"><%= campaign.product_name %></h4>
+                  <p class="text-xs text-gray-500 line-clamp-2"><%= campaign.title %></p>
+                </div>
+
+                <!-- Price Badge (prominent, like Billo's) -->
+                <div class="absolute top-3 right-3 px-3 py-1.5 bg-green-500 text-white font-bold text-sm rounded-full">
+                  <%= campaign.formatted_price %>
+                </div>
+
+                <!-- Play button overlay (like Billo) -->
+                <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/20">
+                  <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg">
+                    <svg class="w-5 h-5 text-gray-700 ml-1" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M8 5v14l11-7z"></path>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Apply Button (like Billo's "Invite to brief") -->
+            <div class="px-4 pb-4">
+              <%= link_to campaign_path(campaign), class: "block w-full py-3 text-center font-medium text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors" do %>
+                View Campaign
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <!-- Empty State -->
+      <div class="text-center py-20">
+        <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
+          <svg class="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold text-gray-900 mb-2">No campaigns available</h3>
+        <p class="text-gray-500 mb-6 max-w-md mx-auto">
+          <% if params[:scenario].present? %>
+            No <%= params[:scenario] %> campaigns right now. Try a different category!
+          <% else %>
+            Check back soon for new opportunities from brands.
+          <% end %>
+        </p>
+        <% if params[:scenario].present? %>
+          <%= link_to "View All Campaigns", campaigns_path, class: "inline-flex items-center gap-2 px-6 py-3 font-medium text-white bg-purple-600 rounded-lg hover:bg-purple-700 transition-colors" %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>

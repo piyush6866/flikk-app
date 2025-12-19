@@ -1,0 +1,25 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  title: MyString
+  product_name: MyString
+  product_url: MyString
+  scenario: MyString
+  aspect_ratio: MyString
+  duration: 1
+  price: 1
+  instructions: MyText
+  status: 1
+  user: one
+
+two:
+  title: MyString
+  product_name: MyString
+  product_url: MyString
+  scenario: MyString
+  aspect_ratio: MyString
+  duration: 1
+  price: 1
+  instructions: MyText
+  status: 1
+  user: two

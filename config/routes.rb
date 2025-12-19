@@ -8,6 +8,9 @@ Rails.application.routes.draw do
   # Root path
   root "pages#home"
 
+  # Campaigns (Marketplace for Creators, Campaign Management for Brands)
+  resources :campaigns
+
   # Brand dashboard
   namespace :brand do
     get 'dashboard', to: 'dashboard#show'

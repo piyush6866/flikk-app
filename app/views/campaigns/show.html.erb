@@ -1,0 +1,205 @@
+<div class="min-h-screen pt-24 pb-16 bg-gray-50">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Back Link -->
+    <div class="mb-6">
+      <% if current_user.creator? %>
+        <%= link_to campaigns_path, class: "inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors" do %>
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+          </svg>
+          Back to Campaigns
+        <% end %>
+      <% else %>
+        <%= link_to brand_dashboard_path, class: "inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors" do %>
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+          </svg>
+          Back to Dashboard
+        <% end %>
+      <% end %>
+    </div>
+
+    <!-- Main Card (Like Billo's creator profile modal) -->
+    <div class="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+      <!-- Header with Brand Info -->
+      <div class="p-8 border-b border-gray-200">
+        <div class="flex items-start justify-between">
+          <div class="flex items-center gap-4">
+            <!-- Brand Avatar (like Billo's profile photo with ring) -->
+            <div class="relative">
+              <div class="w-20 h-20 rounded-full bg-gradient-to-br from-yellow-300 via-yellow-400 to-orange-400 p-1">
+                <div class="w-full h-full rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center text-white font-bold text-2xl">
+                  <%= @campaign.user.display_name.first.upcase %>
+                </div>
+              </div>
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <h1 class="text-2xl font-semibold text-gray-900"><%= @campaign.user.display_name %></h1>
+                <!-- Favorite button (like Billo) -->
+                <button class="p-2 text-gray-400 hover:text-red-500 transition-colors">
+                  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                  </svg>
+                </button>
+              </div>
+              <p class="text-gray-500 text-sm">Posted <%= time_ago_in_words(@campaign.created_at) %> ago</p>
+            </div>
+          </div>
+          
+          <!-- Price (prominent) -->
+          <div class="text-right">
+            <p class="text-sm text-gray-500 mb-1">Creator Payout</p>
+            <p class="text-3xl font-bold text-purple-600"><%= @campaign.formatted_price %></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabs (like Billo's Overview, Ad performance, Organic performance) -->
+      <div class="border-b border-gray-200">
+        <div class="flex">
+          <button class="px-6 py-4 text-sm font-medium text-purple-600 border-b-2 border-purple-600">
+            Overview
+          </button>
+          <button class="px-6 py-4 text-sm font-medium text-gray-500 hover:text-gray-700">
+            Requirements
+          </button>
+        </div>
+      </div>
+
+      <!-- Content Section -->
+      <div class="p-8">
+        <!-- About Campaign (like Billo's "About creator") -->
+        <div class="mb-8">
+          <h2 class="text-base font-semibold text-gray-900 mb-3">About campaign</h2>
+          <p class="text-gray-700"><%= @campaign.title %></p>
+        </div>
+
+        <!-- Campaign Details (like Billo's tags) -->
+        <div class="mb-8">
+          <h2 class="text-base font-semibold text-gray-900 mb-3">Product</h2>
+          <div class="flex flex-wrap gap-2">
+            <span class="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium bg-gray-100 text-gray-800">
+              <%= @campaign.product_name %>
+            </span>
+            <% if @campaign.product_url.present? %>
+              <%= link_to @campaign.product_url, @campaign.product_url, target: '_blank', class: "inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-medium bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors" do %>
+                View Product
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                </svg>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+
+        <!-- Video Type (like Billo's "Appearance" tags) -->
+        <div class="mb-8">
+          <h2 class="text-base font-semibold text-gray-900 mb-3">Video Type</h2>
+          <div class="flex flex-wrap gap-2">
+            <% 
+              scenario_class = case @campaign.scenario
+                when 'Unboxing' then 'bg-amber-100 text-amber-800'
+                when 'Testimonial' then 'bg-emerald-100 text-emerald-800'
+                when 'How-to' then 'bg-blue-100 text-blue-800'
+                when 'Lifestyle' then 'bg-pink-100 text-pink-800'
+                else 'bg-gray-100 text-gray-800'
+              end
+              scenario_emoji = case @campaign.scenario
+                when 'Unboxing' then '📦'
+                when 'Testimonial' then '💬'
+                when 'How-to' then '💡'
+                when 'Lifestyle' then '✨'
+                else ''
+              end
+            %>
+            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium <%= scenario_class %>">
+              <%= scenario_emoji %> <%= @campaign.scenario %>
+            </span>
+          </div>
+        </div>
+
+        <!-- Video Requirements (Stats like Billo's "Videos delivered on time" and "Delivered videos count") -->
+        <div class="grid grid-cols-2 gap-6 mb-8">
+          <div>
+            <p class="text-sm text-gray-500 mb-1">Aspect Ratio</p>
+            <div class="flex items-center gap-2">
+              <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+              </svg>
+              <span class="font-semibold text-gray-900"><%= @campaign.aspect_ratio_label %></span>
+            </div>
+          </div>
+          <div>
+            <p class="text-sm text-gray-500 mb-1">Duration</p>
+            <div class="flex items-center gap-2">
+              <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              <span class="font-semibold text-gray-900"><%= @campaign.duration %> seconds</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Location (like Billo's) -->
+        <div class="mb-8">
+          <h2 class="text-base font-semibold text-gray-900 mb-3">Location</h2>
+          <div class="flex items-center gap-2">
+            <span class="text-xl">🇮🇳</span>
+            <span class="text-gray-700">India</span>
+          </div>
+        </div>
+
+        <!-- Instructions (if present) -->
+        <% if @campaign.instructions.present? %>
+          <div class="mb-8">
+            <h2 class="text-base font-semibold text-gray-900 mb-3">Detailed Instructions</h2>
+            <div class="p-4 bg-gray-50 rounded-xl">
+              <div class="prose prose-sm max-w-none text-gray-700">
+                <%= simple_format(@campaign.instructions, class: 'whitespace-pre-wrap') %>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+
+      <!-- Bottom Action Bar (like Billo's "Video price" + "Invite to brief" footer) -->
+      <div class="border-t border-gray-200 p-6 bg-gray-50">
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div>
+            <p class="text-sm font-medium text-gray-900 mb-1">Video price</p>
+            <p class="text-2xl font-bold text-purple-600"><%= @campaign.formatted_price %></p>
+          </div>
+          
+          <% if current_user.creator? %>
+            <div class="flex flex-col items-end">
+              <button disabled class="w-full sm:w-auto px-8 py-3 font-semibold text-white bg-purple-600 rounded-lg opacity-50 cursor-not-allowed">
+                Apply for Campaign
+              </button>
+              <p class="text-xs text-gray-500 mt-2">Applications coming soon!</p>
+            </div>
+          <% elsif current_user.brand? && @campaign.user_id == current_user.id %>
+            <div class="flex gap-3">
+              <%= link_to edit_campaign_path(@campaign), class: "inline-flex items-center justify-center gap-2 px-6 py-3 font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors" do %>
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                </svg>
+                Edit Campaign
+              <% end %>
+              
+              <%= button_to campaign_path(@campaign), 
+                  method: :delete, 
+                  data: { turbo_confirm: 'Are you sure you want to delete this campaign?' },
+                  class: "inline-flex items-center justify-center gap-2 px-6 py-3 font-medium text-red-600 bg-red-50 rounded-lg hover:bg-red-100 transition-colors" do %>
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                </svg>
+                Delete
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

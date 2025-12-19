@@ -1,0 +1,255 @@
+<div class="min-h-screen pt-24 pb-16 bg-white">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Page Header -->
+    <div class="flex items-center gap-3 mb-8">
+      <%= link_to brand_dashboard_path, class: "p-2 hover:bg-gray-100 rounded-lg transition-colors" do %>
+        <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+        </svg>
+      <% end %>
+      <div>
+        <h1 class="text-2xl font-semibold text-gray-900">Create New Campaign</h1>
+        <p class="text-gray-500 text-sm">Set up your video requirements and find the perfect creator</p>
+      </div>
+    </div>
+
+    <div class="flex flex-col lg:flex-row gap-8">
+      <!-- Main Form Column -->
+      <div class="flex-1">
+        <%= form_with model: @campaign, local: true, data: { controller: "campaign-form" } do |f| %>
+          
+          <!-- Error Messages -->
+          <% if @campaign.errors.any? %>
+            <div class="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+              <div class="flex items-start gap-3">
+                <svg class="w-5 h-5 text-red-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <div>
+                  <h4 class="font-medium text-red-800 mb-1">Please fix the following errors:</h4>
+                  <ul class="text-sm text-red-700 space-y-1">
+                    <% @campaign.errors.full_messages.each do |message| %>
+                      <li>• <%= message %></li>
+                    <% end %>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          <% end %>
+
+          <!-- Section 1: Select Your Product (Billo-style) -->
+          <div class="bg-white border border-gray-200 rounded-xl mb-4 overflow-hidden">
+            <div class="p-6">
+              <h2 class="text-lg font-semibold text-gray-900 mb-1">Select your product</h2>
+              <p class="text-gray-500 text-sm mb-6">Add the product or service you want creators to feature in their videos.</p>
+              
+              <div class="space-y-4">
+                <!-- Product Name -->
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Product Name</label>
+                  <%= f.text_field :product_name, 
+                      class: "w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors",
+                      placeholder: "e.g., GlowUp Vitamin C Face Wash" %>
+                </div>
+
+                <!-- Product URL with Paste style (like Billo) -->
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Product URL</label>
+                  <div class="flex gap-3">
+                    <%= f.url_field :product_url, 
+                        class: "flex-1 px-4 py-3 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors",
+                        placeholder: "Paste your product URL here" %>
+                  </div>
+                  <p class="text-xs text-gray-500 mt-2">Link where creators can view or purchase the product</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 2: Video Requirements (Accordion style) -->
+          <div class="bg-white border border-gray-200 rounded-xl mb-4 overflow-hidden">
+            <div class="p-6">
+              <div class="flex items-center gap-3 mb-6">
+                <div class="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+                  <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                  </svg>
+                </div>
+                <div>
+                  <h2 class="text-lg font-semibold text-gray-900">Video</h2>
+                  <p class="text-gray-500 text-sm">Specify video type and format</p>
+                </div>
+              </div>
+
+              <div class="space-y-4">
+                <!-- Campaign Title -->
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Campaign Title</label>
+                  <%= f.text_field :title, 
+                      class: "w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors",
+                      placeholder: "e.g., Summer Face Wash Unboxing for Instagram Reels" %>
+                  <p class="text-xs text-gray-500 mt-2">A clear title helps creators understand what you need</p>
+                </div>
+
+                <!-- Video Type (Scenario) -->
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Video Type</label>
+                  <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    <% Campaign::SCENARIOS.each_with_index do |scenario, idx| %>
+                      <label class="relative cursor-pointer">
+                        <%= f.radio_button :scenario, scenario, class: "peer sr-only" %>
+                        <div class="p-4 border border-gray-200 rounded-lg text-center peer-checked:border-purple-500 peer-checked:bg-purple-50 hover:border-gray-300 transition-colors">
+                          <% icon = case scenario
+                             when 'Unboxing' then '<svg class="w-6 h-6 mx-auto mb-2 text-gray-500 peer-checked:text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>'
+                             when 'Testimonial' then '<svg class="w-6 h-6 mx-auto mb-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>'
+                             when 'How-to' then '<svg class="w-6 h-6 mx-auto mb-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>'
+                             when 'Lifestyle' then '<svg class="w-6 h-6 mx-auto mb-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>'
+                             end %>
+                          <%= icon.html_safe %>
+                          <span class="text-sm font-medium text-gray-700"><%= scenario %></span>
+                        </div>
+                      </label>
+                    <% end %>
+                  </div>
+                </div>
+
+                <!-- Aspect Ratio & Duration -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Aspect Ratio</label>
+                    <%= f.select :aspect_ratio, 
+                        Campaign::ASPECT_RATIOS,
+                        { prompt: 'Select ratio...' },
+                        class: "w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors" %>
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Duration</label>
+                    <%= f.select :duration, 
+                        Campaign::DURATIONS.map { |d| ["#{d} seconds", d] },
+                        { prompt: 'Select duration...' },
+                        class: "w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors" %>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 3: Campaign visibility and requirements (like Billo) -->
+          <div class="bg-white border border-gray-200 rounded-xl mb-4 overflow-hidden">
+            <div class="p-6">
+              <div class="flex items-center gap-3 mb-6">
+                <div class="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+                  <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                  </svg>
+                </div>
+                <div>
+                  <h2 class="text-lg font-semibold text-gray-900">Campaign visibility and requirements</h2>
+                  <p class="text-gray-500 text-sm">Set budget and provide detailed guidelines for creators</p>
+                </div>
+              </div>
+
+              <div class="space-y-4">
+                <!-- Creator Payout -->
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Creator Payout</label>
+                  <div class="relative">
+                    <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 font-medium">₹</span>
+                    <%= f.number_field :price, 
+                        class: "w-full pl-10 pr-4 py-3 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors",
+                        placeholder: "2500",
+                        min: 500,
+                        max: 100000,
+                        step: 100 %>
+                  </div>
+                  <p class="text-xs text-gray-500 mt-2">Minimum ₹500, Maximum ₹1,00,000. Higher payouts attract top creators.</p>
+                </div>
+
+                <!-- Instructions -->
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Detailed Instructions</label>
+                  <%= f.text_area :instructions, 
+                      rows: 6,
+                      class: "w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors resize-none",
+                      placeholder: "Provide detailed instructions for creators:\n\n• Key points to mention\n• Preferred tone (casual, professional, energetic)\n• Any specific shots or scenes you want\n• Things to avoid" %>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Submit Section (Sticky on mobile) -->
+          <div class="flex flex-col sm:flex-row gap-3 justify-end mt-6">
+            <%= link_to brand_dashboard_path, class: "px-6 py-3 text-center font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors" do %>
+              Cancel
+            <% end %>
+            <%= f.submit "Publish Campaign", class: "px-8 py-3 font-semibold text-white bg-purple-600 rounded-lg hover:bg-purple-700 transition-colors cursor-pointer" %>
+          </div>
+        <% end %>
+      </div>
+
+      <!-- Right Sidebar - Order Estimate (like Billo) -->
+      <div class="lg:w-80 flex-shrink-0">
+        <div class="bg-white border border-gray-200 rounded-xl p-6 sticky top-28">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">Order estimate</h3>
+          
+          <div class="space-y-3 mb-4">
+            <div class="flex justify-between text-sm">
+              <span class="text-gray-600">Original creator video</span>
+              <span class="text-gray-900 font-medium">₹<span id="estimate-price">0</span></span>
+            </div>
+            <div class="flex justify-between text-sm text-gray-500">
+              <span>Platform fee (10%)</span>
+              <span>₹<span id="platform-fee">0</span></span>
+            </div>
+          </div>
+
+          <div class="border-t border-gray-200 pt-4">
+            <div class="flex justify-between items-center">
+              <span class="text-gray-900 font-medium">Total</span>
+              <span class="text-2xl font-bold text-purple-600">₹<span id="total-price">0</span></span>
+            </div>
+            <p class="text-xs text-gray-500 mt-1 text-right">price per creator</p>
+          </div>
+
+          <div class="mt-6 p-4 bg-blue-50 rounded-lg">
+            <div class="flex items-start gap-3">
+              <svg class="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              <p class="text-sm text-blue-700">Funds will be deducted after approving the creator.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Real-time price calculation
+  document.addEventListener('DOMContentLoaded', function() {
+    const priceInput = document.querySelector('input[name="campaign[price]"]');
+    const estimatePrice = document.getElementById('estimate-price');
+    const platformFee = document.getElementById('platform-fee');
+    const totalPrice = document.getElementById('total-price');
+
+    function formatNumber(num) {
+      return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+
+    function updateEstimate() {
+      const price = parseInt(priceInput?.value) || 0;
+      const fee = Math.round(price * 0.10);
+      const total = price + fee;
+
+      if (estimatePrice) estimatePrice.textContent = formatNumber(price);
+      if (platformFee) platformFee.textContent = formatNumber(fee);
+      if (totalPrice) totalPrice.textContent = formatNumber(total);
+    }
+
+    if (priceInput) {
+      priceInput.addEventListener('input', updateEstimate);
+      updateEstimate();
+    }
+  });
+</script>

@@ -3,6 +3,8 @@ class Creator::DashboardController < ApplicationController
   before_action :ensure_creator!
 
   def show
+    @available_campaigns = Campaign.active.recent.limit(5)
+    @total_available = Campaign.active.count
   end
 
   private

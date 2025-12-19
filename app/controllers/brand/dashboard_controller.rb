@@ -3,6 +3,9 @@ class Brand::DashboardController < ApplicationController
   before_action :ensure_brand!
 
   def show
+    @campaigns = current_user.campaigns.recent
+    @active_campaigns = @campaigns.active.count
+    @total_spent = @campaigns.sum(:price)
   end
 
   private

@@ -4,6 +4,9 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
+  # Associations
+  has_many :campaigns, dependent: :destroy
+
   # Validations
   validates :role, presence: true, inclusion: { in: %w[brand creator] }
   validates :brand_name, presence: true, if: :brand?
@@ -17,5 +20,10 @@ class User < ApplicationRecord
 
   def creator?
     role == "creator"
+  end
+
+  # Display name helper
+  def display_name
+    brand? ? brand_name : name
   end
 end

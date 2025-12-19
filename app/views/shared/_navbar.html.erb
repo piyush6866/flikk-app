@@ -27,16 +27,26 @@
           <% end %>
           <%= button_to "Sign Out", destroy_user_session_path, method: :delete, class: "px-4 py-2 font-medium text-slate-600 hover:text-slate-900 transition-colors" %>
         <% else %>
-          <%= link_to "Login", new_user_session_path, class: "text-slate-900 hover:text-slate-600 transition-colors font-medium" %>
-          <div class="relative group">
-            <button class="inline-flex items-center gap-2 px-5 py-2.5 bg-slate-900 text-white font-medium rounded-full hover:bg-slate-800 transition-colors">
+          <%= link_to "Login", new_user_session_path, class: "hidden sm:block text-slate-900 hover:text-slate-600 transition-colors font-medium" %>
+          
+          <!-- Signup Dropdown - Click-based for mobile support -->
+          <div class="relative" data-controller="dropdown">
+            <button 
+              data-action="click->dropdown#toggle" 
+              data-dropdown-target="button"
+              class="inline-flex items-center gap-2 px-5 py-2.5 bg-slate-900 text-white font-medium rounded-full hover:bg-slate-800 transition-colors"
+            >
               Sign up
-              <svg class="w-4 h-4 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-4 h-4 transition-transform" data-dropdown-target="arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
               </svg>
             </button>
-            <!-- Dropdown -->
-            <div class="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-slate-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+            
+            <!-- Dropdown Menu -->
+            <div 
+              data-dropdown-target="menu"
+              class="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-slate-100 opacity-0 invisible transform scale-95 transition-all duration-200 z-50"
+            >
               <div class="p-2">
                 <%= link_to new_user_registration_path(role: 'brand'), class: "flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-50 transition-colors" do %>
                   <div class="w-10 h-10 bg-slate-100 rounded-lg flex items-center justify-center">
@@ -69,3 +79,52 @@
   </div>
 </nav>
 
+<script>
+  // Simple dropdown controller without Stimulus dependency
+  function initDropdowns() {
+    const dropdowns = document.querySelectorAll('[data-controller="dropdown"]');
+    
+    dropdowns.forEach(function(dropdown) {
+      // Skip if already initialized
+      if (dropdown.dataset.initialized === 'true') return;
+      dropdown.dataset.initialized = 'true';
+      
+      const button = dropdown.querySelector('[data-dropdown-target="button"]');
+      const menu = dropdown.querySelector('[data-dropdown-target="menu"]');
+      const arrow = dropdown.querySelector('[data-dropdown-target="arrow"]');
+      let isOpen = false;
+      
+      if (button && menu) {
+        button.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          isOpen = !isOpen;
+          
+          if (isOpen) {
+            menu.classList.remove('opacity-0', 'invisible', 'scale-95');
+            menu.classList.add('opacity-100', 'visible', 'scale-100');
+            if (arrow) arrow.classList.add('rotate-180');
+          } else {
+            menu.classList.add('opacity-0', 'invisible', 'scale-95');
+            menu.classList.remove('opacity-100', 'visible', 'scale-100');
+            if (arrow) arrow.classList.remove('rotate-180');
+          }
+        });
+        
+        // Close on click outside
+        document.addEventListener('click', function(e) {
+          if (!dropdown.contains(e.target) && isOpen) {
+            isOpen = false;
+            menu.classList.add('opacity-0', 'invisible', 'scale-95');
+            menu.classList.remove('opacity-100', 'visible', 'scale-100');
+            if (arrow) arrow.classList.remove('rotate-180');
+          }
+        });
+      }
+    });
+  }
+  
+  // Initialize on page load and Turbo navigation
+  document.addEventListener('DOMContentLoaded', initDropdowns);
+  document.addEventListener('turbo:load', initDropdowns);
+</script>

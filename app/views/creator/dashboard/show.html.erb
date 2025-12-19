@@ -1,11 +1,20 @@
-<div class="min-h-screen pt-20 pb-16">
+<div class="min-h-screen pt-20 pb-16" style="background-color: #faf8ff;">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <!-- Welcome Header -->
-    <div class="mb-8">
-      <h1 class="text-3xl font-bold text-slate-900 mb-2">
-        Welcome back, <%= current_user.name %>! 🎬
-      </h1>
-      <p class="text-slate-600">Here's your creator dashboard overview</p>
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
+      <div>
+        <h1 class="text-3xl font-bold text-slate-900 mb-2">
+          Welcome back, <%= current_user.name %>! 🎬
+        </h1>
+        <p class="text-slate-600">Here's your creator dashboard overview</p>
+      </div>
+      
+      <%= link_to campaigns_path, class: "mt-4 md:mt-0 inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-violet-600 to-purple-600 text-white font-semibold rounded-xl hover:from-violet-700 hover:to-purple-700 transition-all duration-300 shadow-lg shadow-violet-500/25" do %>
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+        </svg>
+        Browse All Jobs
+      <% end %>
     </div>
 
     <!-- Stats Grid -->
@@ -17,9 +26,11 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
             </svg>
           </div>
-          <span class="text-xs font-medium text-emerald-600 bg-emerald-100 px-2 py-1 rounded-full">New</span>
+          <% if @total_available > 0 %>
+            <span class="text-xs font-medium text-emerald-600 bg-emerald-100 px-2 py-1 rounded-full">New</span>
+          <% end %>
         </div>
-        <p class="text-2xl font-bold text-slate-900 mb-1">0</p>
+        <p class="text-2xl font-bold text-slate-900 mb-1"><%= @total_available %></p>
         <p class="text-sm text-slate-500">Available Jobs</p>
       </div>
 
@@ -91,27 +102,72 @@
 
     <!-- Main Content Grid -->
     <div class="grid lg:grid-cols-3 gap-8">
-      <!-- Available Jobs -->
+      <!-- Available Jobs Preview -->
       <div class="lg:col-span-2">
         <div class="bg-white rounded-2xl shadow-lg shadow-slate-200/50 overflow-hidden">
           <div class="p-6 border-b border-slate-100">
             <div class="flex items-center justify-between">
-              <h2 class="text-xl font-bold text-slate-900">Available Jobs</h2>
-              <button class="text-sm text-indigo-600 font-medium hover:text-indigo-700">View All</button>
+              <h2 class="text-xl font-bold text-slate-900">Latest Opportunities</h2>
+              <%= link_to campaigns_path, class: "text-sm text-indigo-600 font-medium hover:text-indigo-700" do %>
+                View All →
+              <% end %>
             </div>
           </div>
           
-          <!-- Empty State -->
-          <div class="p-12 text-center">
-            <div class="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <svg class="w-10 h-10 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-              </svg>
+          <% if @available_campaigns.any? %>
+            <div class="divide-y divide-slate-100">
+              <% @available_campaigns.each do |campaign| %>
+                <div class="p-4 hover:bg-slate-50 transition-colors">
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-4">
+                      <div class="w-10 h-10 rounded-lg flex items-center justify-center
+                        <%= case campaign.scenario
+                            when 'Unboxing' then 'bg-amber-100'
+                            when 'Testimonial' then 'bg-emerald-100'
+                            when 'How-to' then 'bg-blue-100'
+                            when 'Lifestyle' then 'bg-pink-100'
+                            else 'bg-slate-100'
+                            end %>">
+                        <% case campaign.scenario %>
+                        <% when 'Unboxing' %>
+                          <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
+                        <% when 'Testimonial' %>
+                          <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+                        <% when 'How-to' %>
+                          <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
+                        <% when 'Lifestyle' %>
+                          <svg class="w-5 h-5 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                        <% end %>
+                      </div>
+                      <div>
+                        <h3 class="font-medium text-slate-900"><%= campaign.product_name %></h3>
+                        <p class="text-sm text-slate-500"><%= campaign.scenario %> • <%= campaign.duration_label %></p>
+                      </div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                      <span class="font-bold text-emerald-600"><%= campaign.formatted_price %></span>
+                      <%= link_to campaign_path(campaign), class: "p-2 text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors" do %>
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                      <% end %>
+                    </div>
+                  </div>
+                </div>
+              <% end %>
             </div>
-            <h3 class="text-lg font-semibold text-slate-900 mb-2">No Jobs Available Yet</h3>
-            <p class="text-slate-500 mb-4">Complete your profile to start receiving job offers from brands.</p>
-            <p class="text-sm text-slate-400">Coming soon in Phase 2!</p>
-          </div>
+          <% else %>
+            <!-- Empty State -->
+            <div class="p-12 text-center">
+              <div class="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg class="w-10 h-10 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                </svg>
+              </div>
+              <h3 class="text-lg font-semibold text-slate-900 mb-2">No Jobs Available Yet</h3>
+              <p class="text-slate-500 mb-4">Complete your profile to start receiving job offers from brands.</p>
+            </div>
+          <% end %>
         </div>
       </div>
 
@@ -153,25 +209,25 @@
           </h3>
           <ul class="space-y-3 text-sm text-slate-600">
             <li class="flex items-start gap-2">
-              <svg class="w-5 h-5 text-emerald-500 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-5 h-5 text-emerald-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
               </svg>
               Add a professional profile photo
             </li>
             <li class="flex items-start gap-2">
-              <svg class="w-5 h-5 text-emerald-500 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-5 h-5 text-emerald-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
               </svg>
               Upload 3-5 sample videos
             </li>
             <li class="flex items-start gap-2">
-              <svg class="w-5 h-5 text-emerald-500 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-5 h-5 text-emerald-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
               </svg>
               Link your Instagram & YouTube
             </li>
             <li class="flex items-start gap-2">
-              <svg class="w-5 h-5 text-emerald-500 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-5 h-5 text-emerald-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
               </svg>
               Select your content niches
@@ -182,4 +238,3 @@
     </div>
   </div>
 </div>
-

@@ -33,35 +33,134 @@
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
       }
+      
+      /* Loading animation - K drop */
+      .page-loader {
+        position: fixed;
+        inset: 0;
+        background: white;
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+      }
+      .page-loader.hidden {
+        opacity: 0;
+        visibility: hidden;
+      }
+      .loader-logo-container {
+        width: 72px;
+        height: 72px;
+        background: #0f172a;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 10px 40px rgba(15, 23, 42, 0.25);
+      }
+      .loader-k {
+        font-size: 1.75rem;
+        font-weight: 800;
+        color: white;
+        animation: dropK 0.6s ease-out forwards;
+        letter-spacing: -0.05em;
+      }
+      .loader-k-flipped {
+        display: inline-block;
+        transform: scaleX(-1);
+        animation: dropK 0.6s ease-out 0.15s forwards;
+        opacity: 0;
+      }
+      @keyframes dropK {
+        0% {
+          opacity: 0;
+          transform: translateY(-30px) scaleX(var(--scale-x, 1));
+        }
+        60% {
+          opacity: 1;
+          transform: translateY(3px) scaleX(var(--scale-x, 1));
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0) scaleX(var(--scale-x, 1));
+        }
+      }
+      .loader-k-flipped {
+        --scale-x: -1;
+      }
+      
+      /* Toast animations */
+      @keyframes slideInRight {
+        from {
+          transform: translateX(100%);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+      @keyframes slideOutRight {
+        from {
+          transform: translateX(0);
+          opacity: 1;
+        }
+        to {
+          transform: translateX(100%);
+          opacity: 0;
+        }
+      }
+      .toast-enter {
+        animation: slideInRight 0.3s ease-out forwards;
+      }
+      .toast-exit {
+        animation: slideOutRight 0.3s ease-in forwards;
+      }
     </style>
   </head>
 
   <body class="bg-slate-50 antialiased">
+    <!-- Page Loader with K drop animation -->
+    <div id="page-loader" class="page-loader">
+      <div class="loader-logo-container">
+        <span class="loader-k">k</span><span class="loader-k loader-k-flipped">k</span>
+      </div>
+    </div>
+
     <!-- Navigation -->
     <%= render 'shared/navbar' %>
     
-    <!-- Flash Messages -->
-    <% if notice %>
-      <div class="fixed top-20 right-4 z-50 animate-slide-in">
-        <div class="bg-emerald-50 border border-emerald-200 text-emerald-800 px-6 py-4 rounded-xl shadow-lg flex items-center gap-3">
-          <svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <!-- Toast Container - Bottom Right -->
+    <div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col gap-3">
+      <% if notice %>
+        <div class="toast-enter bg-emerald-50 border border-emerald-200 text-emerald-800 px-6 py-4 rounded-xl shadow-lg flex items-center gap-3" data-toast>
+          <svg class="w-5 h-5 text-emerald-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
           </svg>
-          <span><%= notice %></span>
+          <span class="flex-1"><%= notice %></span>
+          <button onclick="dismissToast(this.parentElement)" class="text-emerald-600 hover:text-emerald-800 p-1">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
         </div>
-      </div>
-    <% end %>
-    
-    <% if alert %>
-      <div class="fixed top-20 right-4 z-50 animate-slide-in">
-        <div class="bg-rose-50 border border-rose-200 text-rose-800 px-6 py-4 rounded-xl shadow-lg flex items-center gap-3">
-          <svg class="w-5 h-5 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <% end %>
+      
+      <% if alert %>
+        <div class="toast-enter bg-rose-50 border border-rose-200 text-rose-800 px-6 py-4 rounded-xl shadow-lg flex items-center gap-3" data-toast>
+          <svg class="w-5 h-5 text-rose-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
           </svg>
-          <span><%= alert %></span>
+          <span class="flex-1"><%= alert %></span>
+          <button onclick="dismissToast(this.parentElement)" class="text-rose-600 hover:text-rose-800 p-1">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
         </div>
-      </div>
-    <% end %>
+      <% end %>
+    </div>
 
     <main>
       <%= yield %>
@@ -69,5 +168,62 @@
 
     <!-- Footer -->
     <%= render 'shared/footer' %>
+    
+    <script>
+      // Hide loader function
+      function hideLoader() {
+        setTimeout(function() {
+          const loader = document.getElementById('page-loader');
+          if (loader) {
+            loader.classList.add('hidden');
+          }
+        }, 800);
+      }
+      
+      // Show loader function (for Turbo before navigation)
+      function showLoader() {
+        const loader = document.getElementById('page-loader');
+        if (loader) {
+          loader.classList.remove('hidden');
+        }
+      }
+      
+      // Hide loader after page loads
+      window.addEventListener('load', hideLoader);
+      document.addEventListener('turbo:load', hideLoader);
+      
+      // Show loader before Turbo navigation
+      document.addEventListener('turbo:before-visit', showLoader);
+      
+      // Toast dismiss function
+      function dismissToast(element) {
+        if (!element) return;
+        element.classList.remove('toast-enter');
+        element.classList.add('toast-exit');
+        setTimeout(function() {
+          if (element && element.parentNode) {
+            element.remove();
+          }
+        }, 300);
+      }
+      
+      // Auto-dismiss toasts function
+      function initToasts() {
+        const toasts = document.querySelectorAll('[data-toast]');
+        toasts.forEach(function(toast) {
+          // Skip if already processed
+          if (toast.dataset.autoDismiss) return;
+          toast.dataset.autoDismiss = 'true';
+          
+          setTimeout(function() {
+            dismissToast(toast);
+          }, 4000);
+        });
+      }
+      
+      // Initialize toasts on page load and Turbo navigation
+      document.addEventListener('DOMContentLoaded', initToasts);
+      document.addEventListener('turbo:load', initToasts);
+    </script>
   </body>
 </html>
