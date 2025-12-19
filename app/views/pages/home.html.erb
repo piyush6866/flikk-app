@@ -1,27 +1,53 @@
-<!-- Hero Section -->
-<section class="relative min-h-screen pt-16 overflow-hidden">
-  <!-- Background Gradient -->
-  <div class="absolute inset-0 bg-gradient-to-br from-slate-50 via-indigo-50/30 to-violet-50/50"></div>
-  
-  <!-- Animated Background Shapes -->
-  <div class="absolute inset-0 overflow-hidden">
-    <div class="absolute -top-40 -right-40 w-96 h-96 bg-gradient-to-br from-indigo-400/20 to-violet-400/20 rounded-full blur-3xl animate-pulse"></div>
-    <div class="absolute top-1/2 -left-40 w-80 h-80 bg-gradient-to-br from-cyan-400/15 to-indigo-400/15 rounded-full blur-3xl animate-pulse" style="animation-delay: 1s;"></div>
-    <div class="absolute bottom-0 right-1/4 w-72 h-72 bg-gradient-to-br from-violet-400/10 to-pink-400/10 rounded-full blur-3xl animate-pulse" style="animation-delay: 2s;"></div>
-  </div>
+<!-- Hero Section - Exactly fills viewport -->
+<section class="relative pt-20 min-h-screen flex flex-col" style="background-color: #faf8ff;">
+  <!-- Background -->
+  <div class="absolute inset-0" style="background: linear-gradient(to bottom, #faf8ff, #f5f3ff);"></div>
 
-  <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-32">
-    <div class="grid lg:grid-cols-2 gap-16 items-center">
+  <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 flex-1 flex flex-col justify-center">
+    <div class="grid lg:grid-cols-2 gap-10 items-center">
       <!-- Left Content -->
       <div class="text-center lg:text-left">
-        <!-- Badge -->
-        <div class="inline-flex items-center gap-2 px-4 py-2 bg-indigo-100 text-indigo-700 rounded-full text-sm font-medium mb-8 animate-fade-in">
-          <span class="w-2 h-2 bg-indigo-500 rounded-full animate-pulse"></span>
-          #1 UGC Platform in India
+        <!-- Experts In Badge - Compact spacing -->
+        <div class="flex items-center gap-1.5 mb-6 justify-center lg:justify-start">
+          <span class="text-slate-500 text-sm font-medium">Experts in</span>
+          <!-- Meta Logo -->
+          <svg class="h-3.5 ml-1" viewBox="0 0 22 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M2.31822 9.49646C2.31822 10.3243 2.4981 10.9598 2.7332 11.3443C3.04145 11.848 3.50121 12.0613 3.96993 12.0613C4.57449 12.0613 5.12755 11.9098 6.19337 10.4208C7.04721 9.22731 8.05332 7.55208 8.73027 6.50186L9.87669 4.7226C10.6731 3.48691 11.5948 2.11326 12.6517 1.18216C13.5145 0.422199 14.4452 0 15.3819 0C16.9545 0 18.4525 0.920545 19.5989 2.64704C20.8535 4.53788 21.4626 6.91954 21.4626 9.37734C21.4626 10.8385 21.1775 11.912 20.6923 12.7602C20.2236 13.5805 19.31 14.4 17.7733 14.4V12.0613C19.0891 12.0613 19.4175 10.84 19.4175 9.44218C19.4175 7.4503 18.9578 5.23979 17.9449 3.66031C17.2262 2.53998 16.2947 1.85541 15.27 1.85541C14.1616 1.85541 13.2697 2.69981 12.2673 4.2054C11.7344 5.00532 11.1873 5.98015 10.5731 7.08013L9.89685 8.29018C8.53846 10.7231 8.19438 11.2772 7.51518 12.1917C6.32473 13.7931 5.30817 14.4 3.96993 14.4C2.38241 14.4 1.37854 13.7056 0.756818 12.6592C0.249287 11.8065 0 10.6877 0 9.41278L2.31822 9.49646Z" fill="#0081FB"/>
+            <path d="M1.82812 2.81215C2.89095 1.15728 4.42474 0 6.18393 0C7.20272 0 8.21555 0.304586 9.27315 1.17688C10.43 2.1306 11.663 3.70103 13.2013 6.28926L13.7529 7.21809C15.0844 9.45876 15.8419 10.6115 16.2853 11.1551C16.8555 11.8532 17.2548 12.0613 17.7735 12.0613C19.0894 12.0613 19.4178 10.84 19.4178 9.44218L21.4628 9.37734C21.4628 10.8385 21.1777 11.912 20.6926 12.7602C20.2239 13.5805 19.3103 14.4 17.7735 14.4C16.8182 14.4 15.9718 14.1904 15.0359 13.2985C14.3164 12.6139 13.4752 11.3979 12.8281 10.3047L10.9032 7.05675C9.93742 5.42676 9.05148 4.21143 8.53872 3.66107C7.98716 3.06924 7.27811 2.35451 6.14661 2.35451C5.23082 2.35451 4.4531 3.00364 3.80227 3.99657L1.82812 2.81215Z" fill="url(#paint0_linear_meta)"/>
+            <path d="M6.14634 2.35451C5.23055 2.35451 4.45283 3.00364 3.802 3.99657C2.88173 5.39962 2.31822 7.48951 2.31822 9.49646C2.31822 10.3243 2.4981 10.9598 2.7332 11.3443L0.756818 12.6592C0.249287 11.8065 0 10.6877 0 9.41278C0 7.09445 0.629935 4.67812 1.82786 2.81215C2.89069 1.15728 4.42447 0 6.18366 0L6.14634 2.35451Z" fill="url(#paint1_linear_meta)"/>
+            <defs>
+              <linearGradient id="paint0_linear_meta" x1="4.55312" y1="8.82094" x2="19.332" y2="9.55987" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#0064E1"/>
+                <stop offset="0.4" stop-color="#0064E1"/>
+                <stop offset="0.83" stop-color="#0073EE"/>
+                <stop offset="1" stop-color="#0082FB"/>
+              </linearGradient>
+              <linearGradient id="paint1_linear_meta" x1="3.35866" y1="10.4796" x2="3.35866" y2="4.97592" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#0082FB"/>
+                <stop offset="1" stop-color="#0064E0"/>
+              </linearGradient>
+            </defs>
+          </svg>
+          <span class="text-slate-900 font-medium text-sm">Meta</span>
+          <!-- Instagram Logo -->
+          <svg class="w-3.5 h-3.5 ml-2" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <radialGradient id="instagram-gradient-1" cx="30%" cy="107%" r="150%">
+                <stop offset="0%" stop-color="#FFDD55"/>
+                <stop offset="10%" stop-color="#FFDD55"/>
+                <stop offset="50%" stop-color="#FF543E"/>
+                <stop offset="100%" stop-color="#C837AB"/>
+              </radialGradient>
+            </defs>
+            <rect width="24" height="24" rx="6" fill="url(#instagram-gradient-1)"/>
+            <circle cx="12" cy="12" r="4" stroke="white" stroke-width="2" fill="none"/>
+            <circle cx="18" cy="6" r="1.5" fill="white"/>
+          </svg>
+          <span class="text-slate-900 font-medium text-sm">Instagram</span>
         </div>
 
         <!-- Main Headline -->
-        <h1 class="text-5xl sm:text-6xl lg:text-7xl font-extrabold text-slate-900 leading-tight mb-6">
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 leading-tight mb-5">
           Get Video Ads
           <span class="block bg-gradient-to-r from-indigo-600 via-violet-600 to-purple-600 bg-clip-text text-transparent">
             That Sell.
@@ -29,116 +55,129 @@
         </h1>
 
         <!-- Subheadline -->
-        <p class="text-xl text-slate-600 leading-relaxed mb-10 max-w-lg mx-auto lg:mx-0">
+        <p class="text-lg text-slate-600 leading-relaxed mb-6 max-w-lg mx-auto lg:mx-0">
           Connect with India's top content creators. Get authentic, high-converting UGC videos for your brand in days, not months.
         </p>
 
         <!-- CTA Buttons -->
-        <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-12">
-          <%= link_to new_user_registration_path(role: 'brand'), class: "group inline-flex items-center justify-center gap-3 px-8 py-4 text-lg font-semibold text-white bg-gradient-to-r from-indigo-600 to-violet-600 rounded-2xl hover:from-indigo-700 hover:to-violet-700 transition-all duration-300 shadow-xl shadow-indigo-500/30 hover:shadow-2xl hover:shadow-indigo-500/40 hover:-translate-y-1" do %>
+        <div class="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start mb-6">
+          <%= link_to new_user_registration_path(role: 'brand'), class: "group inline-flex items-center justify-center gap-2 px-6 py-3 text-base font-semibold text-white bg-gradient-to-r from-indigo-600 to-violet-600 rounded-xl hover:from-indigo-700 hover:to-violet-700 transition-all duration-300 shadow-lg shadow-indigo-500/30 hover:shadow-xl hover:shadow-indigo-500/40 hover:-translate-y-1" do %>
             <span>I'm a Brand</span>
-            <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
             </svg>
           <% end %>
           
-          <%= link_to new_user_registration_path(role: 'creator'), class: "group inline-flex items-center justify-center gap-3 px-8 py-4 text-lg font-semibold text-slate-700 bg-white border-2 border-slate-200 rounded-2xl hover:border-indigo-300 hover:text-indigo-600 transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1" do %>
+          <%= link_to new_user_registration_path(role: 'creator'), class: "group inline-flex items-center justify-center gap-2 px-6 py-3 text-base font-semibold text-slate-700 bg-white border-2 border-slate-200 rounded-xl hover:border-indigo-300 hover:text-indigo-600 transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-1" do %>
             <span>I'm a Creator</span>
-            <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
             </svg>
           <% end %>
         </div>
 
         <!-- Social Proof -->
-        <div class="flex flex-col sm:flex-row items-center gap-6 justify-center lg:justify-start">
-          <div class="flex -space-x-3">
-            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-rose-400 to-rose-600 border-3 border-white shadow-lg flex items-center justify-center text-white font-semibold">M</div>
-            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 border-3 border-white shadow-lg flex items-center justify-center text-white font-semibold">N</div>
-            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-emerald-400 to-teal-600 border-3 border-white shadow-lg flex items-center justify-center text-white font-semibold">B</div>
-            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-400 to-violet-600 border-3 border-white shadow-lg flex items-center justify-center text-white font-semibold">P</div>
-            <div class="w-12 h-12 rounded-full bg-slate-100 border-3 border-white shadow-lg flex items-center justify-center text-slate-600 font-semibold text-sm">+99</div>
+        <div class="flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start">
+          <div class="flex -space-x-2">
+            <div class="w-9 h-9 rounded-full bg-gradient-to-br from-rose-400 to-rose-600 border-2 border-white shadow flex items-center justify-center text-white font-semibold text-sm">M</div>
+            <div class="w-9 h-9 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 border-2 border-white shadow flex items-center justify-center text-white font-semibold text-sm">N</div>
+            <div class="w-9 h-9 rounded-full bg-gradient-to-br from-emerald-400 to-teal-600 border-2 border-white shadow flex items-center justify-center text-white font-semibold text-sm">B</div>
+            <div class="w-9 h-9 rounded-full bg-gradient-to-br from-indigo-400 to-violet-600 border-2 border-white shadow flex items-center justify-center text-white font-semibold text-sm">P</div>
+            <div class="w-9 h-9 rounded-full bg-slate-100 border-2 border-white shadow flex items-center justify-center text-slate-600 font-semibold text-xs">+99</div>
           </div>
           <div class="text-slate-600">
-            <div class="flex items-center gap-1 mb-1">
+            <div class="flex items-center gap-0.5 mb-0.5">
               <% 5.times do %>
-                <svg class="w-5 h-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
+                <svg class="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
                 </svg>
               <% end %>
             </div>
-            <span class="font-medium">Trusted by 500+ brands</span>
+            <span class="font-medium text-sm">Trusted by 500+ brands</span>
           </div>
         </div>
       </div>
 
-      <!-- Right Content - Video Preview Cards -->
-      <div class="relative hidden lg:block">
+      <!-- Right Content - iPhone Mockup with Video + Stats -->
+      <div class="relative hidden lg:flex items-center justify-center gap-6">
+        <!-- iPhone Mockup -->
         <div class="relative">
-          <!-- Main Video Card -->
-          <div class="relative bg-white rounded-3xl shadow-2xl shadow-slate-200/50 overflow-hidden transform rotate-2 hover:rotate-0 transition-transform duration-500">
-            <div class="aspect-[9/16] bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center">
-              <div class="text-center p-8">
-                <div class="w-20 h-20 bg-gradient-to-br from-indigo-500 to-violet-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-xl shadow-indigo-500/30">
-                  <svg class="w-8 h-8 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M8 5v14l11-7z"></path>
-                  </svg>
+          <!-- iPhone Frame -->
+          <div class="relative w-[260px] h-[520px] bg-slate-900 rounded-[3rem] p-3 shadow-2xl shadow-slate-400/30">
+            <!-- iPhone Notch -->
+            <div class="absolute top-0 left-1/2 -translate-x-1/2 w-28 h-6 bg-slate-900 rounded-b-xl z-20"></div>
+            <!-- iPhone Screen -->
+            <div class="relative w-full h-full bg-gradient-to-b from-slate-100 to-slate-200 rounded-[2.2rem] overflow-hidden">
+              <!-- Video Placeholder -->
+              <div class="absolute inset-0 flex items-center justify-center">
+                <div class="text-center">
+                  <!-- Play Button -->
+                  <div class="w-16 h-16 bg-gradient-to-br from-indigo-500 to-violet-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-xl shadow-indigo-500/40 cursor-pointer hover:scale-110 transition-transform">
+                    <svg class="w-7 h-7 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M8 5v14l11-7z"></path>
+                    </svg>
+                  </div>
+                  <p class="text-slate-500 font-medium text-sm">Watch Creator Video</p>
                 </div>
-                <p class="text-slate-500 font-medium">UGC Video Preview</p>
               </div>
-            </div>
-            <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/60 to-transparent">
-              <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-pink-400 to-rose-500 flex items-center justify-center text-white font-bold text-sm">P</div>
-                <div class="text-white">
-                  <p class="font-semibold text-sm">@priya_creates</p>
-                  <p class="text-xs text-white/70">Mumbai • 120K followers</p>
+              
+              <!-- Creator Info Overlay -->
+              <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/70 via-black/40 to-transparent">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-full bg-gradient-to-br from-pink-400 to-rose-500 flex items-center justify-center text-white font-bold text-sm border-2 border-white">P</div>
+                  <div class="text-white">
+                    <p class="font-semibold text-sm">@priya_creates</p>
+                    <p class="text-xs text-white/70">Mumbai • 120K followers</p>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
+        </div>
 
-          <!-- Floating Card 1 -->
-          <div class="absolute -top-8 -left-8 bg-white rounded-2xl shadow-xl p-4 transform -rotate-6 hover:rotate-0 transition-transform duration-300">
+        <!-- Stats Cards - Stacked vertically, right of iPhone -->
+        <div class="flex flex-col gap-4">
+          <!-- Stat Card 1 - ROAS -->
+          <div class="bg-white rounded-xl shadow-lg shadow-slate-200/50 p-4 w-36">
             <div class="flex items-center gap-3">
-              <div class="w-12 h-12 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-xl flex items-center justify-center">
-                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div class="w-10 h-10 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-lg flex items-center justify-center">
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
                 </svg>
               </div>
               <div>
-                <p class="text-2xl font-bold text-slate-900">3.2x</p>
+                <p class="text-xl font-bold text-slate-900">3.2x</p>
                 <p class="text-xs text-slate-500">Avg. ROAS</p>
               </div>
             </div>
           </div>
 
-          <!-- Floating Card 2 -->
-          <div class="absolute -bottom-4 -left-12 bg-white rounded-2xl shadow-xl p-4 transform rotate-3 hover:rotate-0 transition-transform duration-300">
+          <!-- Stat Card 2 - Creators -->
+          <div class="bg-white rounded-xl shadow-lg shadow-slate-200/50 p-4 w-36">
             <div class="flex items-center gap-3">
-              <div class="w-12 h-12 bg-gradient-to-br from-amber-400 to-orange-500 rounded-xl flex items-center justify-center">
-                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
-              </div>
-              <div>
-                <p class="text-2xl font-bold text-slate-900">48hrs</p>
-                <p class="text-xs text-slate-500">Delivery Time</p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Floating Card 3 -->
-          <div class="absolute top-1/4 -right-8 bg-white rounded-2xl shadow-xl p-4 transform rotate-6 hover:rotate-0 transition-transform duration-300">
-            <div class="flex items-center gap-3">
-              <div class="w-12 h-12 bg-gradient-to-br from-violet-400 to-purple-500 rounded-xl flex items-center justify-center">
-                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div class="w-10 h-10 bg-gradient-to-br from-violet-400 to-purple-500 rounded-lg flex items-center justify-center">
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
                 </svg>
               </div>
               <div>
-                <p class="text-2xl font-bold text-slate-900">10K+</p>
+                <p class="text-xl font-bold text-slate-900">10K+</p>
                 <p class="text-xs text-slate-500">Creators</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Stat Card 3 - Delivery -->
+          <div class="bg-white rounded-xl shadow-lg shadow-slate-200/50 p-4 w-36">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 bg-gradient-to-br from-amber-400 to-orange-500 rounded-lg flex items-center justify-center">
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              </div>
+              <div>
+                <p class="text-xl font-bold text-slate-900">48hrs</p>
+                <p class="text-xs text-slate-500">Delivery</p>
               </div>
             </div>
           </div>
@@ -147,28 +186,17 @@
     </div>
   </div>
 
-  <!-- Scroll Indicator -->
-  <div class="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
-    <a href="#how-it-works" class="flex flex-col items-center text-slate-400 hover:text-indigo-600 transition-colors">
-      <span class="text-sm font-medium mb-2">Scroll to explore</span>
-      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
-      </svg>
-    </a>
-  </div>
-</section>
-
-<!-- Brand Logos Section -->
-<section class="py-16 bg-white border-y border-slate-100">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <p class="text-center text-slate-500 text-sm font-medium mb-8 uppercase tracking-wider">Trusted by India's fastest-growing brands</p>
-    <div class="flex flex-wrap justify-center items-center gap-x-16 gap-y-8 opacity-60">
-      <div class="text-2xl font-bold text-slate-400">Mamaearth</div>
-      <div class="text-2xl font-bold text-slate-400">boAt</div>
-      <div class="text-2xl font-bold text-slate-400">Sugar</div>
-      <div class="text-2xl font-bold text-slate-400">Noise</div>
-      <div class="text-2xl font-bold text-slate-400">Licious</div>
-      <div class="text-2xl font-bold text-slate-400">Plum</div>
+  <!-- Brand Logos - Inside Hero, at bottom -->
+  <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <p class="text-center text-slate-500 text-sm font-medium mb-5">Trusted by 22,000+ brands worldwide</p>
+    <div class="flex flex-wrap justify-center items-center gap-x-12 gap-y-4">
+      <div class="text-lg font-bold text-slate-400 tracking-tight">Mamaearth</div>
+      <div class="text-lg font-bold text-slate-400 tracking-tight">boAt</div>
+      <div class="text-lg font-bold text-slate-400 tracking-tight">Sugar</div>
+      <div class="text-lg font-bold text-slate-400 tracking-tight">Noise</div>
+      <div class="text-lg font-bold text-slate-400 tracking-tight">Licious</div>
+      <div class="text-lg font-bold text-slate-400 tracking-tight">Plum</div>
+      <div class="text-lg font-bold text-slate-400 tracking-tight">Nykaa</div>
     </div>
   </div>
 </section>
