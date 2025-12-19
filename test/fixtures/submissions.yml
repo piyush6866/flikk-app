@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  campaign: one
+  user: one
+  external_link: MyString
+  status: 1
+  payout_amount: 1
+
+two:
+  campaign: two
+  user: two
+  external_link: MyString
+  status: 1
+  payout_amount: 1

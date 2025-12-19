@@ -1,5 +1,7 @@
 class Campaign < ApplicationRecord
   belongs_to :user
+  has_many :submissions, dependent: :destroy
+  has_many :applicants, through: :submissions, source: :user
 
   # Status enum
   enum status: {

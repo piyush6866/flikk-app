@@ -9,7 +9,13 @@ Rails.application.routes.draw do
   root "pages#home"
 
   # Campaigns (Marketplace for Creators, Campaign Management for Brands)
-  resources :campaigns
+  resources :campaigns do
+    # Apply to campaign (creates a submission)
+    post 'apply', to: 'submissions#create', as: :apply
+  end
+
+  # Submissions (Creator workflow)
+  resources :submissions, only: [:show, :edit, :update]
 
   # Brand dashboard
   namespace :brand do

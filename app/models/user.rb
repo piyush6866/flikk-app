@@ -6,6 +6,8 @@ class User < ApplicationRecord
 
   # Associations
   has_many :campaigns, dependent: :destroy
+  has_many :submissions, dependent: :destroy
+  has_many :applied_campaigns, through: :submissions, source: :campaign
 
   # Validations
   validates :role, presence: true, inclusion: { in: %w[brand creator] }

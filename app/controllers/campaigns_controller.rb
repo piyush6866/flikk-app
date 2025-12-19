@@ -11,6 +11,9 @@ class CampaignsController < ApplicationController
     
     # Filter by scenario if provided
     @campaigns = @campaigns.by_scenario(params[:scenario]) if params[:scenario].present?
+
+    # Get campaigns already applied to
+    @applied_campaign_ids = current_user.submissions.pluck(:campaign_id)
   end
 
   # GET /campaigns/:id - Campaign Details

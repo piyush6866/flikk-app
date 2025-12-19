@@ -1,0 +1,122 @@
+<%# Submission Card with Progress Bar %>
+<div class="bg-slate-50 rounded-xl p-5 border border-slate-200">
+  <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+    <!-- Campaign Info -->
+    <div class="flex items-start gap-4 flex-1">
+      <div class="w-14 h-14 rounded-xl flex items-center justify-center flex-shrink-0
+        <%= case submission.campaign.scenario
+            when 'Unboxing' then 'bg-amber-100'
+            when 'Testimonial' then 'bg-emerald-100'
+            when 'How-to' then 'bg-blue-100'
+            when 'Lifestyle' then 'bg-pink-100'
+            else 'bg-slate-100'
+            end %>">
+        <% case submission.campaign.scenario %>
+        <% when 'Unboxing' %>
+          <svg class="w-7 h-7 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
+        <% when 'Testimonial' %>
+          <svg class="w-7 h-7 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+        <% when 'How-to' %>
+          <svg class="w-7 h-7 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
+        <% when 'Lifestyle' %>
+          <svg class="w-7 h-7 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+        <% end %>
+      </div>
+      
+      <div class="flex-1 min-w-0">
+        <div class="flex items-center gap-2 flex-wrap mb-1">
+          <h3 class="font-semibold text-slate-900 truncate"><%= submission.campaign.product_name %></h3>
+          <span class="px-2 py-0.5 text-xs font-medium rounded-full
+            <%= case submission.status
+                when 'started' then 'bg-amber-100 text-amber-700'
+                when 'submitted' then 'bg-blue-100 text-blue-700'
+                when 'approved' then 'bg-emerald-100 text-emerald-700'
+                when 'rejected' then 'bg-rose-100 text-rose-700'
+                when 'paid' then 'bg-green-100 text-green-700'
+                else 'bg-slate-100 text-slate-700'
+                end %>">
+            <%= submission.status_label %>
+          </span>
+        </div>
+        <p class="text-sm text-slate-500 mb-3">
+          <%= submission.campaign.scenario %> • <%= submission.campaign.duration_label %> • by <%= submission.campaign.user.brand_name %>
+        </p>
+        
+        <!-- Progress Bar -->
+        <div class="flex items-center gap-2">
+          <div class="flex-1 flex items-center gap-1">
+            <% (1..4).each do |step| %>
+              <div class="flex-1 h-1.5 rounded-full <%= step <= submission.progress_step ? 'bg-indigo-500' : 'bg-slate-200' %>"></div>
+            <% end %>
+          </div>
+          <span class="text-xs text-slate-500 whitespace-nowrap">
+            Step <%= submission.progress_step %> of 4
+          </span>
+        </div>
+        <div class="flex items-center gap-4 mt-2 text-xs text-slate-500">
+          <span class="<%= submission.progress_step >= 1 ? 'text-indigo-600 font-medium' : '' %>">Applied</span>
+          <span class="<%= submission.progress_step >= 2 ? 'text-indigo-600 font-medium' : '' %>">Uploaded</span>
+          <span class="<%= submission.progress_step >= 3 ? 'text-indigo-600 font-medium' : '' %>">Reviewed</span>
+          <span class="<%= submission.progress_step >= 4 ? 'text-indigo-600 font-medium' : '' %>">Paid</span>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Price & Actions -->
+    <div class="flex items-center gap-4 lg:flex-shrink-0">
+      <div class="text-right">
+        <p class="text-xl font-bold text-emerald-600"><%= submission.formatted_payout %></p>
+        <p class="text-xs text-slate-500">Payout</p>
+      </div>
+      
+      <% if show_upload && submission.can_upload? %>
+        <%= link_to edit_submission_path(submission), class: "inline-flex items-center gap-2 px-5 py-2.5 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 transition-colors" do %>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
+          </svg>
+          <% if submission.rejected? %>
+            Re-upload
+          <% else %>
+            Upload Content
+          <% end %>
+        <% end %>
+      <% elsif submission.submitted? %>
+        <div class="inline-flex items-center gap-2 px-4 py-2.5 bg-blue-50 text-blue-700 font-medium rounded-lg">
+          <svg class="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+          </svg>
+          Awaiting Review
+        </div>
+      <% elsif submission.approved? %>
+        <div class="inline-flex items-center gap-2 px-4 py-2.5 bg-emerald-50 text-emerald-700 font-medium rounded-lg">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+          Approved
+        </div>
+      <% elsif submission.paid? %>
+        <div class="inline-flex items-center gap-2 px-4 py-2.5 bg-green-50 text-green-700 font-medium rounded-lg">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          Paid
+        </div>
+      <% end %>
+    </div>
+  </div>
+  
+  <% if submission.rejected? %>
+    <div class="mt-4 p-3 bg-rose-50 border border-rose-200 rounded-lg">
+      <div class="flex items-start gap-2">
+        <svg class="w-5 h-5 text-rose-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+        </svg>
+        <div>
+          <p class="text-sm font-medium text-rose-800">Revision Requested</p>
+          <p class="text-sm text-rose-600">The brand has requested changes. Please re-upload your content.</p>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>
+
