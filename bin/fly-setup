@@ -1,0 +1,54 @@
+#!/bin/bash
+# Fly.io setup script for Flikk
+# Run this script after installing flyctl
+
+set -e
+
+echo "🚀 Setting up Flikk on Fly.io..."
+
+# Check if flyctl is installed
+if ! command -v flyctl &> /dev/null; then
+    echo "❌ flyctl is not installed. Please install it first:"
+    echo "   curl -L https://fly.io/install.sh | sh"
+    exit 1
+fi
+
+# Check if logged in
+if ! flyctl auth whoami &> /dev/null; then
+    echo "📝 Please login to Fly.io..."
+    flyctl auth login
+fi
+
+# Launch the app (this will create it if it doesn't exist)
+echo "🎯 Launching app on Fly.io..."
+flyctl launch --copy-config --yes
+
+# Create PostgreSQL database
+echo "🗄️  Creating PostgreSQL database..."
+flyctl postgres create --name flikk-db --region sin --initial-cluster-size 1 --vm-size shared-cpu-1x --volume-size 1
+
+# Attach database to app
+echo "🔗 Attaching database to app..."
+flyctl postgres attach flikk-db
+
+# Set secrets
+echo "🔐 Setting up secrets..."
+echo "Please enter your Rails master key (from config/master.key):"
+read -s MASTER_KEY
+flyctl secrets set RAILS_MASTER_KEY="$MASTER_KEY"
+
+# Deploy
+echo "🚀 Deploying..."
+flyctl deploy
+
+echo ""
+echo "✅ Deployment complete!"
+echo ""
+echo "Your app is now live at: https://flikk.fly.dev"
+echo ""
+echo "Useful commands:"
+echo "  flyctl status       - Check app status"
+echo "  flyctl logs         - View logs"
+echo "  flyctl ssh console  - SSH into the container"
+echo "  flyctl open         - Open app in browser"
+

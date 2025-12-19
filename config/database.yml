@@ -79,6 +79,4 @@ test:
 #
 production:
   <<: *default
-  database: flikk_production
-  username: flikk
-  password: <%= ENV["FLIKK_DATABASE_PASSWORD"] %>
+  url: <%= ENV["DATABASE_URL"] %>
