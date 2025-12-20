@@ -6,11 +6,13 @@ class Brand::CreatorsController < ApplicationController
   def index
     @filter = params[:filter] || 'discover'
     
+    # For MVP, show all creators regardless of approval status
+    # Can filter by approved_creators once we have more creators
     @creators = case @filter
     when 'discover'
-      User.approved_creators.order(rating: :desc, videos_completed: :desc)
+      User.creators.order(created_at: :desc)
     when 'new'
-      User.approved_creators.where('created_at > ?', 30.days.ago).order(created_at: :desc)
+      User.creators.where('created_at > ?', 30.days.ago).order(created_at: :desc)
     when 'previous_hires'
       previous_hire_ids = Submission.joins(:campaign)
         .where(campaigns: { user_id: current_user.id })
@@ -21,9 +23,9 @@ class Brand::CreatorsController < ApplicationController
       # TODO: Implement favorites functionality
       User.none
     when 'ad_performers'
-      User.approved_creators.where('rating >= ?', 4.5).order(rating: :desc)
+      User.creators.where('rating >= ? OR rating IS NULL', 4.5).order(rating: :desc)
     else
-      User.approved_creators
+      User.creators
     end
 
     # Apply additional filters
@@ -49,7 +51,7 @@ class Brand::CreatorsController < ApplicationController
   private
 
   def set_creator
-    @creator = User.approved_creators.find(params[:id])
+    @creator = User.creators.find(params[:id])
   end
 
   def ensure_brand!

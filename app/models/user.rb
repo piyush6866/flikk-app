@@ -20,6 +20,9 @@ class User < ApplicationRecord
     rejected: 2
   }, _prefix: :creator
 
+  # Callbacks
+  before_create :auto_approve_creator
+
   # Validations
   validates :role, presence: true, inclusion: { in: %w[brand creator] }
   validates :brand_name, presence: true, if: :brand?
@@ -71,5 +74,13 @@ class User < ApplicationRecord
 
   def initials
     display_name.to_s.split.map(&:first).join.upcase[0..1]
+  end
+
+  private
+
+  def auto_approve_creator
+    # Auto-approve creators on signup for MVP
+    # Can add manual approval workflow later
+    self.creator_status = :approved if creator?
   end
 end

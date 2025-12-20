@@ -1,306 +1,197 @@
-<div class="min-h-screen pt-20 pb-16" style="background-color: #faf8ff;">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+<div class="min-h-screen pt-20 pb-16 bg-slate-50">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     
-    <!-- Earnings Bar -->
-    <div class="bg-gradient-to-r from-violet-600 to-purple-600 rounded-2xl p-6 mb-8 text-white">
-      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-        <div>
-          <h1 class="text-2xl font-bold mb-1">My Earnings</h1>
-          <p class="text-white/80 text-sm">Track your income from completed campaigns</p>
+    <!-- Header Row -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+      <div>
+        <h1 class="text-2xl font-semibold text-slate-900">Dashboard</h1>
+        <p class="text-sm text-slate-500 mt-0.5">Manage your applications and earnings</p>
+      </div>
+      <div class="flex items-center gap-6 text-sm">
+        <div class="flex items-center gap-2">
+          <span class="text-slate-500">Earned</span>
+          <span class="font-semibold text-slate-900">₹<%= number_with_delimiter(@total_earned) %></span>
         </div>
-        <div class="flex items-center gap-8">
-          <div class="text-center">
-            <p class="text-3xl font-bold">₹<%= number_with_delimiter(@total_earned) %></p>
-            <p class="text-sm text-white/70">Total Earned</p>
-          </div>
-          <div class="w-px h-12 bg-white/20"></div>
-          <div class="text-center">
-            <p class="text-3xl font-bold">₹<%= number_with_delimiter(@pending_payout) %></p>
-            <p class="text-sm text-white/70">Pending Payout</p>
-          </div>
+        <div class="w-px h-4 bg-slate-200"></div>
+        <div class="flex items-center gap-2">
+          <span class="text-slate-500">Pending</span>
+          <span class="font-semibold text-emerald-600">₹<%= number_with_delimiter(@pending_payout) %></span>
         </div>
       </div>
     </div>
 
-    <!-- Stats Grid -->
-    <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
-      <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100">
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center">
-            <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-            </svg>
-          </div>
-          <div>
-            <p class="text-2xl font-bold text-slate-900"><%= @pending_approval.count %></p>
-            <p class="text-xs text-slate-500">Pending</p>
-          </div>
-        </div>
+    <!-- Quick Stats Row -->
+    <div class="flex items-center gap-6 mb-6 overflow-x-auto pb-2">
+      <div class="flex items-center gap-2 px-3 py-1.5 bg-white rounded-full border border-slate-200 text-sm whitespace-nowrap">
+        <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+        <span class="text-slate-600">Pending</span>
+        <span class="font-medium text-slate-900"><%= @pending_approval.count %></span>
       </div>
-      <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100">
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
-            <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
-            </svg>
-          </div>
-          <div>
-            <p class="text-2xl font-bold text-slate-900"><%= @ready_to_upload.count %></p>
-            <p class="text-xs text-slate-500">Ready to Upload</p>
-          </div>
-        </div>
+      <div class="flex items-center gap-2 px-3 py-1.5 bg-white rounded-full border border-slate-200 text-sm whitespace-nowrap">
+        <span class="w-2 h-2 rounded-full bg-indigo-500"></span>
+        <span class="text-slate-600">Ready to Upload</span>
+        <span class="font-medium text-slate-900"><%= @ready_to_upload.count %></span>
       </div>
-      <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100">
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-            <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-            </svg>
-          </div>
-          <div>
-            <p class="text-2xl font-bold text-slate-900"><%= @under_review.count %></p>
-            <p class="text-xs text-slate-500">Under Review</p>
-          </div>
-        </div>
+      <div class="flex items-center gap-2 px-3 py-1.5 bg-white rounded-full border border-slate-200 text-sm whitespace-nowrap">
+        <span class="w-2 h-2 rounded-full bg-blue-500"></span>
+        <span class="text-slate-600">Under Review</span>
+        <span class="font-medium text-slate-900"><%= @under_review.count %></span>
       </div>
-      <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100">
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center">
-            <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-            </svg>
-          </div>
-          <div>
-            <p class="text-2xl font-bold text-slate-900"><%= @completed_tasks.count %></p>
-            <p class="text-xs text-slate-500">Completed</p>
-          </div>
-        </div>
-      </div>
-      <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100">
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 bg-violet-100 rounded-lg flex items-center justify-center">
-            <svg class="w-5 h-5 text-violet-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-            </svg>
-          </div>
-          <div>
-            <p class="text-2xl font-bold text-slate-900"><%= @total_available %></p>
-            <p class="text-xs text-slate-500">Available Jobs</p>
-          </div>
-        </div>
+      <div class="flex items-center gap-2 px-3 py-1.5 bg-white rounded-full border border-slate-200 text-sm whitespace-nowrap">
+        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+        <span class="text-slate-600">Completed</span>
+        <span class="font-medium text-slate-900"><%= @completed_tasks.count %></span>
       </div>
     </div>
 
-    <!-- Tabs Navigation -->
-    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 mb-8" data-controller="tabs">
-      <div class="border-b border-slate-100">
-        <nav class="flex gap-1 p-2 overflow-x-auto">
+    <!-- Main Content Card -->
+    <div class="bg-white rounded-xl border border-slate-200 shadow-sm" data-controller="tabs">
+      <!-- Tabs Navigation -->
+      <div class="border-b border-slate-200">
+        <nav class="flex -mb-px">
           <button 
             data-tabs-target="tab" 
             data-action="click->tabs#switch" 
             data-tab="pending"
-            class="tab-btn px-4 py-3 text-sm font-medium rounded-lg transition-colors bg-indigo-50 text-indigo-600 whitespace-nowrap">
-            Pending Approval
+            class="tab-btn px-5 py-3 text-sm font-medium border-b-2 border-indigo-500 text-indigo-600">
+            Pending
             <% if @pending_approval.any? %>
-              <span class="ml-2 px-2 py-0.5 text-xs bg-amber-100 text-amber-700 rounded-full"><%= @pending_approval.count %></span>
+              <span class="ml-1.5 text-xs bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded"><%= @pending_approval.count %></span>
             <% end %>
           </button>
           <button 
             data-tabs-target="tab" 
             data-action="click->tabs#switch" 
             data-tab="upload"
-            class="tab-btn px-4 py-3 text-sm font-medium rounded-lg transition-colors text-slate-600 hover:bg-slate-50 whitespace-nowrap">
+            class="tab-btn px-5 py-3 text-sm font-medium border-b-2 border-transparent text-slate-500 hover:text-slate-700">
             Ready to Upload
             <% if @ready_to_upload.any? %>
-              <span class="ml-2 px-2 py-0.5 text-xs bg-indigo-100 text-indigo-700 rounded-full"><%= @ready_to_upload.count %></span>
+              <span class="ml-1.5 text-xs bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded"><%= @ready_to_upload.count %></span>
             <% end %>
           </button>
           <button 
             data-tabs-target="tab" 
             data-action="click->tabs#switch" 
             data-tab="review"
-            class="tab-btn px-4 py-3 text-sm font-medium rounded-lg transition-colors text-slate-600 hover:bg-slate-50 whitespace-nowrap">
+            class="tab-btn px-5 py-3 text-sm font-medium border-b-2 border-transparent text-slate-500 hover:text-slate-700">
             Under Review
             <% if @under_review.any? %>
-              <span class="ml-2 px-2 py-0.5 text-xs bg-blue-100 text-blue-700 rounded-full"><%= @under_review.count %></span>
+              <span class="ml-1.5 text-xs bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded"><%= @under_review.count %></span>
             <% end %>
           </button>
           <button 
             data-tabs-target="tab" 
             data-action="click->tabs#switch" 
             data-tab="completed"
-            class="tab-btn px-4 py-3 text-sm font-medium rounded-lg transition-colors text-slate-600 hover:bg-slate-50 whitespace-nowrap">
+            class="tab-btn px-5 py-3 text-sm font-medium border-b-2 border-transparent text-slate-500 hover:text-slate-700">
             Completed
             <% if @completed_tasks.any? %>
-              <span class="ml-2 px-2 py-0.5 text-xs bg-emerald-100 text-emerald-700 rounded-full"><%= @completed_tasks.count %></span>
+              <span class="ml-1.5 text-xs bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded"><%= @completed_tasks.count %></span>
             <% end %>
           </button>
         </nav>
       </div>
 
       <!-- Tab Content: Pending Approval -->
-      <div data-tabs-target="content" data-tab="pending" class="p-6">
+      <div data-tabs-target="content" data-tab="pending" class="p-5">
         <% if @pending_approval.any? %>
-          <div class="space-y-4">
+          <div class="space-y-3">
             <% @pending_approval.each do |submission| %>
               <%= render 'creator/dashboard/submission_card', submission: submission %>
             <% end %>
           </div>
         <% else %>
-          <div class="text-center py-12">
-            <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <svg class="w-8 h-8 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-              </svg>
-            </div>
-            <h3 class="text-lg font-semibold text-slate-900 mb-2">No Pending Applications</h3>
-            <p class="text-slate-500 mb-4">Apply to jobs and wait for brands to approve you!</p>
-            <%= link_to campaigns_path, class: "inline-flex items-center gap-2 px-5 py-2.5 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 transition-colors" do %>
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-              </svg>
-              Browse Jobs
+          <div class="text-center py-10">
+            <p class="text-slate-500 text-sm mb-3">No pending applications</p>
+            <%= link_to campaigns_path, class: "text-sm text-indigo-600 font-medium hover:text-indigo-700" do %>
+              Browse Opportunities →
             <% end %>
           </div>
         <% end %>
       </div>
 
       <!-- Tab Content: Ready to Upload -->
-      <div data-tabs-target="content" data-tab="upload" class="p-6 hidden">
+      <div data-tabs-target="content" data-tab="upload" class="p-5 hidden">
         <% if @ready_to_upload.any? %>
-          <div class="space-y-4">
+          <div class="space-y-3">
             <% @ready_to_upload.each do |submission| %>
               <%= render 'creator/dashboard/submission_card', submission: submission %>
             <% end %>
           </div>
         <% else %>
-          <div class="text-center py-12">
-            <div class="w-16 h-16 bg-indigo-50 rounded-full flex items-center justify-center mx-auto mb-4">
-              <svg class="w-8 h-8 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
-              </svg>
-            </div>
-            <h3 class="text-lg font-semibold text-slate-900 mb-2">No Videos to Upload</h3>
-            <p class="text-slate-500">When brands approve your application, you can upload your video here.</p>
+          <div class="text-center py-10">
+            <p class="text-slate-500 text-sm">Approved applications will appear here for upload</p>
           </div>
         <% end %>
       </div>
 
       <!-- Tab Content: Under Review -->
-      <div data-tabs-target="content" data-tab="review" class="p-6 hidden">
+      <div data-tabs-target="content" data-tab="review" class="p-5 hidden">
         <% if @under_review.any? %>
-          <div class="space-y-4">
+          <div class="space-y-3">
             <% @under_review.each do |submission| %>
               <%= render 'creator/dashboard/submission_card', submission: submission %>
             <% end %>
           </div>
         <% else %>
-          <div class="text-center py-12">
-            <div class="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4">
-              <svg class="w-8 h-8 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-              </svg>
-            </div>
-            <h3 class="text-lg font-semibold text-slate-900 mb-2">Nothing Under Review</h3>
-            <p class="text-slate-500">Submitted content will appear here while brands review it.</p>
+          <div class="text-center py-10">
+            <p class="text-slate-500 text-sm">Submitted content will appear here</p>
           </div>
         <% end %>
       </div>
 
       <!-- Tab Content: Completed -->
-      <div data-tabs-target="content" data-tab="completed" class="p-6 hidden">
+      <div data-tabs-target="content" data-tab="completed" class="p-5 hidden">
         <% if @completed_tasks.any? %>
-          <div class="space-y-4">
+          <div class="space-y-3">
             <% @completed_tasks.each do |submission| %>
               <%= render 'creator/dashboard/submission_card', submission: submission %>
             <% end %>
           </div>
         <% else %>
-          <div class="text-center py-12">
-            <div class="w-16 h-16 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-4">
-              <svg class="w-8 h-8 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-              </svg>
-            </div>
-            <h3 class="text-lg font-semibold text-slate-900 mb-2">No Completed Jobs Yet</h3>
-            <p class="text-slate-500">Your approved and paid submissions will appear here.</p>
+          <div class="text-center py-10">
+            <p class="text-slate-500 text-sm">Completed work will appear here</p>
           </div>
         <% end %>
       </div>
     </div>
 
-    <!-- Available Jobs Section -->
-    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-      <div class="p-6 border-b border-slate-100 flex items-center justify-between">
-        <div>
-          <h2 class="text-xl font-bold text-slate-900">New Opportunities</h2>
-          <p class="text-sm text-slate-500">Jobs you haven't applied to yet</p>
+    <!-- Available Opportunities -->
+    <% if @available_campaigns.any? %>
+      <div class="mt-6">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-lg font-medium text-slate-900">New Opportunities</h2>
+          <%= link_to campaigns_path, class: "text-sm text-indigo-600 font-medium hover:text-indigo-700" do %>
+            View All →
+          <% end %>
         </div>
-        <%= link_to campaigns_path, class: "text-sm text-indigo-600 font-medium hover:text-indigo-700" do %>
-          View All →
-        <% end %>
-      </div>
-      
-      <% if @available_campaigns.any? %>
-        <div class="divide-y divide-slate-100">
-          <% @available_campaigns.each do |campaign| %>
-            <div class="p-4 hover:bg-slate-50 transition-colors">
+        
+        <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <% @available_campaigns.limit(3).each do |campaign| %>
+            <div class="bg-white rounded-xl border border-slate-200 p-4 hover:border-slate-300 transition-colors">
+              <div class="flex items-start justify-between mb-3">
+                <div>
+                  <h3 class="font-medium text-slate-900 text-sm"><%= campaign.product_name %></h3>
+                  <p class="text-xs text-slate-500 mt-0.5"><%= campaign.scenario %> • <%= campaign.duration_label %></p>
+                </div>
+                <span class="text-sm font-semibold text-emerald-600"><%= campaign.formatted_price %></span>
+              </div>
               <div class="flex items-center justify-between">
-                <div class="flex items-center gap-4">
-                  <div class="w-12 h-12 rounded-xl flex items-center justify-center
-                    <%= case campaign.scenario
-                        when 'Unboxing' then 'bg-amber-100'
-                        when 'Testimonial' then 'bg-emerald-100'
-                        when 'How-to' then 'bg-blue-100'
-                        when 'Lifestyle' then 'bg-pink-100'
-                        else 'bg-slate-100'
-                        end %>">
-                    <% case campaign.scenario %>
-                    <% when 'Unboxing' %>
-                      <svg class="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
-                    <% when 'Testimonial' %>
-                      <svg class="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
-                    <% when 'How-to' %>
-                      <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
-                    <% when 'Lifestyle' %>
-                      <svg class="w-6 h-6 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
-                    <% end %>
-                  </div>
-                  <div>
-                    <h3 class="font-semibold text-slate-900"><%= campaign.product_name %></h3>
-                    <p class="text-sm text-slate-500"><%= campaign.scenario %> • <%= campaign.duration_label %> • by <%= campaign.user.brand_name %></p>
-                  </div>
-                </div>
-                <div class="flex items-center gap-4">
-                  <span class="text-lg font-bold text-emerald-600"><%= campaign.formatted_price %></span>
-                  <%= button_to campaign_apply_path(campaign), method: :post, class: "px-4 py-2 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 transition-colors text-sm" do %>
-                    Apply Now
-                  <% end %>
-                </div>
+                <span class="text-xs text-slate-400">by <%= campaign.user.brand_name %></span>
+                <%= button_to campaign_apply_path(campaign), method: :post, class: "px-3 py-1.5 bg-slate-900 text-white text-xs font-medium rounded-lg hover:bg-slate-800 transition-colors" do %>
+                  Apply
+                <% end %>
               </div>
             </div>
           <% end %>
         </div>
-      <% else %>
-        <div class="p-12 text-center">
-          <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg class="w-8 h-8 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-            </svg>
-          </div>
-          <h3 class="text-lg font-semibold text-slate-900 mb-2">You're All Caught Up!</h3>
-          <p class="text-slate-500">You've applied to all available jobs. Check back later for new opportunities.</p>
-        </div>
-      <% end %>
-    </div>
+      </div>
+    <% end %>
 
   </div>
 </div>
 
 <script>
-  // Simple tabs controller
   function initTabs() {
     const containers = document.querySelectorAll('[data-controller="tabs"]');
     
@@ -315,18 +206,16 @@
         tab.addEventListener('click', function() {
           const targetTab = tab.dataset.tab;
           
-          // Update tab styles
           tabs.forEach(function(t) {
             if (t.dataset.tab === targetTab) {
-              t.classList.add('bg-indigo-50', 'text-indigo-600');
-              t.classList.remove('text-slate-600', 'hover:bg-slate-50');
+              t.classList.add('border-indigo-500', 'text-indigo-600');
+              t.classList.remove('border-transparent', 'text-slate-500', 'hover:text-slate-700');
             } else {
-              t.classList.remove('bg-indigo-50', 'text-indigo-600');
-              t.classList.add('text-slate-600', 'hover:bg-slate-50');
+              t.classList.remove('border-indigo-500', 'text-indigo-600');
+              t.classList.add('border-transparent', 'text-slate-500', 'hover:text-slate-700');
             }
           });
           
-          // Show/hide content
           contents.forEach(function(content) {
             if (content.dataset.tab === targetTab) {
               content.classList.remove('hidden');

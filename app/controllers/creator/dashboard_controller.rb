@@ -19,8 +19,15 @@ class Creator::DashboardController < ApplicationController
     @completed_tasks = @submissions.completed
 
     # Earnings calculations (use creator_net_payout which is after 15% fee)
-    @total_earned = @submissions.where(status: :paid).sum(:creator_net_payout)
-    @pending_payout = @submissions.where(status: :content_approved).sum(:creator_net_payout)
+    # Handle case where column may not exist yet (migration pending)
+    begin
+      @total_earned = @submissions.where(status: :paid).sum(:creator_net_payout)
+      @pending_payout = @submissions.where(status: :content_approved).sum(:creator_net_payout)
+    rescue ActiveRecord::StatementInvalid
+      # Fallback if column doesn't exist yet
+      @total_earned = 0
+      @pending_payout = 0
+    end
 
     # Available campaigns (excluding already applied)
     applied_campaign_ids = @submissions.pluck(:campaign_id)
