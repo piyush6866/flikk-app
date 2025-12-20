@@ -209,25 +209,17 @@
 
                   <div class="flex items-center gap-3 ml-4">
                     <% if submission.uploaded? %>
-                      <!-- Show content preview for uploaded submissions -->
-                      <% if submission.video.attached? %>
-                        <button onclick="openContentModal('<%= rails_blob_url(submission.video) %>', 'video', '<%= submission.user.name %>', '<%= submission.campaign.product_name %>', <%= submission.id %>)" class="flex items-center gap-2 px-3 py-1.5 bg-indigo-600 text-white text-xs font-medium rounded-md hover:bg-indigo-700 transition-colors">
-                          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                          </svg>
-                          Review Video
-                        </button>
-                      <% elsif submission.external_link.present? %>
-                        <button onclick="openContentModal('<%= submission.external_link %>', 'link', '<%= submission.user.name %>', '<%= submission.campaign.product_name %>', <%= submission.id %>)" class="flex items-center gap-2 px-3 py-1.5 bg-indigo-600 text-white text-xs font-medium rounded-md hover:bg-indigo-700 transition-colors">
-                          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
-                          </svg>
-                          Review Link
-                        </button>
+                      <%= link_to brand_submission_path(submission), class: "flex items-center gap-2 px-3 py-1.5 bg-indigo-600 text-white text-xs font-medium rounded-md hover:bg-indigo-700 transition-colors" do %>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        Review Content
                       <% end %>
                     <% elsif submission.revision_requested? %>
-                      <span class="text-xs text-rose-600">Waiting for revision</span>
+                      <%= link_to brand_submission_path(submission), class: "text-xs text-rose-600 hover:underline" do %>
+                        Waiting for revision →
+                      <% end %>
                     <% else %>
                       <span class="text-xs text-slate-500">Awaiting upload</span>
                     <% end %>
@@ -287,21 +279,12 @@
                       <p class="text-xs text-slate-400">paid</p>
                     </div>
                     
-                    <% if submission.video.attached? %>
-                      <button onclick="openContentModal('<%= rails_blob_url(submission.video) %>', 'video', '<%= submission.user.name %>', '<%= submission.campaign.product_name %>', <%= submission.id %>)" class="flex items-center gap-2 px-3 py-1.5 bg-slate-900 text-white text-xs font-medium rounded-md hover:bg-slate-800 transition-colors">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
-                        View Video
-                      </button>
-                    <% elsif submission.external_link.present? %>
-                      <a href="<%= submission.external_link %>" target="_blank" class="flex items-center gap-2 px-3 py-1.5 bg-slate-900 text-white text-xs font-medium rounded-md hover:bg-slate-800 transition-colors">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
-                        </svg>
-                        View Content
-                      </a>
+                    <%= link_to brand_submission_path(submission), class: "flex items-center gap-2 px-3 py-1.5 bg-slate-900 text-white text-xs font-medium rounded-md hover:bg-slate-800 transition-colors" do %>
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                      </svg>
+                      View Content
                     <% end %>
                   </div>
                 </div>
@@ -346,160 +329,3 @@
   </div>
 </div>
 
-<!-- Content Review Modal -->
-<div id="content-modal" class="fixed inset-0 z-50 hidden">
-  <div class="absolute inset-0 bg-black/60" onclick="closeContentModal()"></div>
-  <div class="absolute inset-4 sm:inset-8 md:inset-16 lg:inset-24 bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden">
-    <!-- Modal Header -->
-    <div class="flex items-center justify-between px-6 py-4 border-b border-slate-200">
-      <div>
-        <h3 id="modal-title" class="font-semibold text-slate-900">Review Content</h3>
-        <p id="modal-subtitle" class="text-sm text-slate-500"></p>
-      </div>
-      <button onclick="closeContentModal()" class="p-2 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100 transition-colors">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-        </svg>
-      </button>
-    </div>
-    
-    <!-- Modal Content -->
-    <div class="flex-1 flex items-center justify-center p-6 bg-slate-900">
-      <div id="video-container" class="hidden w-full max-w-2xl aspect-[9/16] max-h-full">
-        <video id="modal-video" controls class="w-full h-full object-contain rounded-lg">
-          Your browser does not support the video tag.
-        </video>
-      </div>
-      <div id="link-container" class="hidden text-center">
-        <div class="w-20 h-20 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-4">
-          <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
-          </svg>
-        </div>
-        <p class="text-white text-lg mb-4">External Video Link</p>
-        <a id="modal-external-link" href="#" target="_blank" class="inline-flex items-center gap-2 px-6 py-3 bg-white text-slate-900 font-medium rounded-lg hover:bg-slate-100 transition-colors">
-          Open in New Tab
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
-          </svg>
-        </a>
-      </div>
-    </div>
-    
-    <!-- Modal Footer (Actions) -->
-    <div id="modal-actions" class="px-6 py-4 border-t border-slate-200 bg-slate-50">
-      <div class="flex items-center justify-between">
-        <div id="modal-feedback-section" class="hidden flex-1 mr-4">
-          <input type="text" id="modal-feedback-input" placeholder="Enter feedback for revision..." class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
-        </div>
-        <div class="flex items-center gap-3">
-          <button id="btn-request-revision" onclick="toggleFeedback()" class="px-4 py-2 bg-white border border-slate-300 text-slate-700 font-medium rounded-lg hover:bg-slate-50 transition-colors text-sm">
-            Request Revision
-          </button>
-          <button id="btn-send-revision" onclick="sendRevision()" class="hidden px-4 py-2 bg-amber-600 text-white font-medium rounded-lg hover:bg-amber-700 transition-colors text-sm">
-            Send Revision Request
-          </button>
-          <form id="approve-form" method="post" class="inline">
-            <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
-            <button type="submit" class="px-4 py-2 bg-emerald-600 text-white font-medium rounded-lg hover:bg-emerald-700 transition-colors text-sm">
-              Approve Content
-            </button>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<script>
-  let currentSubmissionId = null;
-  
-  function openContentModal(url, type, creatorName, campaignName, submissionId) {
-    const modal = document.getElementById('content-modal');
-    const videoContainer = document.getElementById('video-container');
-    const linkContainer = document.getElementById('link-container');
-    const modalVideo = document.getElementById('modal-video');
-    const modalLink = document.getElementById('modal-external-link');
-    const modalTitle = document.getElementById('modal-title');
-    const modalSubtitle = document.getElementById('modal-subtitle');
-    const approveForm = document.getElementById('approve-form');
-    
-    currentSubmissionId = submissionId;
-    modalTitle.textContent = 'Content from ' + creatorName;
-    modalSubtitle.textContent = campaignName;
-    
-    // Set approve form action
-    approveForm.action = '/brand/submissions/' + submissionId + '/approve_content';
-    
-    if (type === 'video') {
-      videoContainer.classList.remove('hidden');
-      linkContainer.classList.add('hidden');
-      modalVideo.src = url;
-    } else {
-      videoContainer.classList.add('hidden');
-      linkContainer.classList.remove('hidden');
-      modalLink.href = url;
-    }
-    
-    modal.classList.remove('hidden');
-    document.body.classList.add('overflow-hidden');
-  }
-  
-  function closeContentModal() {
-    const modal = document.getElementById('content-modal');
-    const modalVideo = document.getElementById('modal-video');
-    
-    modal.classList.add('hidden');
-    document.body.classList.remove('overflow-hidden');
-    modalVideo.pause();
-    modalVideo.src = '';
-    
-    // Reset feedback
-    document.getElementById('modal-feedback-section').classList.add('hidden');
-    document.getElementById('modal-feedback-input').value = '';
-    document.getElementById('btn-request-revision').classList.remove('hidden');
-    document.getElementById('btn-send-revision').classList.add('hidden');
-  }
-  
-  function toggleFeedback() {
-    document.getElementById('modal-feedback-section').classList.toggle('hidden');
-    document.getElementById('btn-request-revision').classList.toggle('hidden');
-    document.getElementById('btn-send-revision').classList.toggle('hidden');
-  }
-  
-  function sendRevision() {
-    const feedback = document.getElementById('modal-feedback-input').value;
-    if (!feedback.trim()) {
-      alert('Please enter feedback for the creator');
-      return;
-    }
-    
-    // Create and submit form
-    const form = document.createElement('form');
-    form.method = 'POST';
-    form.action = '/brand/submissions/' + currentSubmissionId + '/request_revision';
-    
-    const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
-    const csrfInput = document.createElement('input');
-    csrfInput.type = 'hidden';
-    csrfInput.name = 'authenticity_token';
-    csrfInput.value = csrfToken;
-    form.appendChild(csrfInput);
-    
-    const feedbackInput = document.createElement('input');
-    feedbackInput.type = 'hidden';
-    feedbackInput.name = 'feedback';
-    feedbackInput.value = feedback;
-    form.appendChild(feedbackInput);
-    
-    document.body.appendChild(form);
-    form.submit();
-  }
-  
-  // Close modal on escape
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') {
-      closeContentModal();
-    }
-  });
-</script>
