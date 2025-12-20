@@ -61,99 +61,104 @@
       <h2 class="text-2xl font-bold text-slate-900 mb-2">Choose a pack that works for you</h2>
       <p class="text-slate-600 mb-8">No subscriptions, no automated charges. Each plan includes bonus funds applied instantly to your wallet that can be used within 12 months.</p>
 
-      <!-- Pack Cards -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <!-- Pack Cards - Equal sizing grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         <!-- Basic Pack -->
-        <div class="bg-white rounded-2xl border border-slate-200 p-6 hover:border-indigo-300 hover:shadow-lg transition-all cursor-pointer pack-card" data-amount="500">
-          <h3 class="text-lg font-medium text-slate-700 mb-4">Basic</h3>
-          <div class="flex items-baseline gap-1 mb-6">
-            <span class="text-4xl font-bold text-slate-900">₹500</span>
+        <div class="bg-white rounded-2xl border border-slate-200 p-6 hover:border-indigo-300 hover:shadow-lg transition-all cursor-pointer pack-card flex flex-col h-[220px]" data-amount="500">
+          <h3 class="text-lg font-medium text-slate-700 mb-1">Basic</h3>
+          <div class="flex-1 flex flex-col justify-center">
+            <div class="mb-1">
+              <span class="text-4xl font-bold text-slate-900">₹500</span>
+            </div>
+            <p class="text-slate-400 text-sm h-5">&nbsp;</p>
           </div>
-          <button onclick="selectPack(500)" class="w-full py-3 bg-slate-900 text-white font-medium rounded-lg hover:bg-slate-800 transition-colors">
+          <button onclick="selectPack(500)" class="w-full py-3 bg-slate-900 text-white font-medium rounded-lg hover:bg-slate-800 transition-colors mt-auto">
             Add ₹500
           </button>
         </div>
 
         <!-- Essential Pack (Most Popular) -->
-        <div class="relative bg-white rounded-2xl border-2 border-indigo-500 p-6 shadow-lg cursor-pointer pack-card" data-amount="1000">
-          <div class="absolute -top-3 left-1/2 -translate-x-1/2">
-            <span class="px-4 py-1 bg-indigo-600 text-white text-sm font-medium rounded-full">Most popular</span>
+        <div class="relative bg-white rounded-2xl border-2 border-indigo-500 p-6 shadow-lg cursor-pointer pack-card flex flex-col h-[220px]" data-amount="1000">
+          <div class="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
+            <span class="px-4 py-1 bg-indigo-600 text-white text-sm font-medium rounded-full whitespace-nowrap">Most popular</span>
           </div>
-          <h3 class="text-lg font-medium text-slate-700 mb-4 mt-2">Essential</h3>
-          <div class="flex items-baseline gap-1 mb-2">
-            <span class="text-4xl font-bold text-slate-900">₹1,000</span>
+          <h3 class="text-lg font-medium text-slate-700 mb-1 mt-2">Essential</h3>
+          <div class="flex-1 flex flex-col justify-center">
+            <div class="mb-1">
+              <span class="text-4xl font-bold text-slate-900">₹1,000</span>
+            </div>
+            <p class="text-indigo-600 font-medium text-sm h-5">+₹100 bonus</p>
           </div>
-          <p class="text-indigo-600 font-medium mb-4">+₹100 bonus</p>
-          <button onclick="selectPack(1000, 100)" class="w-full py-3 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 transition-colors">
+          <button onclick="selectPack(1000, 100)" class="w-full py-3 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 transition-colors mt-auto">
             Add ₹1,000
           </button>
         </div>
 
         <!-- Professional Pack -->
-        <div class="bg-white rounded-2xl border border-slate-200 p-6 hover:border-indigo-300 hover:shadow-lg transition-all cursor-pointer pack-card" data-amount="2500">
-          <h3 class="text-lg font-medium text-slate-700 mb-4">Professional</h3>
-          <div class="flex items-baseline gap-1 mb-2">
-            <span class="text-4xl font-bold text-slate-900">₹2,500</span>
+        <div class="bg-white rounded-2xl border border-slate-200 p-6 hover:border-indigo-300 hover:shadow-lg transition-all cursor-pointer pack-card flex flex-col h-[220px]" data-amount="2500">
+          <h3 class="text-lg font-medium text-slate-700 mb-1">Professional</h3>
+          <div class="flex-1 flex flex-col justify-center">
+            <div class="mb-1">
+              <span class="text-4xl font-bold text-slate-900">₹2,500</span>
+            </div>
+            <p class="text-indigo-600 font-medium text-sm h-5">+₹300 bonus</p>
           </div>
-          <p class="text-indigo-600 font-medium mb-4">+₹300 bonus</p>
-          <button onclick="selectPack(2500, 300)" class="w-full py-3 bg-slate-900 text-white font-medium rounded-lg hover:bg-slate-800 transition-colors">
+          <button onclick="selectPack(2500, 300)" class="w-full py-3 bg-slate-900 text-white font-medium rounded-lg hover:bg-slate-800 transition-colors mt-auto">
             Add ₹2,500
           </button>
         </div>
 
         <!-- Enterprise Pack -->
-        <div class="bg-white rounded-2xl border border-slate-200 p-6 hover:border-indigo-300 hover:shadow-lg transition-all cursor-pointer pack-card" data-amount="5000">
-          <h3 class="text-lg font-medium text-slate-700 mb-4">Enterprise</h3>
-          <div class="flex items-baseline gap-1 mb-2">
-            <span class="text-4xl font-bold text-slate-900">₹5,000</span>
+        <div class="bg-white rounded-2xl border border-slate-200 p-6 hover:border-indigo-300 hover:shadow-lg transition-all cursor-pointer pack-card flex flex-col h-[220px]" data-amount="5000">
+          <h3 class="text-lg font-medium text-slate-700 mb-1">Enterprise</h3>
+          <div class="flex-1 flex flex-col justify-center">
+            <div class="mb-1">
+              <span class="text-4xl font-bold text-slate-900">₹5,000</span>
+            </div>
+            <p class="text-indigo-600 font-medium text-sm h-5">+₹700 bonus</p>
           </div>
-          <p class="text-indigo-600 font-medium mb-4">+₹700 bonus</p>
-          <button onclick="selectPack(5000, 700)" class="w-full py-3 bg-slate-900 text-white font-medium rounded-lg hover:bg-slate-800 transition-colors">
+          <button onclick="selectPack(5000, 700)" class="w-full py-3 bg-slate-900 text-white font-medium rounded-lg hover:bg-slate-800 transition-colors mt-auto">
             Add ₹5,000
           </button>
         </div>
       </div>
 
-      <!-- Additional Options -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+      <!-- Bottom Row - Premium and Custom -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 mt-5">
         <!-- Premium Pack -->
-        <div class="bg-white rounded-2xl border border-slate-200 p-6 hover:border-indigo-300 hover:shadow-lg transition-all cursor-pointer pack-card" data-amount="10000">
-          <div class="flex items-center justify-between">
-            <div>
-              <h3 class="text-lg font-medium text-slate-700 mb-2">Premium</h3>
-              <div class="flex items-baseline gap-2">
-                <span class="text-3xl font-bold text-slate-900">₹10,000</span>
-                <span class="text-indigo-600 font-medium">+₹1,500 bonus</span>
-              </div>
+        <div class="bg-white rounded-2xl border border-slate-200 p-6 hover:border-indigo-300 hover:shadow-lg transition-all cursor-pointer pack-card flex items-center justify-between" data-amount="10000">
+          <div>
+            <h3 class="text-lg font-medium text-slate-700 mb-1">Premium</h3>
+            <div class="flex items-baseline gap-3">
+              <span class="text-3xl font-bold text-slate-900">₹10,000</span>
+              <span class="text-indigo-600 font-medium text-sm">+₹1,500 bonus</span>
             </div>
-            <button onclick="selectPack(10000, 1500)" class="px-6 py-3 bg-slate-900 text-white font-medium rounded-lg hover:bg-slate-800 transition-colors">
-              Add ₹10,000
-            </button>
           </div>
+          <button onclick="selectPack(10000, 1500)" class="px-8 py-3 bg-slate-900 text-white font-medium rounded-lg hover:bg-slate-800 transition-colors whitespace-nowrap">
+            Add ₹10,000
+          </button>
         </div>
 
         <!-- Custom Amount -->
-        <div class="bg-white rounded-2xl border border-slate-200 p-6">
-          <div class="flex items-center justify-between">
-            <div class="flex-1 mr-4">
-              <h3 class="text-lg font-medium text-slate-700 mb-2">Custom Amount</h3>
-              <div class="relative">
-                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 font-medium">₹</span>
-                <input 
-                  type="number" 
-                  id="custom-amount" 
-                  class="w-full pl-8 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-lg font-medium"
-                  placeholder="Enter amount"
-                  min="500"
-                  step="100"
-                >
-              </div>
-              <p class="text-xs text-slate-500 mt-1">Minimum ₹500</p>
+        <div class="bg-white rounded-2xl border border-slate-200 p-6 flex items-center justify-between">
+          <div class="flex-1 mr-6">
+            <h3 class="text-lg font-medium text-slate-700 mb-2">Custom Amount</h3>
+            <div class="relative">
+              <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 font-medium">₹</span>
+              <input 
+                type="number" 
+                id="custom-amount" 
+                class="w-full pl-8 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-lg font-medium"
+                placeholder="Enter amount"
+                min="500"
+                step="100"
+              >
             </div>
-            <button onclick="addCustomAmount()" class="px-6 py-3 bg-slate-900 text-white font-medium rounded-lg hover:bg-slate-800 transition-colors">
-              Add Funds
-            </button>
+            <p class="text-xs text-slate-500 mt-1">Minimum ₹500</p>
           </div>
+          <button onclick="addCustomAmount()" class="px-8 py-3 bg-slate-900 text-white font-medium rounded-lg hover:bg-slate-800 transition-colors whitespace-nowrap">
+            Add Funds
+          </button>
         </div>
       </div>
     </div>
