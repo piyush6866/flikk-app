@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_12_19_233305) do
+ActiveRecord::Schema[7.1].define(version: 2025_12_20_010155) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -103,9 +103,23 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_19_233305) do
     t.decimal "rating", precision: 3, scale: 2, default: "0.0"
     t.integer "videos_completed", default: 0
     t.integer "price_per_video", default: 2500
+    t.integer "wallet_balance", default: 0
     t.index ["creator_status"], name: "index_users_on_creator_status"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+  end
+
+  create_table "wallet_transactions", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.integer "amount", null: false
+    t.integer "transaction_type", default: 0, null: false
+    t.string "description"
+    t.bigint "related_submission_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["related_submission_id"], name: "index_wallet_transactions_on_related_submission_id"
+    t.index ["user_id", "created_at"], name: "index_wallet_transactions_on_user_id_and_created_at"
+    t.index ["user_id"], name: "index_wallet_transactions_on_user_id"
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
@@ -113,4 +127,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_19_233305) do
   add_foreign_key "campaigns", "users"
   add_foreign_key "submissions", "campaigns"
   add_foreign_key "submissions", "users"
+  add_foreign_key "wallet_transactions", "submissions", column: "related_submission_id"
+  add_foreign_key "wallet_transactions", "users"
 end

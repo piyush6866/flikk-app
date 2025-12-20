@@ -40,6 +40,12 @@ Rails.application.routes.draw do
     get 'dashboard', to: 'dashboard#show'
   end
 
+  # Wallet
+  resource :wallet, only: [:show], controller: 'wallet' do
+    post :add_funds
+    get 'transaction/:id', to: 'wallet#transaction_details', as: :transaction
+  end
+
   # Health check for load balancers
   get "up" => "rails/health#show", as: :rails_health_check
 end

@@ -124,15 +124,34 @@ class Submission < ApplicationRecord
   end
 
   def approve_content!
+    brand = campaign.user
+    creator = user
+    
+    # Deduct from brand's wallet
+    brand_cost = brand_total_cost || calculate_brand_cost
+    unless brand.deduct_from_wallet(brand_cost, submission: self, description: "Payment for #{campaign.title.truncate(30)}")
+      raise "Insufficient wallet balance"
+    end
+    
+    # Credit to creator's wallet
+    creator_payout = creator_net_payout || calculate_creator_net
+    creator.credit_payout(creator_payout, submission: self, description: "Payout for #{campaign.title.truncate(30)}")
+    
     update!(status: :content_approved, approved_at: Time.current)
   end
 
   def request_revision!(feedback)
-    update!(status: :revision_requested, brand_feedback: feedback, revision_count: revision_count + 1)
+    update!(status: :revision_requested, brand_feedback: feedback, revision_count: (revision_count || 0) + 1)
   end
 
   def mark_paid!
     update!(status: :paid, paid_at: Time.current)
+  end
+
+  def brand_has_sufficient_funds?
+    brand = campaign.user
+    brand_cost = brand_total_cost || calculate_brand_cost
+    (brand.wallet_balance || 0) >= brand_cost
   end
 
   private

@@ -41,8 +41,18 @@ class Brand::SubmissionsController < ApplicationController
 
   # Approve the submitted content
   def approve_content
-    @submission.approve_content!
-    redirect_to brand_submissions_path(tab: 'in_progress'), notice: "Content approved! #{@submission.user.name} will be notified."
+    # Check for sufficient funds first
+    unless @submission.brand_has_sufficient_funds?
+      redirect_to brand_submission_path(@submission), alert: "Insufficient wallet balance. Please add funds to approve this content. Required: #{@submission.formatted_brand_cost}"
+      return
+    end
+
+    begin
+      @submission.approve_content!
+      redirect_to brand_submissions_path(tab: 'in_progress'), notice: "Content approved! #{@submission.user.name} has been paid #{@submission.formatted_creator_net}."
+    rescue => e
+      redirect_to brand_submission_path(@submission), alert: "Failed to approve content: #{e.message}"
+    end
   end
 
   # Request revision with feedback

@@ -1,0 +1,404 @@
+<div class="min-h-screen pt-20 pb-16 bg-slate-50">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-8">
+      <div>
+        <h1 class="text-2xl font-bold text-slate-900">Wallet</h1>
+        <p class="text-slate-500 text-sm">Manage your funds and view transaction history</p>
+      </div>
+      <button 
+        onclick="openAddFundsModal()"
+        class="inline-flex items-center gap-2 px-5 py-2.5 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 transition-colors"
+      >
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+        </svg>
+        Add Money
+      </button>
+    </div>
+
+    <!-- Balance Card -->
+    <div class="bg-white border border-slate-200 rounded-xl p-6 mb-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm text-slate-500 mb-1">Available Balance</p>
+          <p class="text-3xl font-bold text-slate-900" id="wallet-balance"><%= current_user.formatted_wallet_balance %></p>
+        </div>
+        <div class="w-14 h-14 bg-indigo-100 rounded-xl flex items-center justify-center">
+          <svg class="w-7 h-7 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats Row -->
+    <div class="grid grid-cols-3 gap-4 mb-8">
+      <div class="bg-white border border-slate-200 rounded-xl p-4">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center">
+            <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+            </svg>
+          </div>
+          <div>
+            <p class="text-xs text-slate-500">Total Added</p>
+            <p class="text-lg font-semibold text-slate-900">₹<%= number_with_delimiter(@total_credited) %></p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="bg-white border border-slate-200 rounded-xl p-4">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 bg-rose-100 rounded-lg flex items-center justify-center">
+            <svg class="w-5 h-5 text-rose-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path>
+            </svg>
+          </div>
+          <div>
+            <p class="text-xs text-slate-500">Total Spent</p>
+            <p class="text-lg font-semibold text-slate-900">₹<%= number_with_delimiter(@total_debited) %></p>
+          </div>
+        </div>
+      </div>
+      
+      <% if current_user.creator? %>
+        <div class="bg-white border border-slate-200 rounded-xl p-4">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
+              <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+            </div>
+            <div>
+              <p class="text-xs text-slate-500">Total Earned</p>
+              <p class="text-lg font-semibold text-slate-900">₹<%= number_with_delimiter(@total_payouts) %></p>
+            </div>
+          </div>
+        </div>
+      <% else %>
+        <div class="bg-white border border-slate-200 rounded-xl p-4">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-violet-100 rounded-lg flex items-center justify-center">
+              <svg class="w-5 h-5 text-violet-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+            </div>
+            <div>
+              <p class="text-xs text-slate-500">Transactions</p>
+              <p class="text-lg font-semibold text-slate-900"><%= @transactions.count %></p>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Transaction History -->
+    <div class="bg-white border border-slate-200 rounded-xl overflow-hidden">
+      <div class="px-6 py-4 border-b border-slate-100">
+        <h2 class="font-semibold text-slate-900">Transaction History</h2>
+      </div>
+      
+      <% if @transactions.any? %>
+        <div class="divide-y divide-slate-100">
+          <% @transactions.each do |transaction| %>
+            <div class="px-6 py-4 hover:bg-slate-50 transition-colors cursor-pointer" 
+                 onclick="showTransactionDetails(<%= transaction.id %>)"
+                 data-transaction-id="<%= transaction.id %>">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-4">
+                  <!-- Icon -->
+                  <div class="w-10 h-10 <%= transaction.icon_bg %> rounded-full flex items-center justify-center">
+                    <% if transaction.credit? %>
+                      <svg class="w-5 h-5 <%= transaction.icon_color %>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                      </svg>
+                    <% elsif transaction.debit? %>
+                      <svg class="w-5 h-5 <%= transaction.icon_color %>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path>
+                      </svg>
+                    <% elsif transaction.payout? %>
+                      <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                      </svg>
+                    <% else %>
+                      <svg class="w-5 h-5 <%= transaction.icon_color %>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                      </svg>
+                    <% end %>
+                  </div>
+                  
+                  <!-- Details -->
+                  <div>
+                    <p class="font-medium text-slate-900"><%= transaction.description %></p>
+                    <p class="text-sm text-slate-500"><%= transaction.created_at.strftime('%b %d, %Y • %I:%M %p') %></p>
+                    <% if transaction.related_submission %>
+                      <p class="text-xs text-slate-400 mt-0.5">
+                        Campaign: <%= transaction.related_submission.campaign.title.truncate(30) %>
+                      </p>
+                    <% end %>
+                  </div>
+                </div>
+                
+                <!-- Amount -->
+                <div class="text-right">
+                  <p class="font-semibold <%= transaction.amount_color %>"><%= transaction.formatted_amount %></p>
+                  <% if transaction.debit? && transaction.related_submission %>
+                    <button 
+                      class="text-xs text-indigo-600 hover:text-indigo-700 mt-1"
+                      onclick="event.stopPropagation(); showTransactionDetails(<%= transaction.id %>)"
+                    >
+                      View breakdown →
+                    </button>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <div class="px-6 py-12 text-center">
+          <div class="w-16 h-16 mx-auto mb-4 bg-slate-100 rounded-full flex items-center justify-center">
+            <svg class="w-8 h-8 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            </svg>
+          </div>
+          <h3 class="font-medium text-slate-900 mb-1">No transactions yet</h3>
+          <p class="text-sm text-slate-500">Your transaction history will appear here</p>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<!-- Add Funds Modal -->
+<div id="add-funds-modal" class="fixed inset-0 z-50 hidden" aria-modal="true">
+  <div class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm" onclick="closeAddFundsModal()"></div>
+  <div class="fixed inset-0 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-xl max-w-md w-full p-6 relative">
+      <button onclick="closeAddFundsModal()" class="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+      
+      <div class="text-center mb-6">
+        <div class="w-16 h-16 mx-auto mb-4 bg-indigo-100 rounded-full flex items-center justify-center">
+          <svg class="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+          </svg>
+        </div>
+        <h3 class="text-xl font-bold text-slate-900">Add Money to Wallet</h3>
+        <p class="text-sm text-slate-500 mt-1">Enter the amount you want to add</p>
+      </div>
+      
+      <div class="mb-6">
+        <label class="block text-sm font-medium text-slate-700 mb-2">Amount (₹)</label>
+        <div class="relative">
+          <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 font-medium text-lg">₹</span>
+          <input 
+            type="number" 
+            id="add-funds-amount" 
+            class="w-full pl-10 pr-4 py-3 text-lg font-medium bg-white border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+            placeholder="1,000"
+            min="100"
+            max="1000000"
+            step="100"
+          >
+        </div>
+        <p class="text-xs text-slate-500 mt-2">Minimum ₹100, Maximum ₹10,00,000</p>
+      </div>
+      
+      <!-- Quick amount buttons -->
+      <div class="grid grid-cols-4 gap-2 mb-6">
+        <button onclick="setAmount(500)" class="py-2 text-sm font-medium text-slate-700 bg-slate-100 rounded-lg hover:bg-slate-200 transition-colors">₹500</button>
+        <button onclick="setAmount(1000)" class="py-2 text-sm font-medium text-slate-700 bg-slate-100 rounded-lg hover:bg-slate-200 transition-colors">₹1,000</button>
+        <button onclick="setAmount(5000)" class="py-2 text-sm font-medium text-slate-700 bg-slate-100 rounded-lg hover:bg-slate-200 transition-colors">₹5,000</button>
+        <button onclick="setAmount(10000)" class="py-2 text-sm font-medium text-slate-700 bg-slate-100 rounded-lg hover:bg-slate-200 transition-colors">₹10,000</button>
+      </div>
+      
+      <button 
+        onclick="addFunds()"
+        id="add-funds-btn"
+        class="w-full py-3 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition-colors flex items-center justify-center gap-2"
+      >
+        <span>Add Money</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Transaction Details Modal -->
+<div id="transaction-details-modal" class="fixed inset-0 z-50 hidden" aria-modal="true">
+  <div class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm" onclick="closeTransactionDetails()"></div>
+  <div class="fixed inset-0 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-xl max-w-md w-full p-6 relative">
+      <button onclick="closeTransactionDetails()" class="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+      
+      <h3 class="text-lg font-bold text-slate-900 mb-4">Transaction Details</h3>
+      
+      <div id="transaction-details-content">
+        <!-- Populated by JavaScript -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function openAddFundsModal() {
+  document.getElementById('add-funds-modal').classList.remove('hidden');
+  document.body.classList.add('overflow-hidden');
+}
+
+function closeAddFundsModal() {
+  document.getElementById('add-funds-modal').classList.add('hidden');
+  document.body.classList.remove('overflow-hidden');
+}
+
+function setAmount(amount) {
+  document.getElementById('add-funds-amount').value = amount;
+}
+
+function addFunds() {
+  const amount = parseInt(document.getElementById('add-funds-amount').value);
+  const btn = document.getElementById('add-funds-btn');
+  
+  if (!amount || amount < 100) {
+    alert('Please enter a valid amount (minimum ₹100)');
+    return;
+  }
+  
+  btn.disabled = true;
+  btn.innerHTML = '<svg class="animate-spin h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Adding...';
+  
+  fetch('<%= add_funds_wallet_path %>', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
+    },
+    body: JSON.stringify({ amount: amount })
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      document.getElementById('wallet-balance').textContent = data.formatted_balance;
+      closeAddFundsModal();
+      // Show success notification
+      showToast('Money added successfully!', 'success');
+      // Reload to show new transaction
+      setTimeout(() => location.reload(), 1000);
+    } else {
+      alert(data.message || 'Failed to add funds');
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    alert('Something went wrong. Please try again.');
+  })
+  .finally(() => {
+    btn.disabled = false;
+    btn.innerHTML = '<span>Add Money</span>';
+  });
+}
+
+function showTransactionDetails(transactionId) {
+  const modal = document.getElementById('transaction-details-modal');
+  const content = document.getElementById('transaction-details-content');
+  
+  content.innerHTML = '<div class="text-center py-8"><div class="animate-spin w-8 h-8 border-4 border-indigo-600 border-t-transparent rounded-full mx-auto"></div></div>';
+  modal.classList.remove('hidden');
+  document.body.classList.add('overflow-hidden');
+  
+  fetch(`<%= wallet_path %>/transaction/${transactionId}`, {
+    headers: {
+      'Accept': 'application/json'
+    }
+  })
+  .then(response => response.json())
+  .then(data => {
+    let html = `
+      <div class="space-y-4">
+        <div class="flex justify-between items-center py-2 border-b border-slate-100">
+          <span class="text-slate-500">Amount</span>
+          <span class="font-semibold ${data.transaction_type === 'credit' || data.transaction_type === 'payout' ? 'text-emerald-600' : 'text-rose-600'}">${data.formatted_amount}</span>
+        </div>
+        <div class="flex justify-between items-center py-2 border-b border-slate-100">
+          <span class="text-slate-500">Type</span>
+          <span class="font-medium text-slate-900 capitalize">${data.transaction_type}</span>
+        </div>
+        <div class="flex justify-between items-center py-2 border-b border-slate-100">
+          <span class="text-slate-500">Description</span>
+          <span class="font-medium text-slate-900">${data.description}</span>
+        </div>
+        <div class="flex justify-between items-center py-2 border-b border-slate-100">
+          <span class="text-slate-500">Date</span>
+          <span class="text-slate-700">${data.created_at}</span>
+        </div>
+    `;
+    
+    if (data.submission) {
+      html += `
+        <div class="mt-4 p-4 bg-slate-50 rounded-lg">
+          <h4 class="font-semibold text-slate-900 mb-3">Payment Breakdown</h4>
+          <div class="space-y-2 text-sm">
+            <div class="flex justify-between">
+              <span class="text-slate-500">Campaign</span>
+              <span class="text-slate-900">${data.submission.campaign_title}</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-500">Creator Payout</span>
+              <span class="text-slate-900">${data.submission.creator_payout}</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-500">Platform Fee (10%)</span>
+              <span class="text-slate-900">${data.submission.platform_fee}</span>
+            </div>
+            <div class="flex justify-between pt-2 border-t border-slate-200">
+              <span class="font-medium text-slate-700">Total Charged</span>
+              <span class="font-semibold text-slate-900">${data.submission.brand_total}</span>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+    
+    html += '</div>';
+    content.innerHTML = html;
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    content.innerHTML = '<p class="text-center text-slate-500 py-8">Failed to load transaction details</p>';
+  });
+}
+
+function closeTransactionDetails() {
+  document.getElementById('transaction-details-modal').classList.add('hidden');
+  document.body.classList.remove('overflow-hidden');
+}
+
+function showToast(message, type = 'success') {
+  const toast = document.createElement('div');
+  toast.className = `fixed bottom-4 right-4 px-6 py-3 rounded-lg shadow-lg text-white ${type === 'success' ? 'bg-emerald-600' : 'bg-rose-600'} z-50 animate-slide-in`;
+  toast.textContent = message;
+  document.body.appendChild(toast);
+  
+  setTimeout(() => {
+    toast.classList.add('animate-slide-out');
+    setTimeout(() => toast.remove(), 300);
+  }, 3000);
+}
+
+// Close modals on escape
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    closeAddFundsModal();
+    closeTransactionDetails();
+  }
+});
+</script>
+

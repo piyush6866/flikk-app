@@ -227,29 +227,40 @@
 
 <script>
   // Real-time price calculation
-  document.addEventListener('DOMContentLoaded', function() {
+  function initPriceCalculation() {
     const priceInput = document.querySelector('input[name="campaign[price]"]');
     const estimatePrice = document.getElementById('estimate-price');
     const platformFee = document.getElementById('platform-fee');
     const totalPrice = document.getElementById('total-price');
 
-    function formatNumber(num) {
-      return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    }
+    // Avoid duplicate listeners
+    if (priceInput && !priceInput.dataset.initialized) {
+      priceInput.dataset.initialized = 'true';
 
-    function updateEstimate() {
-      const price = parseInt(priceInput?.value) || 0;
-      const fee = Math.round(price * 0.10);
-      const total = price + fee;
+      function formatNumber(num) {
+        return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      }
 
-      if (estimatePrice) estimatePrice.textContent = formatNumber(price);
-      if (platformFee) platformFee.textContent = formatNumber(fee);
-      if (totalPrice) totalPrice.textContent = formatNumber(total);
-    }
+      function updateEstimate() {
+        const price = parseInt(priceInput.value) || 0;
+        const fee = Math.round(price * 0.10);
+        const total = price + fee;
 
-    if (priceInput) {
+        if (estimatePrice) estimatePrice.textContent = formatNumber(price);
+        if (platformFee) platformFee.textContent = formatNumber(fee);
+        if (totalPrice) totalPrice.textContent = formatNumber(total);
+      }
+
       priceInput.addEventListener('input', updateEstimate);
+      priceInput.addEventListener('change', updateEstimate);
+      priceInput.addEventListener('keyup', updateEstimate);
+      
+      // Initial calculation
       updateEstimate();
     }
-  });
+  }
+
+  document.addEventListener('DOMContentLoaded', initPriceCalculation);
+  document.addEventListener('turbo:load', initPriceCalculation);
+  document.addEventListener('turbo:render', initPriceCalculation);
 </script>

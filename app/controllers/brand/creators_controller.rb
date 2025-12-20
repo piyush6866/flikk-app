@@ -22,8 +22,6 @@ class Brand::CreatorsController < ApplicationController
     when 'favorites'
       # TODO: Implement favorites functionality
       User.none
-    when 'ad_performers'
-      User.creators.where('rating >= ? OR rating IS NULL', 4.5).order(rating: :desc)
     else
       User.creators
     end

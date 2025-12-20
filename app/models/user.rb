@@ -12,6 +12,7 @@ class User < ApplicationRecord
   has_many :campaigns, dependent: :destroy
   has_many :submissions, dependent: :destroy
   has_many :applied_campaigns, through: :submissions, source: :campaign
+  has_many :wallet_transactions, dependent: :destroy
 
   # Creator status enum
   enum creator_status: {
@@ -74,6 +75,66 @@ class User < ApplicationRecord
 
   def initials
     display_name.to_s.split.map(&:first).join.upcase[0..1]
+  end
+
+  # Wallet methods
+  def formatted_wallet_balance
+    balance = wallet_balance || 0
+    "₹#{balance.to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1,').reverse}"
+  end
+
+  def add_to_wallet(amount, description: 'Wallet top-up')
+    return false if amount <= 0
+
+    transaction do
+      increment!(:wallet_balance, amount)
+      wallet_transactions.create!(
+        amount: amount,
+        transaction_type: :credit,
+        description: description
+      )
+    end
+    true
+  rescue => e
+    Rails.logger.error "Failed to add wallet funds: #{e.message}"
+    false
+  end
+
+  def deduct_from_wallet(amount, submission: nil, description: 'Payment')
+    return false if amount <= 0
+    return false if (wallet_balance || 0) < amount
+
+    transaction do
+      decrement!(:wallet_balance, amount)
+      wallet_transactions.create!(
+        amount: amount,
+        transaction_type: :debit,
+        description: description,
+        related_submission: submission
+      )
+    end
+    true
+  rescue => e
+    Rails.logger.error "Failed to deduct wallet funds: #{e.message}"
+    false
+  end
+
+  def credit_payout(amount, submission:, description: 'Creator payout')
+    return false if amount <= 0
+
+    transaction do
+      increment!(:wallet_balance, amount)
+      wallet_transactions.create!(
+        amount: amount,
+        transaction_type: :payout,
+        description: description,
+        related_submission: submission
+      )
+    end
+    true
+  rescue => e
+    Rails.logger.error "Failed to credit payout: #{e.message}"
+    false
   end
 
   private

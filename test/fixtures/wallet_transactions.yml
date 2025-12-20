@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  amount: 1
+  transaction_type: 1
+  description: MyString
+  related_submission: one
+
+two:
+  user: two
+  amount: 1
+  transaction_type: 1
+  description: MyString
+  related_submission: two
