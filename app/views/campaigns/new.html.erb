@@ -226,41 +226,60 @@
 </div>
 
 <script>
-  // Real-time price calculation
-  function initPriceCalculation() {
-    const priceInput = document.querySelector('input[name="campaign[price]"]');
-    const estimatePrice = document.getElementById('estimate-price');
-    const platformFee = document.getElementById('platform-fee');
-    const totalPrice = document.getElementById('total-price');
+  // Real-time price calculation - run immediately
+  (function() {
+    function formatNumber(num) {
+      return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
 
-    // Avoid duplicate listeners
-    if (priceInput && !priceInput.dataset.initialized) {
-      priceInput.dataset.initialized = 'true';
+    function updateEstimate() {
+      const priceInput = document.querySelector('input[name="campaign[price]"]');
+      const estimatePrice = document.getElementById('estimate-price');
+      const platformFee = document.getElementById('platform-fee');
+      const totalPrice = document.getElementById('total-price');
 
-      function formatNumber(num) {
-        return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-      }
+      if (!priceInput || !estimatePrice || !platformFee || !totalPrice) return;
 
-      function updateEstimate() {
-        const price = parseInt(priceInput.value) || 0;
-        const fee = Math.round(price * 0.10);
-        const total = price + fee;
+      const price = parseInt(priceInput.value) || 0;
+      const fee = Math.round(price * 0.10);
+      const total = price + fee;
 
-        if (estimatePrice) estimatePrice.textContent = formatNumber(price);
-        if (platformFee) platformFee.textContent = formatNumber(fee);
-        if (totalPrice) totalPrice.textContent = formatNumber(total);
-      }
+      estimatePrice.textContent = formatNumber(price);
+      platformFee.textContent = formatNumber(fee);
+      totalPrice.textContent = formatNumber(total);
+    }
 
-      priceInput.addEventListener('input', updateEstimate);
-      priceInput.addEventListener('change', updateEstimate);
-      priceInput.addEventListener('keyup', updateEstimate);
-      
-      // Initial calculation
+    function initPriceCalculation() {
+      const priceInput = document.querySelector('input[name="campaign[price]"]');
+      if (!priceInput) return;
+
+      // Remove old listeners by cloning
+      const newInput = priceInput.cloneNode(true);
+      priceInput.parentNode.replaceChild(newInput, priceInput);
+
+      // Add listeners to the new input
+      newInput.addEventListener('input', updateEstimate);
+      newInput.addEventListener('change', updateEstimate);
+      newInput.addEventListener('keyup', updateEstimate);
+      newInput.addEventListener('blur', updateEstimate);
+
+      // Run initial calculation
       updateEstimate();
     }
-  }
 
-  document.addEventListener('DOMContentLoaded', initPriceCalculation);
-  document.addEventListener('turbo:load', initPriceCalculation);
-  document.addEventListener('turbo:render', initPriceCalculation);
+    // Run on all possible events
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initPriceCalculation);
+    } else {
+      initPriceCalculation();
+    }
+    
+    document.addEventListener('turbo:load', initPriceCalculation);
+    document.addEventListener('turbo:render', initPriceCalculation);
+    document.addEventListener('turbo:frame-load', initPriceCalculation);
+    
+    // Also run after a short delay as fallback
+    setTimeout(initPriceCalculation, 100);
+    setTimeout(updateEstimate, 200);
+  })();
 </script>
