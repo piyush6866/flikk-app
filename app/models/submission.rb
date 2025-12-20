@@ -28,7 +28,7 @@ class Submission < ApplicationRecord
   scope :pending_approval, -> { where(status: :applied) }
   scope :ready_to_upload, -> { where(status: [:approved_to_upload, :revision_requested]) }
   scope :under_review, -> { where(status: :uploaded) }
-  scope :completed, -> { where(status: [:content_approved, :paid]) }
+  scope :completed, -> { where(status: :paid) }  # Paid = completed (money in creator wallet)
   scope :recent, -> { order(created_at: :desc) }
 
   # Callbacks
@@ -145,7 +145,8 @@ class Submission < ApplicationRecord
     creator_payout = calculate_creator_net
     creator.credit_payout(creator_payout, submission: self, description: "Payout for #{campaign.title.truncate(30)}")
     
-    update!(status: :content_approved, approved_at: Time.current)
+    # Mark as paid since money is now in creator's wallet
+    update!(status: :paid, approved_at: Time.current, paid_at: Time.current)
   end
 
   def request_revision!(feedback)
