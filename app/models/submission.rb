@@ -37,15 +37,30 @@ class Submission < ApplicationRecord
 
   # Helper methods
   def formatted_payout
-    "₹#{payout_amount.to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1,').reverse}"
+    amount = payout_amount || 0
+    "₹#{amount.to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1,').reverse}"
   end
 
   def formatted_creator_net
-    "₹#{creator_net_payout.to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1,').reverse}"
+    # Calculate on the fly if not set
+    amount = creator_net_payout || calculate_creator_net
+    "₹#{amount.to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1,').reverse}"
   end
 
   def formatted_brand_cost
-    "₹#{brand_total_cost.to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1,').reverse}"
+    # Calculate on the fly if not set
+    amount = brand_total_cost || calculate_brand_cost
+    "₹#{amount.to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1,').reverse}"
+  end
+
+  def calculate_creator_net
+    base = payout_amount || 0
+    base - (base * CREATOR_FEE_PERCENT / 100.0).round
+  end
+
+  def calculate_brand_cost
+    base = payout_amount || 0
+    base + (base * BRAND_FEE_PERCENT / 100.0).round
   end
 
   def status_label
