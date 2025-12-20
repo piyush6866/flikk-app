@@ -5,7 +5,7 @@
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
       <div>
         <h1 class="text-2xl font-semibold text-slate-900">Dashboard</h1>
-        <p class="text-sm text-slate-500 mt-0.5">Manage your campaigns and creators</p>
+        <p class="text-sm text-slate-500 mt-0.5">Manage campaigns, applications and submissions</p>
       </div>
       <div class="flex items-center gap-4">
         <div class="flex items-center gap-6 text-sm mr-4">
@@ -28,123 +28,296 @@
       </div>
     </div>
 
-    <!-- Quick Stats Row -->
-    <div class="flex items-center gap-6 mb-6 overflow-x-auto pb-2">
-      <div class="flex items-center gap-2 px-3 py-1.5 bg-white rounded-full border border-slate-200 text-sm whitespace-nowrap">
-        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-        <span class="text-slate-600">Active</span>
-        <span class="font-medium text-slate-900"><%= @active_campaigns %></span>
-      </div>
-      <div class="flex items-center gap-2 px-3 py-1.5 bg-white rounded-full border border-slate-200 text-sm whitespace-nowrap">
-        <span class="w-2 h-2 rounded-full bg-slate-400"></span>
-        <span class="text-slate-600">Total Campaigns</span>
-        <span class="font-medium text-slate-900"><%= @total_campaigns %></span>
-      </div>
-      <div class="flex items-center gap-2 px-3 py-1.5 bg-white rounded-full border border-slate-200 text-sm whitespace-nowrap">
-        <span class="w-2 h-2 rounded-full bg-amber-400"></span>
-        <span class="text-slate-600">Applications</span>
-        <span class="font-medium text-slate-900"><%= @pending_applications %></span>
-      </div>
-      <div class="flex items-center gap-2 px-3 py-1.5 bg-white rounded-full border border-slate-200 text-sm whitespace-nowrap">
-        <span class="w-2 h-2 rounded-full bg-blue-500"></span>
-        <span class="text-slate-600">In Progress</span>
-        <span class="font-medium text-slate-900"><%= @in_progress %></span>
-      </div>
-      <div class="flex items-center gap-2 px-3 py-1.5 bg-white rounded-full border border-slate-200 text-sm whitespace-nowrap">
-        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-        <span class="text-slate-600">Completed</span>
-        <span class="font-medium text-slate-900"><%= @completed %></span>
-      </div>
+    <!-- Clickable Stats Row -->
+    <div class="flex items-center gap-3 mb-6 overflow-x-auto pb-2">
+      <%= link_to brand_dashboard_path(tab: 'campaigns'), class: "flex items-center gap-2 px-4 py-2 rounded-lg border text-sm whitespace-nowrap transition-colors #{@tab == 'campaigns' ? 'bg-slate-900 text-white border-slate-900' : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300'}" do %>
+        <span class="w-2 h-2 rounded-full <%= @tab == 'campaigns' ? 'bg-white' : 'bg-emerald-500' %>"></span>
+        <span>Active</span>
+        <span class="font-semibold"><%= @active_campaigns_count %></span>
+      <% end %>
+      
+      <%= link_to brand_dashboard_path(tab: 'all_campaigns'), class: "flex items-center gap-2 px-4 py-2 rounded-lg border text-sm whitespace-nowrap transition-colors #{@tab == 'all_campaigns' ? 'bg-slate-900 text-white border-slate-900' : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300'}" do %>
+        <span class="w-2 h-2 rounded-full <%= @tab == 'all_campaigns' ? 'bg-white' : 'bg-slate-400' %>"></span>
+        <span>All Campaigns</span>
+        <span class="font-semibold"><%= @total_campaigns %></span>
+      <% end %>
+      
+      <%= link_to brand_dashboard_path(tab: 'applications'), class: "flex items-center gap-2 px-4 py-2 rounded-lg border text-sm whitespace-nowrap transition-colors #{@tab == 'applications' ? 'bg-slate-900 text-white border-slate-900' : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300'}" do %>
+        <span class="w-2 h-2 rounded-full <%= @tab == 'applications' ? 'bg-white' : 'bg-amber-400' %>"></span>
+        <span>Applications</span>
+        <span class="font-semibold"><%= @applications_count %></span>
+      <% end %>
+      
+      <%= link_to brand_dashboard_path(tab: 'in_progress'), class: "flex items-center gap-2 px-4 py-2 rounded-lg border text-sm whitespace-nowrap transition-colors #{@tab == 'in_progress' ? 'bg-slate-900 text-white border-slate-900' : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300'}" do %>
+        <span class="w-2 h-2 rounded-full <%= @tab == 'in_progress' ? 'bg-white' : 'bg-blue-500' %>"></span>
+        <span>In Progress</span>
+        <span class="font-semibold"><%= @in_progress_count %></span>
+      <% end %>
+      
+      <%= link_to brand_dashboard_path(tab: 'completed'), class: "flex items-center gap-2 px-4 py-2 rounded-lg border text-sm whitespace-nowrap transition-colors #{@tab == 'completed' ? 'bg-slate-900 text-white border-slate-900' : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300'}" do %>
+        <span class="w-2 h-2 rounded-full <%= @tab == 'completed' ? 'bg-white' : 'bg-emerald-500' %>"></span>
+        <span>Completed</span>
+        <span class="font-semibold"><%= @completed_count %></span>
+      <% end %>
     </div>
 
-    <!-- Campaigns List -->
-    <div class="bg-white rounded-xl border border-slate-200 shadow-sm mb-6">
-      <div class="flex items-center justify-between px-5 py-4 border-b border-slate-200">
-        <h2 class="font-medium text-slate-900">Your Campaigns</h2>
-        <% if @campaigns.any? %>
-          <span class="text-xs text-slate-500"><%= @campaigns.count %> campaign<%= @campaigns.count == 1 ? '' : 's' %></span>
-        <% end %>
-      </div>
+    <!-- Main Content Area -->
+    <div class="bg-white rounded-xl border border-slate-200 shadow-sm">
       
-      <% if @campaigns.any? %>
-        <div class="divide-y divide-slate-100">
-          <% @campaigns.each do |campaign| %>
-            <div class="flex items-center justify-between p-4 hover:bg-slate-50 transition-colors">
-              <div class="flex items-center gap-3 flex-1 min-w-0">
-                <!-- Status Icon -->
-                <div class="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 bg-slate-100">
-                  <% case campaign.status %>
-                  <% when 'live' %>
-                    <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.636 18.364a9 9 0 010-12.728m12.728 0a9 9 0 010 12.728m-9.9-2.829a5 5 0 010-7.07m7.072 0a5 5 0 010 7.07M13 12a1 1 0 11-2 0 1 1 0 012 0z"></path>
-                    </svg>
-                  <% when 'draft' %>
-                    <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-                    </svg>
-                  <% else %>
-                    <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
-                  <% end %>
-                </div>
-                
-                <!-- Campaign Info -->
-                <div class="min-w-0 flex-1">
-                  <div class="flex items-center gap-2">
-                    <h3 class="font-medium text-slate-900 text-sm truncate"><%= campaign.product_name %></h3>
-                    <span class="flex-shrink-0 px-1.5 py-0.5 text-xs font-medium rounded
-                      <%= case campaign.status
-                          when 'live' then 'bg-emerald-100 text-emerald-700'
-                          when 'draft' then 'bg-slate-100 text-slate-600'
-                          when 'completed' then 'bg-blue-100 text-blue-700'
-                          else 'bg-slate-100 text-slate-500'
-                          end %>">
-                      <%= campaign.status.titleize %>
-                    </span>
+      <% if @tab == 'campaigns' || @tab == 'all_campaigns' %>
+        <!-- Campaigns Tab -->
+        <div class="px-5 py-4 border-b border-slate-200">
+          <h2 class="font-medium text-slate-900"><%= @tab == 'campaigns' ? 'Active Campaigns' : 'All Campaigns' %></h2>
+        </div>
+        
+        <% campaigns_to_show = @tab == 'campaigns' ? @campaigns.active : @campaigns %>
+        <% if campaigns_to_show.any? %>
+          <div class="divide-y divide-slate-100">
+            <% campaigns_to_show.each do |campaign| %>
+              <%= link_to campaign_path(campaign), class: "flex items-center justify-between p-4 hover:bg-slate-50 transition-colors block" do %>
+                <div class="flex items-center gap-3 flex-1 min-w-0">
+                  <div class="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 <%= campaign.live? ? 'bg-emerald-100' : 'bg-slate-100' %>">
+                    <% if campaign.live? %>
+                      <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.636 18.364a9 9 0 010-12.728m12.728 0a9 9 0 010 12.728m-9.9-2.829a5 5 0 010-7.07m7.072 0a5 5 0 010 7.07M13 12a1 1 0 11-2 0 1 1 0 012 0z"></path>
+                      </svg>
+                    <% else %>
+                      <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                      </svg>
+                    <% end %>
                   </div>
-                  <p class="text-xs text-slate-500 mt-0.5 truncate">
-                    <%= campaign.scenario %> • <%= campaign.duration_label %> • <%= campaign.created_at.strftime("%b %d") %>
-                  </p>
+                  
+                  <div class="min-w-0 flex-1">
+                    <div class="flex items-center gap-2">
+                      <h3 class="font-medium text-slate-900 text-sm truncate"><%= campaign.product_name %></h3>
+                      <span class="flex-shrink-0 px-1.5 py-0.5 text-xs font-medium rounded <%= campaign.live? ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-600' %>">
+                        <%= campaign.status.titleize %>
+                      </span>
+                    </div>
+                    <p class="text-xs text-slate-500 mt-0.5 truncate">
+                      <%= campaign.scenario %> • <%= campaign.duration_label %> • <%= campaign.submissions.count %> submissions
+                    </p>
+                  </div>
+                </div>
+
+                <div class="flex items-center gap-4 ml-4">
+                  <div class="text-right">
+                    <p class="text-sm font-semibold text-slate-900"><%= campaign.formatted_price %></p>
+                    <p class="text-xs text-slate-400">per video</p>
+                  </div>
+                  <svg class="w-5 h-5 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                  </svg>
+                </div>
+              <% end %>
+            <% end %>
+          </div>
+        <% else %>
+          <div class="text-center py-12">
+            <p class="text-slate-500 text-sm mb-3">No campaigns yet</p>
+            <%= link_to new_campaign_path, class: "text-sm text-indigo-600 font-medium hover:text-indigo-700" do %>
+              Create your first campaign →
+            <% end %>
+          </div>
+        <% end %>
+
+      <% elsif @tab == 'applications' %>
+        <!-- Applications Tab -->
+        <div class="px-5 py-4 border-b border-slate-200">
+          <h2 class="font-medium text-slate-900">Pending Applications</h2>
+          <p class="text-xs text-slate-500 mt-0.5">Creators waiting for your approval to start working</p>
+        </div>
+        
+        <% if @applications.any? %>
+          <div class="divide-y divide-slate-100">
+            <% @applications.each do |submission| %>
+              <div class="p-4 hover:bg-slate-50 transition-colors">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-3 flex-1 min-w-0">
+                    <div class="w-10 h-10 bg-gradient-to-br from-slate-600 to-slate-700 rounded-full flex items-center justify-center text-white font-medium text-sm flex-shrink-0">
+                      <%= submission.user.initials %>
+                    </div>
+                    
+                    <div class="min-w-0 flex-1">
+                      <div class="flex items-center gap-2">
+                        <h3 class="font-medium text-slate-900 text-sm"><%= submission.user.name %></h3>
+                        <span class="px-1.5 py-0.5 text-xs font-medium rounded bg-amber-100 text-amber-700">Pending</span>
+                      </div>
+                      <p class="text-xs text-slate-500 mt-0.5">
+                        Applied to <span class="font-medium"><%= submission.campaign.product_name %></span> • <%= time_ago_in_words(submission.created_at) %> ago
+                      </p>
+                    </div>
+                  </div>
+
+                  <div class="flex items-center gap-2 ml-4">
+                    <div class="text-right mr-2 hidden sm:block">
+                      <p class="text-sm font-semibold text-slate-900"><%= submission.formatted_brand_cost %></p>
+                      <p class="text-xs text-slate-400">total cost</p>
+                    </div>
+                    <%= button_to approve_creator_brand_submission_path(submission), method: :post, class: "px-3 py-1.5 bg-emerald-600 text-white text-xs font-medium rounded-md hover:bg-emerald-700 transition-colors" do %>
+                      Approve
+                    <% end %>
+                    <%= button_to reject_creator_brand_submission_path(submission), method: :delete, class: "px-3 py-1.5 bg-slate-100 text-slate-600 text-xs font-medium rounded-md hover:bg-slate-200 transition-colors", data: { confirm: "Decline this application?" } do %>
+                      Decline
+                    <% end %>
+                  </div>
                 </div>
               </div>
+            <% end %>
+          </div>
+        <% else %>
+          <div class="text-center py-12">
+            <p class="text-slate-500 text-sm">No pending applications</p>
+          </div>
+        <% end %>
 
-              <!-- Right side -->
-              <div class="flex items-center gap-4 ml-4">
-                <div class="text-right hidden sm:block">
-                  <p class="text-sm font-semibold text-slate-900"><%= campaign.formatted_price %></p>
-                  <p class="text-xs text-slate-400">per video</p>
+      <% elsif @tab == 'in_progress' %>
+        <!-- In Progress Tab -->
+        <div class="px-5 py-4 border-b border-slate-200">
+          <h2 class="font-medium text-slate-900">In Progress</h2>
+          <p class="text-xs text-slate-500 mt-0.5">Submissions awaiting upload or ready for review</p>
+        </div>
+        
+        <% if @in_progress_submissions.any? %>
+          <div class="divide-y divide-slate-100">
+            <% @in_progress_submissions.each do |submission| %>
+              <div class="p-4 hover:bg-slate-50 transition-colors">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-3 flex-1 min-w-0">
+                    <div class="w-10 h-10 bg-gradient-to-br from-slate-600 to-slate-700 rounded-full flex items-center justify-center text-white font-medium text-sm flex-shrink-0">
+                      <%= submission.user.initials %>
+                    </div>
+                    
+                    <div class="min-w-0 flex-1">
+                      <div class="flex items-center gap-2">
+                        <h3 class="font-medium text-slate-900 text-sm"><%= submission.user.name %></h3>
+                        <span class="px-1.5 py-0.5 text-xs font-medium rounded 
+                          <%= case submission.status
+                              when 'approved_to_upload' then 'bg-indigo-100 text-indigo-700'
+                              when 'uploaded' then 'bg-blue-100 text-blue-700'
+                              when 'revision_requested' then 'bg-rose-100 text-rose-700'
+                              end %>">
+                          <%= submission.status_label %>
+                        </span>
+                      </div>
+                      <p class="text-xs text-slate-500 mt-0.5">
+                        <span class="font-medium"><%= submission.campaign.product_name %></span> • <%= submission.campaign.scenario %>
+                      </p>
+                    </div>
+                  </div>
+
+                  <div class="flex items-center gap-3 ml-4">
+                    <% if submission.uploaded? %>
+                      <!-- Show content preview for uploaded submissions -->
+                      <% if submission.video.attached? %>
+                        <button onclick="openContentModal('<%= rails_blob_url(submission.video) %>', 'video', '<%= submission.user.name %>', '<%= submission.campaign.product_name %>', <%= submission.id %>)" class="flex items-center gap-2 px-3 py-1.5 bg-indigo-600 text-white text-xs font-medium rounded-md hover:bg-indigo-700 transition-colors">
+                          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                          </svg>
+                          Review Video
+                        </button>
+                      <% elsif submission.external_link.present? %>
+                        <button onclick="openContentModal('<%= submission.external_link %>', 'link', '<%= submission.user.name %>', '<%= submission.campaign.product_name %>', <%= submission.id %>)" class="flex items-center gap-2 px-3 py-1.5 bg-indigo-600 text-white text-xs font-medium rounded-md hover:bg-indigo-700 transition-colors">
+                          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                          </svg>
+                          Review Link
+                        </button>
+                      <% end %>
+                    <% elsif submission.revision_requested? %>
+                      <span class="text-xs text-rose-600">Waiting for revision</span>
+                    <% else %>
+                      <span class="text-xs text-slate-500">Awaiting upload</span>
+                    <% end %>
+                  </div>
                 </div>
                 
-                <div class="flex items-center gap-1">
-                  <%= link_to campaign_path(campaign), class: "p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-md transition-colors" do %>
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-                    </svg>
-                  <% end %>
-                  <%= link_to edit_campaign_path(campaign), class: "p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-md transition-colors" do %>
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-                    </svg>
-                  <% end %>
+                <% if submission.revision_requested? && submission.brand_feedback.present? %>
+                  <div class="mt-3 ml-13 px-3 py-2 bg-rose-50 rounded-md border-l-2 border-rose-300">
+                    <p class="text-xs text-rose-700"><strong>Your feedback:</strong> <%= submission.brand_feedback %></p>
+                  </div>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+        <% else %>
+          <div class="text-center py-12">
+            <p class="text-slate-500 text-sm">No submissions in progress</p>
+          </div>
+        <% end %>
+
+      <% elsif @tab == 'completed' %>
+        <!-- Completed Tab -->
+        <div class="px-5 py-4 border-b border-slate-200">
+          <h2 class="font-medium text-slate-900">Completed Content</h2>
+          <p class="text-xs text-slate-500 mt-0.5">Approved content ready to use</p>
+        </div>
+        
+        <% if @completed_submissions.any? %>
+          <div class="divide-y divide-slate-100">
+            <% @completed_submissions.each do |submission| %>
+              <div class="p-4 hover:bg-slate-50 transition-colors">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-3 flex-1 min-w-0">
+                    <div class="w-10 h-10 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-full flex items-center justify-center text-white font-medium text-sm flex-shrink-0">
+                      <%= submission.user.initials %>
+                    </div>
+                    
+                    <div class="min-w-0 flex-1">
+                      <div class="flex items-center gap-2">
+                        <h3 class="font-medium text-slate-900 text-sm"><%= submission.user.name %></h3>
+                        <span class="px-1.5 py-0.5 text-xs font-medium rounded <%= submission.paid? ? 'bg-green-100 text-green-700' : 'bg-emerald-100 text-emerald-700' %>">
+                          <%= submission.paid? ? 'Paid' : 'Approved' %>
+                        </span>
+                      </div>
+                      <p class="text-xs text-slate-500 mt-0.5">
+                        <span class="font-medium"><%= submission.campaign.product_name %></span> • <%= submission.campaign.scenario %>
+                        <% if submission.approved_at.present? %>
+                          • Approved <%= time_ago_in_words(submission.approved_at) %> ago
+                        <% end %>
+                      </p>
+                    </div>
+                  </div>
+
+                  <div class="flex items-center gap-3 ml-4">
+                    <div class="text-right mr-2 hidden sm:block">
+                      <p class="text-sm font-semibold text-emerald-600"><%= submission.formatted_brand_cost %></p>
+                      <p class="text-xs text-slate-400">paid</p>
+                    </div>
+                    
+                    <% if submission.video.attached? %>
+                      <button onclick="openContentModal('<%= rails_blob_url(submission.video) %>', 'video', '<%= submission.user.name %>', '<%= submission.campaign.product_name %>', <%= submission.id %>)" class="flex items-center gap-2 px-3 py-1.5 bg-slate-900 text-white text-xs font-medium rounded-md hover:bg-slate-800 transition-colors">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        View Video
+                      </button>
+                    <% elsif submission.external_link.present? %>
+                      <a href="<%= submission.external_link %>" target="_blank" class="flex items-center gap-2 px-3 py-1.5 bg-slate-900 text-white text-xs font-medium rounded-md hover:bg-slate-800 transition-colors">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                        </svg>
+                        View Content
+                      </a>
+                    <% end %>
+                  </div>
                 </div>
               </div>
-            </div>
-          <% end %>
-        </div>
-      <% else %>
-        <div class="text-center py-10">
-          <p class="text-slate-500 text-sm mb-3">No campaigns yet</p>
-          <%= link_to new_campaign_path, class: "text-sm text-indigo-600 font-medium hover:text-indigo-700" do %>
-            Create your first campaign →
-          <% end %>
-        </div>
+            <% end %>
+          </div>
+        <% else %>
+          <div class="text-center py-12">
+            <p class="text-slate-500 text-sm">No completed submissions yet</p>
+          </div>
+        <% end %>
       <% end %>
     </div>
 
     <!-- Quick Actions -->
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
       <%= link_to brand_creators_path, class: "flex items-center gap-3 p-4 bg-white rounded-xl border border-slate-200 hover:border-slate-300 transition-colors" do %>
         <div class="w-10 h-10 bg-slate-100 rounded-lg flex items-center justify-center">
           <svg class="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -153,34 +326,180 @@
         </div>
         <div>
           <h3 class="text-sm font-medium text-slate-900">Browse Creators</h3>
-          <p class="text-xs text-slate-500">Find the perfect match</p>
+          <p class="text-xs text-slate-500">Find creators for your campaigns</p>
         </div>
       <% end %>
 
-      <%= link_to brand_submissions_path, class: "flex items-center gap-3 p-4 bg-white rounded-xl border border-slate-200 hover:border-slate-300 transition-colors" do %>
+      <%= link_to new_campaign_path, class: "flex items-center gap-3 p-4 bg-white rounded-xl border border-slate-200 hover:border-slate-300 transition-colors" do %>
         <div class="w-10 h-10 bg-slate-100 rounded-lg flex items-center justify-center">
           <svg class="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
           </svg>
         </div>
         <div>
-          <h3 class="text-sm font-medium text-slate-900">Applications</h3>
-          <p class="text-xs text-slate-500">Review submissions</p>
+          <h3 class="text-sm font-medium text-slate-900">Create Campaign</h3>
+          <p class="text-xs text-slate-500">Post a new video brief</p>
         </div>
       <% end %>
-
-      <div class="flex items-center gap-3 p-4 bg-white rounded-xl border border-slate-200 opacity-60">
-        <div class="w-10 h-10 bg-slate-100 rounded-lg flex items-center justify-center">
-          <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-          </svg>
-        </div>
-        <div>
-          <h3 class="text-sm font-medium text-slate-500">Get Help</h3>
-          <p class="text-xs text-slate-400">Coming soon</p>
-        </div>
-      </div>
     </div>
 
   </div>
 </div>
+
+<!-- Content Review Modal -->
+<div id="content-modal" class="fixed inset-0 z-50 hidden">
+  <div class="absolute inset-0 bg-black/60" onclick="closeContentModal()"></div>
+  <div class="absolute inset-4 sm:inset-8 md:inset-16 lg:inset-24 bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden">
+    <!-- Modal Header -->
+    <div class="flex items-center justify-between px-6 py-4 border-b border-slate-200">
+      <div>
+        <h3 id="modal-title" class="font-semibold text-slate-900">Review Content</h3>
+        <p id="modal-subtitle" class="text-sm text-slate-500"></p>
+      </div>
+      <button onclick="closeContentModal()" class="p-2 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100 transition-colors">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
+    
+    <!-- Modal Content -->
+    <div class="flex-1 flex items-center justify-center p-6 bg-slate-900">
+      <div id="video-container" class="hidden w-full max-w-2xl aspect-[9/16] max-h-full">
+        <video id="modal-video" controls class="w-full h-full object-contain rounded-lg">
+          Your browser does not support the video tag.
+        </video>
+      </div>
+      <div id="link-container" class="hidden text-center">
+        <div class="w-20 h-20 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-4">
+          <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+          </svg>
+        </div>
+        <p class="text-white text-lg mb-4">External Video Link</p>
+        <a id="modal-external-link" href="#" target="_blank" class="inline-flex items-center gap-2 px-6 py-3 bg-white text-slate-900 font-medium rounded-lg hover:bg-slate-100 transition-colors">
+          Open in New Tab
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+          </svg>
+        </a>
+      </div>
+    </div>
+    
+    <!-- Modal Footer (Actions) -->
+    <div id="modal-actions" class="px-6 py-4 border-t border-slate-200 bg-slate-50">
+      <div class="flex items-center justify-between">
+        <div id="modal-feedback-section" class="hidden flex-1 mr-4">
+          <input type="text" id="modal-feedback-input" placeholder="Enter feedback for revision..." class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+        </div>
+        <div class="flex items-center gap-3">
+          <button id="btn-request-revision" onclick="toggleFeedback()" class="px-4 py-2 bg-white border border-slate-300 text-slate-700 font-medium rounded-lg hover:bg-slate-50 transition-colors text-sm">
+            Request Revision
+          </button>
+          <button id="btn-send-revision" onclick="sendRevision()" class="hidden px-4 py-2 bg-amber-600 text-white font-medium rounded-lg hover:bg-amber-700 transition-colors text-sm">
+            Send Revision Request
+          </button>
+          <form id="approve-form" method="post" class="inline">
+            <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+            <button type="submit" class="px-4 py-2 bg-emerald-600 text-white font-medium rounded-lg hover:bg-emerald-700 transition-colors text-sm">
+              Approve Content
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  let currentSubmissionId = null;
+  
+  function openContentModal(url, type, creatorName, campaignName, submissionId) {
+    const modal = document.getElementById('content-modal');
+    const videoContainer = document.getElementById('video-container');
+    const linkContainer = document.getElementById('link-container');
+    const modalVideo = document.getElementById('modal-video');
+    const modalLink = document.getElementById('modal-external-link');
+    const modalTitle = document.getElementById('modal-title');
+    const modalSubtitle = document.getElementById('modal-subtitle');
+    const approveForm = document.getElementById('approve-form');
+    
+    currentSubmissionId = submissionId;
+    modalTitle.textContent = 'Content from ' + creatorName;
+    modalSubtitle.textContent = campaignName;
+    
+    // Set approve form action
+    approveForm.action = '/brand/submissions/' + submissionId + '/approve_content';
+    
+    if (type === 'video') {
+      videoContainer.classList.remove('hidden');
+      linkContainer.classList.add('hidden');
+      modalVideo.src = url;
+    } else {
+      videoContainer.classList.add('hidden');
+      linkContainer.classList.remove('hidden');
+      modalLink.href = url;
+    }
+    
+    modal.classList.remove('hidden');
+    document.body.classList.add('overflow-hidden');
+  }
+  
+  function closeContentModal() {
+    const modal = document.getElementById('content-modal');
+    const modalVideo = document.getElementById('modal-video');
+    
+    modal.classList.add('hidden');
+    document.body.classList.remove('overflow-hidden');
+    modalVideo.pause();
+    modalVideo.src = '';
+    
+    // Reset feedback
+    document.getElementById('modal-feedback-section').classList.add('hidden');
+    document.getElementById('modal-feedback-input').value = '';
+    document.getElementById('btn-request-revision').classList.remove('hidden');
+    document.getElementById('btn-send-revision').classList.add('hidden');
+  }
+  
+  function toggleFeedback() {
+    document.getElementById('modal-feedback-section').classList.toggle('hidden');
+    document.getElementById('btn-request-revision').classList.toggle('hidden');
+    document.getElementById('btn-send-revision').classList.toggle('hidden');
+  }
+  
+  function sendRevision() {
+    const feedback = document.getElementById('modal-feedback-input').value;
+    if (!feedback.trim()) {
+      alert('Please enter feedback for the creator');
+      return;
+    }
+    
+    // Create and submit form
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = '/brand/submissions/' + currentSubmissionId + '/request_revision';
+    
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+    const csrfInput = document.createElement('input');
+    csrfInput.type = 'hidden';
+    csrfInput.name = 'authenticity_token';
+    csrfInput.value = csrfToken;
+    form.appendChild(csrfInput);
+    
+    const feedbackInput = document.createElement('input');
+    feedbackInput.type = 'hidden';
+    feedbackInput.name = 'feedback';
+    feedbackInput.value = feedback;
+    form.appendChild(feedbackInput);
+    
+    document.body.appendChild(form);
+    form.submit();
+  }
+  
+  // Close modal on escape
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      closeContentModal();
+    }
+  });
+</script>

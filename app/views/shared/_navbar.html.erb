@@ -52,10 +52,7 @@
                 Explore creators
               <% end %>
               <%= link_to brand_dashboard_path, class: "px-4 py-2 font-medium transition-colors rounded-lg hover:bg-slate-50 #{controller_name == 'dashboard' && controller.class.name.include?('Brand') ? 'text-slate-900' : 'text-slate-600 hover:text-slate-900'}" do %>
-                Manage campaigns
-              <% end %>
-              <%= link_to brand_submissions_path, class: "px-4 py-2 font-medium transition-colors rounded-lg hover:bg-slate-50 #{controller_name == 'submissions' ? 'text-slate-900' : 'text-slate-600 hover:text-slate-900'}" do %>
-                Applications
+                Dashboard
               <% end %>
             <% else %>
               <%= link_to creator_dashboard_path, class: "px-4 py-2 font-medium transition-colors rounded-lg hover:bg-slate-50 #{controller_name == 'dashboard' ? 'text-slate-900' : 'text-slate-600 hover:text-slate-900'}" do %>
