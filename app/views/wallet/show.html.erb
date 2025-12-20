@@ -3,95 +3,143 @@
     <!-- Header -->
     <div class="flex items-center justify-between mb-8">
       <div>
-        <h1 class="text-2xl font-bold text-slate-900">Wallet</h1>
-        <p class="text-slate-500 text-sm">Manage your funds and view transaction history</p>
+        <h1 class="text-2xl font-bold text-slate-900"><%= current_user.brand? ? 'Wallet' : 'Earnings' %></h1>
+        <p class="text-slate-500 text-sm"><%= current_user.brand? ? 'Manage your funds and view transaction history' : 'Track your earnings and withdrawal history' %></p>
       </div>
-      <button 
-        onclick="openAddFundsModal()"
-        class="inline-flex items-center gap-2 px-5 py-2.5 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 transition-colors"
-      >
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-        </svg>
-        Add Money
-      </button>
+      <% if current_user.brand? %>
+        <button 
+          onclick="openAddFundsModal()"
+          class="inline-flex items-center gap-2 px-5 py-2.5 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 transition-colors"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+          </svg>
+          Add Money
+        </button>
+      <% else %>
+        <button 
+          onclick="openWithdrawModal()"
+          class="inline-flex items-center gap-2 px-5 py-2.5 bg-emerald-600 text-white font-medium rounded-lg hover:bg-emerald-700 transition-colors"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          Withdraw
+        </button>
+      <% end %>
     </div>
 
     <!-- Balance Card -->
     <div class="bg-white border border-slate-200 rounded-xl p-6 mb-6">
       <div class="flex items-center justify-between">
         <div>
-          <p class="text-sm text-slate-500 mb-1">Available Balance</p>
+          <p class="text-sm text-slate-500 mb-1"><%= current_user.brand? ? 'Available Balance' : 'Available for Withdrawal' %></p>
           <p class="text-3xl font-bold text-slate-900" id="wallet-balance"><%= current_user.formatted_wallet_balance %></p>
         </div>
-        <div class="w-14 h-14 bg-indigo-100 rounded-xl flex items-center justify-center">
-          <svg class="w-7 h-7 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
+        <div class="w-14 h-14 <%= current_user.brand? ? 'bg-indigo-100' : 'bg-emerald-100' %> rounded-xl flex items-center justify-center">
+          <svg class="w-7 h-7 <%= current_user.brand? ? 'text-indigo-600' : 'text-emerald-600' %>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <% if current_user.brand? %>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
+            <% else %>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            <% end %>
           </svg>
         </div>
       </div>
     </div>
 
     <!-- Stats Row -->
-    <div class="grid grid-cols-3 gap-4 mb-8">
-      <div class="bg-white border border-slate-200 rounded-xl p-4">
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center">
-            <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-            </svg>
-          </div>
-          <div>
-            <p class="text-xs text-slate-500">Total Added</p>
-            <p class="text-lg font-semibold text-slate-900">₹<%= number_with_delimiter(@total_credited) %></p>
-          </div>
-        </div>
-      </div>
-      
-      <div class="bg-white border border-slate-200 rounded-xl p-4">
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 bg-rose-100 rounded-lg flex items-center justify-center">
-            <svg class="w-5 h-5 text-rose-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path>
-            </svg>
-          </div>
-          <div>
-            <p class="text-xs text-slate-500">Total Spent</p>
-            <p class="text-lg font-semibold text-slate-900">₹<%= number_with_delimiter(@total_debited) %></p>
-          </div>
-        </div>
-      </div>
-      
-      <% if current_user.creator? %>
+    <% if current_user.brand? %>
+      <!-- Brand Stats -->
+      <div class="grid grid-cols-3 gap-4 mb-8">
         <div class="bg-white border border-slate-200 rounded-xl p-4">
           <div class="flex items-center gap-3">
-            <div class="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
-              <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center">
+              <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+              </svg>
+            </div>
+            <div>
+              <p class="text-xs text-slate-500">Total Added</p>
+              <p class="text-lg font-semibold text-slate-900">₹<%= number_with_delimiter(@total_credited) %></p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="bg-white border border-slate-200 rounded-xl p-4">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-rose-100 rounded-lg flex items-center justify-center">
+              <svg class="w-5 h-5 text-rose-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path>
+              </svg>
+            </div>
+            <div>
+              <p class="text-xs text-slate-500">Total Spent</p>
+              <p class="text-lg font-semibold text-slate-900">₹<%= number_with_delimiter(@total_debited) %></p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="bg-white border border-slate-200 rounded-xl p-4">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center">
+              <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+            </div>
+            <div>
+              <p class="text-xs text-slate-500">Pending</p>
+              <p class="text-lg font-semibold text-slate-900">₹<%= number_with_delimiter(@pending_payments) %></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% else %>
+      <!-- Creator Stats -->
+      <div class="grid grid-cols-3 gap-4 mb-8">
+        <div class="bg-white border border-slate-200 rounded-xl p-4">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center">
+              <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
               </svg>
             </div>
             <div>
               <p class="text-xs text-slate-500">Total Earned</p>
-              <p class="text-lg font-semibold text-slate-900">₹<%= number_with_delimiter(@total_payouts) %></p>
+              <p class="text-lg font-semibold text-slate-900">₹<%= number_with_delimiter(@total_earned) %></p>
             </div>
           </div>
         </div>
-      <% else %>
+        
         <div class="bg-white border border-slate-200 rounded-xl p-4">
           <div class="flex items-center gap-3">
-            <div class="w-10 h-10 bg-violet-100 rounded-lg flex items-center justify-center">
-              <svg class="w-5 h-5 text-violet-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            <div class="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center">
+              <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
               </svg>
             </div>
             <div>
-              <p class="text-xs text-slate-500">Transactions</p>
-              <p class="text-lg font-semibold text-slate-900"><%= @transactions.count %></p>
+              <p class="text-xs text-slate-500">Pending</p>
+              <p class="text-lg font-semibold text-slate-900">₹<%= number_with_delimiter(@pending_payout) %></p>
             </div>
           </div>
         </div>
-      <% end %>
-    </div>
+        
+        <div class="bg-white border border-slate-200 rounded-xl p-4">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
+              <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+            </div>
+            <div>
+              <p class="text-xs text-slate-500">Withdrawn</p>
+              <p class="text-lg font-semibold text-slate-900">₹<%= number_with_delimiter(@total_withdrawn) %></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
 
     <!-- Transaction History -->
     <div class="bg-white border border-slate-200 rounded-xl overflow-hidden">
@@ -118,7 +166,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path>
                       </svg>
                     <% elsif transaction.payout? %>
-                      <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                       </svg>
                     <% else %>
@@ -134,7 +182,7 @@
                     <p class="text-sm text-slate-500"><%= transaction.created_at.strftime('%b %d, %Y • %I:%M %p') %></p>
                     <% if transaction.related_submission %>
                       <p class="text-xs text-slate-400 mt-0.5">
-                        Campaign: <%= transaction.related_submission.campaign.title.truncate(30) %>
+                        <%= current_user.brand? ? "Creator: #{transaction.related_submission.user.name}" : "Brand: #{transaction.related_submission.campaign.user.brand_name}" %>
                       </p>
                     <% end %>
                   </div>
@@ -143,7 +191,7 @@
                 <!-- Amount -->
                 <div class="text-right">
                   <p class="font-semibold <%= transaction.amount_color %>"><%= transaction.formatted_amount %></p>
-                  <% if transaction.debit? && transaction.related_submission %>
+                  <% if (transaction.debit? || transaction.payout?) && transaction.related_submission %>
                     <button 
                       class="text-xs text-indigo-600 hover:text-indigo-700 mt-1"
                       onclick="event.stopPropagation(); showTransactionDetails(<%= transaction.id %>)"
@@ -164,14 +212,21 @@
             </svg>
           </div>
           <h3 class="font-medium text-slate-900 mb-1">No transactions yet</h3>
-          <p class="text-sm text-slate-500">Your transaction history will appear here</p>
+          <p class="text-sm text-slate-500">
+            <% if current_user.brand? %>
+              Add money to your wallet to start hiring creators
+            <% else %>
+              Complete opportunities to start earning
+            <% end %>
+          </p>
         </div>
       <% end %>
     </div>
   </div>
 </div>
 
-<!-- Add Funds Modal -->
+<% if current_user.brand? %>
+<!-- Add Funds Modal (Brand Only) -->
 <div id="add-funds-modal" class="fixed inset-0 z-50 hidden" aria-modal="true">
   <div class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm" onclick="closeAddFundsModal()"></div>
   <div class="fixed inset-0 flex items-center justify-center p-4">
@@ -227,6 +282,50 @@
     </div>
   </div>
 </div>
+<% else %>
+<!-- Withdraw Modal (Creator Only) -->
+<div id="withdraw-modal" class="fixed inset-0 z-50 hidden" aria-modal="true">
+  <div class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm" onclick="closeWithdrawModal()"></div>
+  <div class="fixed inset-0 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-xl max-w-md w-full p-6 relative">
+      <button onclick="closeWithdrawModal()" class="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+      
+      <div class="text-center mb-6">
+        <div class="w-16 h-16 mx-auto mb-4 bg-emerald-100 rounded-full flex items-center justify-center">
+          <svg class="w-8 h-8 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+        </div>
+        <h3 class="text-xl font-bold text-slate-900">Withdraw Earnings</h3>
+        <p class="text-sm text-slate-500 mt-1">Available: <%= current_user.formatted_wallet_balance %></p>
+      </div>
+      
+      <div class="p-4 bg-amber-50 border border-amber-200 rounded-lg mb-6">
+        <div class="flex items-start gap-3">
+          <svg class="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <div>
+            <p class="text-sm font-medium text-amber-800">Coming Soon</p>
+            <p class="text-sm text-amber-700">Withdrawal feature will be available soon. Your earnings are safe and will be credited to your bank account once this feature is live.</p>
+          </div>
+        </div>
+      </div>
+      
+      <button 
+        onclick="closeWithdrawModal()"
+        class="w-full py-3 bg-slate-200 text-slate-700 font-semibold rounded-lg hover:bg-slate-300 transition-colors"
+      >
+        Close
+      </button>
+    </div>
+  </div>
+</div>
+<% end %>
 
 <!-- Transaction Details Modal -->
 <div id="transaction-details-modal" class="fixed inset-0 z-50 hidden" aria-modal="true">
@@ -249,6 +348,7 @@
 </div>
 
 <script>
+<% if current_user.brand? %>
 function openAddFundsModal() {
   document.getElementById('add-funds-modal').classList.remove('hidden');
   document.body.classList.add('overflow-hidden');
@@ -288,9 +388,7 @@ function addFunds() {
     if (data.success) {
       document.getElementById('wallet-balance').textContent = data.formatted_balance;
       closeAddFundsModal();
-      // Show success notification
       showToast('Money added successfully!', 'success');
-      // Reload to show new transaction
       setTimeout(() => location.reload(), 1000);
     } else {
       alert(data.message || 'Failed to add funds');
@@ -305,6 +403,17 @@ function addFunds() {
     btn.innerHTML = '<span>Add Money</span>';
   });
 }
+<% else %>
+function openWithdrawModal() {
+  document.getElementById('withdraw-modal').classList.remove('hidden');
+  document.body.classList.add('overflow-hidden');
+}
+
+function closeWithdrawModal() {
+  document.getElementById('withdraw-modal').classList.add('hidden');
+  document.body.classList.remove('overflow-hidden');
+}
+<% end %>
 
 function showTransactionDetails(transactionId) {
   const modal = document.getElementById('transaction-details-modal');
@@ -350,6 +459,14 @@ function showTransactionDetails(transactionId) {
               <span class="text-slate-500">Campaign</span>
               <span class="text-slate-900">${data.submission.campaign_title}</span>
             </div>
+      `;
+      
+      <% if current_user.brand? %>
+      html += `
+            <div class="flex justify-between">
+              <span class="text-slate-500">Creator</span>
+              <span class="text-slate-900">${data.submission.creator_name}</span>
+            </div>
             <div class="flex justify-between">
               <span class="text-slate-500">Creator Payout</span>
               <span class="text-slate-900">${data.submission.creator_payout}</span>
@@ -362,6 +479,29 @@ function showTransactionDetails(transactionId) {
               <span class="font-medium text-slate-700">Total Charged</span>
               <span class="font-semibold text-slate-900">${data.submission.brand_total}</span>
             </div>
+      `;
+      <% else %>
+      html += `
+            <div class="flex justify-between">
+              <span class="text-slate-500">Brand</span>
+              <span class="text-slate-900">${data.submission.brand_name}</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-500">Gross Amount</span>
+              <span class="text-slate-900">${data.submission.gross_amount}</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-500">Platform Fee (15%)</span>
+              <span class="text-rose-600">-${data.submission.platform_fee}</span>
+            </div>
+            <div class="flex justify-between pt-2 border-t border-slate-200">
+              <span class="font-medium text-slate-700">Net Payout</span>
+              <span class="font-semibold text-emerald-600">${data.submission.net_payout}</span>
+            </div>
+      `;
+      <% end %>
+      
+      html += `
           </div>
         </div>
       `;
@@ -383,12 +523,13 @@ function closeTransactionDetails() {
 
 function showToast(message, type = 'success') {
   const toast = document.createElement('div');
-  toast.className = `fixed bottom-4 right-4 px-6 py-3 rounded-lg shadow-lg text-white ${type === 'success' ? 'bg-emerald-600' : 'bg-rose-600'} z-50 animate-slide-in`;
+  toast.className = `fixed bottom-4 right-4 px-6 py-3 rounded-lg shadow-lg text-white ${type === 'success' ? 'bg-emerald-600' : 'bg-rose-600'} z-50`;
+  toast.style.animation = 'slideIn 0.3s ease-out';
   toast.textContent = message;
   document.body.appendChild(toast);
   
   setTimeout(() => {
-    toast.classList.add('animate-slide-out');
+    toast.style.animation = 'slideOut 0.3s ease-in';
     setTimeout(() => toast.remove(), 300);
   }, 3000);
 }
@@ -396,9 +537,23 @@ function showToast(message, type = 'success') {
 // Close modals on escape
 document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') {
+    <% if current_user.brand? %>
     closeAddFundsModal();
+    <% else %>
+    closeWithdrawModal();
+    <% end %>
     closeTransactionDetails();
   }
 });
 </script>
 
+<style>
+@keyframes slideIn {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+@keyframes slideOut {
+  from { transform: translateX(0); opacity: 1; }
+  to { transform: translateX(100%); opacity: 0; }
+}
+</style>

@@ -4,13 +4,12 @@
 
 puts "🌱 Starting seed..."
 
-# Clear existing data (be careful in production!)
-if Rails.env.development?
-  puts "🧹 Cleaning up existing data..."
-  Submission.destroy_all
-  Campaign.destroy_all
-  User.destroy_all
-end
+# Clear existing data
+puts "🧹 Cleaning up existing data..."
+WalletTransaction.destroy_all
+Submission.destroy_all
+Campaign.destroy_all
+User.destroy_all
 
 # ============================================
 # CREATE BRAND USERS
@@ -23,6 +22,15 @@ brand1 = User.create!(
   password_confirmation: "password123",
   role: "brand",
   brand_name: "Mamaearth",
+  wallet_balance: 25000
+)
+
+# Add wallet transaction for brand
+WalletTransaction.create!(
+  user: brand1,
+  amount: 25000,
+  transaction_type: :credit,
+  description: "Initial wallet top-up"
 )
 
 brand2 = User.create!(
@@ -31,6 +39,14 @@ brand2 = User.create!(
   password_confirmation: "password123",
   role: "brand",
   brand_name: "boAt Lifestyle",
+  wallet_balance: 50000
+)
+
+WalletTransaction.create!(
+  user: brand2,
+  amount: 50000,
+  transaction_type: :credit,
+  description: "Initial wallet top-up"
 )
 
 brand3 = User.create!(
@@ -39,16 +55,23 @@ brand3 = User.create!(
   password_confirmation: "password123",
   role: "brand",
   brand_name: "Sugar Cosmetics",
+  wallet_balance: 15000
+)
+
+WalletTransaction.create!(
+  user: brand3,
+  amount: 15000,
+  transaction_type: :credit,
+  description: "Initial wallet top-up"
 )
 
 puts "  ✅ Created #{User.where(role: 'brand').count} brands"
 
 # ============================================
-# CREATE CREATOR USERS (Various Statuses)
+# CREATE CREATOR USERS (All Approved for MVP)
 # ============================================
 puts "👤 Creating creator accounts..."
 
-# Approved creators (can be found on Browse Creators page)
 creator1 = User.create!(
   email: "creator@example.com",
   password: "password123",
@@ -64,7 +87,8 @@ creator1 = User.create!(
   videos_completed: 47,
   price_per_video: 5000,
   instagram_handle: "priya_creates",
-  youtube_handle: "PriyaCreates"
+  youtube_handle: "PriyaCreates",
+  wallet_balance: 12750 # Has some earnings
 )
 
 creator2 = User.create!(
@@ -82,7 +106,8 @@ creator2 = User.create!(
   videos_completed: 82,
   price_per_video: 7500,
   instagram_handle: "techrahul",
-  youtube_handle: "TechWithRahul"
+  youtube_handle: "TechWithRahul",
+  wallet_balance: 25500
 )
 
 creator3 = User.create!(
@@ -99,7 +124,8 @@ creator3 = User.create!(
   rating: 4.7,
   videos_completed: 35,
   price_per_video: 4500,
-  instagram_handle: "ananya.styles"
+  instagram_handle: "ananya.styles",
+  wallet_balance: 8500
 )
 
 creator4 = User.create!(
@@ -116,7 +142,8 @@ creator4 = User.create!(
   rating: 4.6,
   videos_completed: 28,
   price_per_video: 4000,
-  instagram_handle: "fitvik"
+  instagram_handle: "fitvik",
+  wallet_balance: 0
 )
 
 creator5 = User.create!(
@@ -133,7 +160,8 @@ creator5 = User.create!(
   rating: 4.9,
   videos_completed: 63,
   price_per_video: 3500,
-  instagram_handle: "sneha.cooks"
+  instagram_handle: "sneha.cooks",
+  wallet_balance: 5950
 )
 
 creator6 = User.create!(
@@ -150,43 +178,29 @@ creator6 = User.create!(
   rating: 4.5,
   videos_completed: 21,
   price_per_video: 6000,
-  instagram_handle: "wandering.arjun"
+  instagram_handle: "wandering.arjun",
+  wallet_balance: 0
 )
 
-# Pending approval creators (testing the approval flow)
-creator_pending1 = User.create!(
-  email: "newcreator@example.com",
-  password: "password123",
-  password_confirmation: "password123",
-  role: "creator",
-  name: "Kavya Iyer",
-  phone_number: "9876543216",
-  creator_status: :pending_approval,
-  bio: "New to UGC but passionate about skincare! Looking forward to creating authentic content.",
-  location: "Chennai, Tamil Nadu",
-  niches: "Skincare, Beauty",
-  rating: 0,
-  videos_completed: 0,
-  price_per_video: 2500
-)
-
-creator_pending2 = User.create!(
-  email: "newcreator2@example.com",
+creator7 = User.create!(
+  email: "aditya@example.com",
   password: "password123",
   password_confirmation: "password123",
   role: "creator",
   name: "Aditya Bhatt",
   phone_number: "9876543217",
-  creator_status: :pending_approval,
-  bio: "Gaming content creator transitioning to UGC. Experienced in video editing and storytelling.",
+  creator_status: :approved,
+  bio: "Gaming content creator and tech reviewer. Experienced in video editing and storytelling. Creating authentic content that connects with the audience.",
   location: "Jaipur, Rajasthan",
   niches: "Gaming, Tech",
-  rating: 0,
-  videos_completed: 0,
-  price_per_video: 3000
+  rating: 4.4,
+  videos_completed: 15,
+  price_per_video: 3000,
+  instagram_handle: "aditya.plays",
+  wallet_balance: 0
 )
 
-puts "  ✅ Created #{User.where(role: 'creator').count} creators (#{User.approved_creators.count} approved)"
+puts "  ✅ Created #{User.where(role: 'creator').count} creators"
 
 # ============================================
 # CREATE CAMPAIGNS
@@ -271,29 +285,28 @@ campaign6 = Campaign.create!(
   status: :live
 )
 
-# A draft campaign (won't show in marketplace)
-campaign_draft = Campaign.create!(
-  user: brand1,
-  title: "New Product Launch (TBD)",
-  product_name: "Coming Soon Product",
-  product_url: "https://mamaearth.in",
-  scenario: "Unboxing",
-  aspect_ratio: "9:16",
-  duration: 30,
-  price: 5000,
-  instructions: "Draft - details to be finalized",
-  status: :draft
-)
-
 puts "  ✅ Created #{Campaign.count} campaigns (#{Campaign.active.count} live)"
 
 # ============================================
-# CREATE SUBMISSIONS (Various States)
+# CREATE SUBMISSIONS WITH WALLET TRANSACTIONS
 # ============================================
-puts "📝 Creating submissions..."
+puts "📝 Creating submissions with wallet transactions..."
+
+# Helper to create submission with proper fee calculation
+def create_submission_with_fees(attrs)
+  submission = Submission.new(attrs)
+  base_price = attrs[:payout_amount] || submission.campaign.price
+  submission.payout_amount = base_price
+  submission.platform_fee_brand = (base_price * 0.10).round
+  submission.brand_total_cost = base_price + submission.platform_fee_brand
+  submission.platform_fee_creator = (base_price * 0.15).round
+  submission.creator_net_payout = base_price - submission.platform_fee_creator
+  submission.save!
+  submission
+end
 
 # Submission 1: Applied - waiting for brand approval
-sub1 = Submission.create!(
+sub1 = create_submission_with_fees(
   campaign: campaign1,
   user: creator1,
   status: :applied,
@@ -301,7 +314,7 @@ sub1 = Submission.create!(
 )
 
 # Submission 2: Approved to upload - creator can now upload
-sub2 = Submission.create!(
+sub2 = create_submission_with_fees(
   campaign: campaign2,
   user: creator1,
   status: :approved_to_upload,
@@ -309,7 +322,7 @@ sub2 = Submission.create!(
 )
 
 # Submission 3: Uploaded - waiting for brand review
-sub3 = Submission.create!(
+sub3 = create_submission_with_fees(
   campaign: campaign3,
   user: creator2,
   status: :uploaded,
@@ -317,8 +330,8 @@ sub3 = Submission.create!(
   external_link: "https://drive.google.com/file/d/example123/view"
 )
 
-# Submission 4: Content approved - waiting for payment
-sub4 = Submission.create!(
+# Submission 4: Content approved - completed with wallet transactions
+sub4 = create_submission_with_fees(
   campaign: campaign4,
   user: creator2,
   status: :content_approved,
@@ -327,8 +340,31 @@ sub4 = Submission.create!(
   external_link: "https://drive.google.com/file/d/example456/view"
 )
 
+# Create wallet transactions for this completed submission
+# Deduct from brand
+brand2.update!(wallet_balance: brand2.wallet_balance - sub4.brand_total_cost)
+WalletTransaction.create!(
+  user: brand2,
+  amount: sub4.brand_total_cost,
+  transaction_type: :debit,
+  description: "Payment for #{sub4.campaign.title}",
+  related_submission: sub4,
+  created_at: 2.days.ago
+)
+
+# Credit to creator
+creator2.update!(wallet_balance: creator2.wallet_balance + sub4.creator_net_payout)
+WalletTransaction.create!(
+  user: creator2,
+  amount: sub4.creator_net_payout,
+  transaction_type: :payout,
+  description: "Payout for #{sub4.campaign.title}",
+  related_submission: sub4,
+  created_at: 2.days.ago
+)
+
 # Submission 5: Paid - complete!
-sub5 = Submission.create!(
+sub5 = create_submission_with_fees(
   campaign: campaign5,
   user: creator3,
   status: :paid,
@@ -338,8 +374,31 @@ sub5 = Submission.create!(
   external_link: "https://drive.google.com/file/d/example789/view"
 )
 
+# Create wallet transactions for this paid submission
+# Deduct from brand
+brand3.update!(wallet_balance: brand3.wallet_balance - sub5.brand_total_cost)
+WalletTransaction.create!(
+  user: brand3,
+  amount: sub5.brand_total_cost,
+  transaction_type: :debit,
+  description: "Payment for #{sub5.campaign.title}",
+  related_submission: sub5,
+  created_at: 5.days.ago
+)
+
+# Credit to creator
+creator3.update!(wallet_balance: creator3.wallet_balance + sub5.creator_net_payout)
+WalletTransaction.create!(
+  user: creator3,
+  amount: sub5.creator_net_payout,
+  transaction_type: :payout,
+  description: "Payout for #{sub5.campaign.title}",
+  related_submission: sub5,
+  created_at: 5.days.ago
+)
+
 # Submission 6: Revision requested - creator needs to re-upload
-sub6 = Submission.create!(
+sub6 = create_submission_with_fees(
   campaign: campaign6,
   user: creator3,
   status: :revision_requested,
@@ -349,7 +408,7 @@ sub6 = Submission.create!(
 )
 
 # Submission 7: Applied by another creator
-sub7 = Submission.create!(
+sub7 = create_submission_with_fees(
   campaign: campaign1,
   user: creator4,
   status: :applied,
@@ -357,11 +416,42 @@ sub7 = Submission.create!(
 )
 
 # Submission 8: Approved to upload for another campaign
-sub8 = Submission.create!(
+sub8 = create_submission_with_fees(
   campaign: campaign5,
   user: creator5,
   status: :approved_to_upload,
   payout_amount: campaign5.price
+)
+
+# Submission 9: Content approved for Aditya (Priya's pending example)
+sub9 = create_submission_with_fees(
+  campaign: campaign3,
+  user: creator7,
+  status: :content_approved,
+  payout_amount: 13500, # Higher amount
+  approved_at: 1.day.ago,
+  external_link: "https://drive.google.com/file/d/aditya_video/view"
+)
+
+# Create wallet transactions for Aditya's approved submission
+brand2.update!(wallet_balance: brand2.wallet_balance - sub9.brand_total_cost)
+WalletTransaction.create!(
+  user: brand2,
+  amount: sub9.brand_total_cost,
+  transaction_type: :debit,
+  description: "Payment for #{sub9.campaign.title}",
+  related_submission: sub9,
+  created_at: 1.day.ago
+)
+
+creator7.update!(wallet_balance: creator7.wallet_balance + sub9.creator_net_payout)
+WalletTransaction.create!(
+  user: creator7,
+  amount: sub9.creator_net_payout,
+  transaction_type: :payout,
+  description: "Payout for #{sub9.campaign.title}",
+  related_submission: sub9,
+  created_at: 1.day.ago
 )
 
 puts "  ✅ Created #{Submission.count} submissions"
@@ -383,14 +473,21 @@ puts ""
 puts "BRAND LOGIN:"
 puts "  Email: brand@example.com"
 puts "  Password: password123"
+puts "  Wallet: ₹25,000"
 puts ""
-puts "CREATOR LOGIN:"
+puts "CREATOR LOGIN (with earnings):"
+puts "  Email: aditya@example.com"
+puts "  Password: password123"
+puts "  Wallet: ₹#{creator7.wallet_balance}"
+puts ""
+puts "CREATOR LOGIN (standard):"
 puts "  Email: creator@example.com"
 puts "  Password: password123"
 puts ""
 puts "📊 Data Summary:"
 puts "  - #{User.where(role: 'brand').count} Brands"
-puts "  - #{User.where(role: 'creator').count} Creators (#{User.approved_creators.count} approved)"
+puts "  - #{User.where(role: 'creator').count} Creators"
 puts "  - #{Campaign.count} Campaigns (#{Campaign.active.count} live)"
 puts "  - #{Submission.count} Submissions"
+puts "  - #{WalletTransaction.count} Wallet Transactions"
 puts ""

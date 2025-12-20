@@ -17,19 +17,31 @@ class WalletTransaction < ApplicationRecord
   scope :debits, -> { where(transaction_type: :debit) }
 
   def formatted_amount
-    prefix = credit? || refund? ? '+' : '-'
+    prefix = credit? || refund? || payout? ? '+' : '-'
     "#{prefix}₹#{amount.to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1,').reverse}"
   end
 
   def amount_color
-    credit? || refund? ? 'text-emerald-600' : 'text-rose-600'
+    credit? || refund? || payout? ? 'text-emerald-600' : 'text-rose-600'
   end
 
   def icon_bg
-    credit? || refund? ? 'bg-emerald-100' : 'bg-rose-100'
+    if payout?
+      'bg-emerald-100'
+    elsif credit? || refund?
+      'bg-emerald-100'
+    else
+      'bg-rose-100'
+    end
   end
 
   def icon_color
-    credit? || refund? ? 'text-emerald-600' : 'text-rose-600'
+    if payout?
+      'text-emerald-600'
+    elsif credit? || refund?
+      'text-emerald-600'
+    else
+      'text-rose-600'
+    end
   end
 end
