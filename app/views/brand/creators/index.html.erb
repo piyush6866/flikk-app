@@ -1,0 +1,489 @@
+<div class="min-h-screen pt-20 pb-16" style="background-color: #faf8ff;">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-slate-900 mb-2">Creators</h1>
+      <p class="text-slate-600">Find new creators, explore your previous hires, and discover your favorites. All in one place.</p>
+    </div>
+
+    <!-- Filter Tabs -->
+    <div class="mb-6">
+      <p class="text-sm font-medium text-slate-700 mb-3">Filter creators</p>
+      <div class="flex flex-wrap gap-3">
+        <%= link_to brand_creators_path(filter: 'discover'), 
+            class: "px-5 py-2.5 rounded-full font-medium text-sm transition-colors #{@filter == 'discover' ? 'bg-indigo-600 text-white' : 'bg-white border border-slate-200 text-slate-700 hover:border-slate-300'}" do %>
+          Discover
+        <% end %>
+        <%= link_to brand_creators_path(filter: 'new'), 
+            class: "px-5 py-2.5 rounded-full font-medium text-sm transition-colors #{@filter == 'new' ? 'bg-indigo-600 text-white' : 'bg-white border border-slate-200 text-slate-700 hover:border-slate-300'}" do %>
+          New
+        <% end %>
+        <%= link_to brand_creators_path(filter: 'previous_hires'), 
+            class: "px-5 py-2.5 rounded-full font-medium text-sm transition-colors #{@filter == 'previous_hires' ? 'bg-indigo-600 text-white' : 'bg-white border border-slate-200 text-slate-700 hover:border-slate-300'}" do %>
+          Previous hires
+        <% end %>
+        <%= link_to brand_creators_path(filter: 'favorites'), 
+            class: "px-5 py-2.5 rounded-full font-medium text-sm transition-colors #{@filter == 'favorites' ? 'bg-indigo-600 text-white' : 'bg-white border border-slate-200 text-slate-700 hover:border-slate-300'}" do %>
+          Favorites
+        <% end %>
+        <%= link_to brand_creators_path(filter: 'ad_performers'), 
+            class: "px-5 py-2.5 rounded-full font-medium text-sm transition-colors flex items-center gap-2 #{@filter == 'ad_performers' ? 'bg-indigo-600 text-white' : 'bg-white border border-slate-200 text-slate-700 hover:border-slate-300'}" do %>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path>
+          </svg>
+          Ad performers
+        <% end %>
+      </div>
+    </div>
+
+    <!-- All Filters Button -->
+    <div class="mb-8">
+      <button class="inline-flex items-center gap-2 px-4 py-2.5 bg-slate-900 text-white font-medium rounded-full hover:bg-slate-800 transition-colors">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path>
+        </svg>
+        All filters
+      </button>
+    </div>
+
+    <!-- Creators Grid -->
+    <% if @creators.any? %>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <% @creators.each do |creator| %>
+          <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden hover:shadow-lg transition-all group">
+            <!-- Creator Header -->
+            <div class="p-4 border-b border-slate-100">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <!-- Avatar -->
+                  <div class="relative">
+                    <% if creator.profile_photo.attached? %>
+                      <%= image_tag rails_blob_url(creator.profile_photo), class: "w-12 h-12 rounded-full object-cover" %>
+                    <% else %>
+                      <div class="w-12 h-12 bg-gradient-to-br from-indigo-400 to-violet-500 rounded-full flex items-center justify-center text-white font-bold">
+                        <%= creator.initials %>
+                      </div>
+                    <% end %>
+                    <% if creator.videos_completed >= 10 %>
+                      <div class="absolute -bottom-1 -right-1 w-5 h-5 bg-indigo-600 rounded-full flex items-center justify-center">
+                        <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                          <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                        </svg>
+                      </div>
+                    <% end %>
+                  </div>
+                  <div>
+                    <h3 class="font-semibold text-slate-900"><%= creator.name.split.first %> <%= creator.name.split.last&.first %>.</h3>
+                    <% if creator.videos_completed >= 5 %>
+                      <span class="inline-flex px-2 py-0.5 text-xs font-medium bg-indigo-100 text-indigo-700 rounded-full">Premium</span>
+                    <% end %>
+                  </div>
+                </div>
+                <button class="p-2 text-slate-400 hover:text-rose-500 transition-colors">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- Stats Row -->
+            <div class="px-4 py-3 bg-slate-50 flex items-center gap-4 text-sm">
+              <% if creator.location.present? %>
+                <div class="flex items-center gap-1.5">
+                  <span class="text-lg">🇮🇳</span>
+                  <span class="text-slate-600"><%= creator.location.split(',').first %></span>
+                </div>
+              <% end %>
+              <div class="flex items-center gap-1.5">
+                <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                </svg>
+                <span class="text-slate-600"><%= creator.videos_completed %></span>
+              </div>
+              <% if creator.rating > 0 %>
+                <div class="flex items-center gap-1.5">
+                  <svg class="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                  </svg>
+                  <span class="text-slate-600"><%= creator.rating %></span>
+                </div>
+              <% end %>
+              <% if creator.approval_rate > 0 %>
+                <div class="flex items-center gap-1.5">
+                  <svg class="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                  <span class="text-slate-600"><%= creator.approval_rate %>%</span>
+                </div>
+              <% end %>
+            </div>
+
+            <!-- Video Preview Area -->
+            <div class="relative aspect-[3/4] bg-gradient-to-br from-slate-100 to-slate-200">
+              <% if creator.intro_video.attached? %>
+                <video 
+                  class="w-full h-full object-cover"
+                  muted
+                  loop
+                  onmouseenter="this.play()"
+                  onmouseleave="this.pause(); this.currentTime=0;"
+                >
+                  <source src="<%= rails_blob_url(creator.intro_video) %>" type="<%= creator.intro_video.content_type %>">
+                </video>
+              <% else %>
+                <div class="absolute inset-0 flex flex-col items-center justify-center text-slate-400">
+                  <div class="w-20 h-20 bg-white rounded-full flex items-center justify-center shadow-lg mb-3">
+                    <svg class="w-8 h-8 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                    </svg>
+                  </div>
+                  <p class="text-sm">No intro video</p>
+                </div>
+              <% end %>
+
+              <!-- Play Button Overlay -->
+              <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/20">
+                <div class="w-14 h-14 bg-white rounded-full flex items-center justify-center shadow-lg">
+                  <svg class="w-6 h-6 text-slate-700 ml-1" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M8 5v14l11-7z"></path>
+                  </svg>
+                </div>
+              </div>
+
+              <!-- Price Badge -->
+              <div class="absolute bottom-4 left-4 right-4">
+                <div class="bg-white/95 backdrop-blur-sm rounded-xl px-4 py-3 shadow-lg">
+                  <div class="flex items-center justify-between">
+                    <div>
+                      <p class="text-xs text-slate-500">Starting from</p>
+                      <p class="text-lg font-bold text-slate-900"><%= creator.formatted_price %></p>
+                    </div>
+                    <button 
+                      type="button"
+                      onclick="openCreatorPanel(<%= creator.id %>)"
+                      class="px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors"
+                    >
+                      View Profile
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="text-center py-16">
+        <div class="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <svg class="w-10 h-10 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold text-slate-900 mb-2">No creators found</h3>
+        <p class="text-slate-500 max-w-md mx-auto">
+          <% if @filter == 'previous_hires' %>
+            You haven't worked with any creators yet. Start by browsing available creators!
+          <% elsif @filter == 'favorites' %>
+            You haven't added any creators to your favorites yet.
+          <% else %>
+            No creators match your current filters. Try adjusting your search criteria.
+          <% end %>
+        </p>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<!-- Creator Profile Slide Panel -->
+<div id="creator-panel-overlay" class="fixed inset-0 bg-black/50 z-50 opacity-0 invisible transition-opacity duration-300" onclick="closeCreatorPanel()"></div>
+
+<div id="creator-panel" class="fixed top-0 right-0 h-full w-full max-w-lg bg-white shadow-2xl z-50 transform translate-x-full transition-transform duration-300 ease-out overflow-hidden flex flex-col">
+  <!-- Panel Header -->
+  <div class="flex items-center justify-between p-4 border-b border-slate-100 bg-white">
+    <button onclick="closeCreatorPanel()" class="p-2 text-slate-500 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition-colors">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+      </svg>
+    </button>
+    <div class="flex items-center gap-2">
+      <button class="p-2 text-slate-500 hover:text-rose-500 hover:bg-rose-50 rounded-lg transition-colors" title="Add to favorites">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+        </svg>
+      </button>
+      <button class="p-2 text-slate-500 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition-colors" title="Share">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Panel Content (scrollable) -->
+  <div id="creator-panel-content" class="flex-1 overflow-y-auto">
+    <!-- Content loaded dynamically -->
+  </div>
+
+  <!-- Panel Footer - Fixed CTA -->
+  <div id="creator-panel-footer" class="hidden p-4 border-t border-slate-100 bg-white">
+    <div class="flex items-center justify-between mb-3">
+      <div>
+        <p class="text-sm text-slate-500">Video price</p>
+        <p id="creator-panel-price" class="text-xl font-bold text-slate-900">-</p>
+      </div>
+      <button class="px-6 py-3 bg-indigo-600 text-white font-semibold rounded-xl hover:bg-indigo-700 transition-colors">
+        Invite to brief
+      </button>
+    </div>
+    <p class="text-xs text-slate-500 text-right">Invite the creator now, approve later.</p>
+  </div>
+</div>
+
+<!-- Creator data for each creator (hidden) -->
+<% @creators.each do |creator| %>
+  <template id="creator-data-<%= creator.id %>">
+    <div class="creator-profile-content">
+      <!-- Creator Header -->
+      <div class="p-6 border-b border-slate-100">
+        <div class="flex items-center gap-5">
+          <!-- Avatar -->
+          <div class="relative">
+            <% if creator.profile_photo.attached? %>
+              <%= image_tag rails_blob_url(creator.profile_photo), class: "w-20 h-20 rounded-full object-cover ring-4 ring-indigo-100" %>
+            <% else %>
+              <div class="w-20 h-20 bg-gradient-to-br from-indigo-400 to-violet-500 rounded-full flex items-center justify-center text-white font-bold text-2xl ring-4 ring-indigo-100">
+                <%= creator.initials %>
+              </div>
+            <% end %>
+            <% if creator.videos_completed >= 10 %>
+              <div class="absolute -bottom-1 -right-1 w-7 h-7 bg-indigo-600 rounded-full flex items-center justify-center ring-2 ring-white">
+                <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                </svg>
+              </div>
+            <% end %>
+          </div>
+          <div>
+            <div class="flex items-center gap-3 mb-1">
+              <h2 class="text-2xl font-bold text-slate-900"><%= creator.name %></h2>
+            </div>
+            <p class="text-slate-500">(0 reviews)</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="border-b border-slate-100">
+        <nav class="flex space-x-8 px-6" aria-label="Tabs">
+          <button class="whitespace-nowrap py-4 px-1 border-b-2 border-indigo-500 text-indigo-600 font-medium text-sm">
+            Overview
+          </button>
+          <button class="whitespace-nowrap py-4 px-1 border-b-2 border-transparent text-slate-500 hover:text-slate-700 font-medium text-sm">
+            Ad performance
+          </button>
+          <button class="whitespace-nowrap py-4 px-1 border-b-2 border-transparent text-slate-500 hover:text-slate-700 font-medium text-sm">
+            Organic
+          </button>
+        </nav>
+      </div>
+
+      <!-- Content -->
+      <div class="p-6">
+        <!-- Meta Account Notice -->
+        <div class="bg-blue-50 border border-blue-100 rounded-xl p-4 mb-6 flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <span class="text-sm text-blue-800">Connect Meta account for ad performance!</span>
+          </div>
+          <a href="#" class="text-sm font-medium text-blue-600 hover:text-blue-700">Learn more</a>
+        </div>
+
+        <!-- Performance Stats -->
+        <div class="grid grid-cols-3 gap-4 mb-6">
+          <div class="bg-slate-50 rounded-xl p-4 text-center">
+            <p class="text-xs text-slate-500 mb-1">ROAS</p>
+            <p class="text-xl font-bold text-slate-400">-</p>
+          </div>
+          <div class="bg-slate-50 rounded-xl p-4 text-center">
+            <p class="text-xs text-slate-500 mb-1">CTR</p>
+            <p class="text-xl font-bold text-slate-400">-</p>
+          </div>
+          <div class="bg-slate-50 rounded-xl p-4 text-center">
+            <p class="text-xs text-slate-500 mb-1">Hook Rate</p>
+            <p class="text-xl font-bold text-slate-400">-</p>
+          </div>
+        </div>
+
+        <!-- Creator Stats -->
+        <div class="grid grid-cols-2 gap-4 mb-6">
+          <div class="bg-slate-50 rounded-xl p-4">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
+                <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                </svg>
+              </div>
+              <div>
+                <p class="text-xl font-bold text-slate-900"><%= creator.videos_completed %></p>
+                <p class="text-xs text-slate-500">Videos completed</p>
+              </div>
+            </div>
+          </div>
+          <div class="bg-slate-50 rounded-xl p-4">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center">
+                <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              </div>
+              <div>
+                <p class="text-xl font-bold text-slate-900"><%= creator.approval_rate %>%</p>
+                <p class="text-xs text-slate-500">Approval rate</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Creator Bio -->
+        <% if creator.bio.present? %>
+          <div class="mb-6">
+            <h3 class="font-semibold text-slate-900 mb-3">About</h3>
+            <p class="text-slate-600 text-sm leading-relaxed"><%= creator.bio %></p>
+          </div>
+        <% end %>
+
+        <!-- Location -->
+        <% if creator.location.present? %>
+          <div class="mb-6">
+            <h3 class="font-semibold text-slate-900 mb-3">Location</h3>
+            <div class="flex items-center gap-2 text-slate-600">
+              <span class="text-xl">🇮🇳</span>
+              <span><%= creator.location %></span>
+            </div>
+          </div>
+        <% end %>
+
+        <!-- Niches -->
+        <% if creator.niches.present? %>
+          <div class="mb-6">
+            <h3 class="font-semibold text-slate-900 mb-3">Specializations</h3>
+            <div class="flex flex-wrap gap-2">
+              <% creator.niches_array.each do |niche| %>
+                <span class="px-3 py-1.5 bg-indigo-50 text-indigo-700 text-sm font-medium rounded-full"><%= niche %></span>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+
+        <!-- Video Portfolio -->
+        <div class="mb-6">
+          <h3 class="font-semibold text-slate-900 mb-4">Sample Videos</h3>
+          <div class="grid grid-cols-2 gap-4">
+            <% if creator.intro_video.attached? %>
+              <div class="relative aspect-[9/16] bg-slate-100 rounded-xl overflow-hidden group">
+                <video 
+                  class="w-full h-full object-cover"
+                  muted
+                  loop
+                  onmouseenter="this.play()"
+                  onmouseleave="this.pause(); this.currentTime=0;"
+                  onclick="this.paused ? this.play() : this.pause()"
+                >
+                  <source src="<%= rails_blob_url(creator.intro_video) %>" type="<%= creator.intro_video.content_type %>">
+                </video>
+                <div class="absolute top-2 left-2">
+                  <span class="px-2 py-1 bg-indigo-600 text-white text-xs font-medium rounded-lg">Intro</span>
+                </div>
+                <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/20 pointer-events-none">
+                  <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg">
+                    <svg class="w-5 h-5 text-slate-700 ml-1" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M8 5v14l11-7z"></path>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            <% else %>
+              <div class="aspect-[9/16] bg-slate-100 rounded-xl flex items-center justify-center">
+                <div class="text-center">
+                  <svg class="w-8 h-8 text-slate-300 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                  </svg>
+                  <p class="text-xs text-slate-400">No videos</p>
+                </div>
+              </div>
+            <% end %>
+            <!-- Placeholder for more videos -->
+            <div class="aspect-[9/16] bg-slate-50 rounded-xl border-2 border-dashed border-slate-200 flex items-center justify-center">
+              <div class="text-center">
+                <svg class="w-8 h-8 text-slate-300 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                </svg>
+                <p class="text-xs text-slate-400">More coming</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </template>
+  <script>
+    window['creatorPrice<%= creator.id %>'] = '<%= creator.formatted_price %>';
+  </script>
+<% end %>
+
+<script>
+  function openCreatorPanel(creatorId) {
+    const panel = document.getElementById('creator-panel');
+    const overlay = document.getElementById('creator-panel-overlay');
+    const content = document.getElementById('creator-panel-content');
+    const footer = document.getElementById('creator-panel-footer');
+    const priceEl = document.getElementById('creator-panel-price');
+    
+    if (!panel || !overlay || !content) return;
+    
+    // Show loading state first
+    content.innerHTML = '<div class="flex items-center justify-center h-64"><div class="animate-spin rounded-full h-10 w-10 border-b-2 border-indigo-600"></div></div>';
+    footer.classList.add('hidden');
+    
+    // Show panel and overlay
+    panel.classList.remove('translate-x-full');
+    overlay.classList.remove('opacity-0', 'invisible');
+    overlay.classList.add('opacity-100', 'visible');
+    document.body.style.overflow = 'hidden';
+    
+    // Load creator content from template after a brief delay
+    setTimeout(function() {
+      const template = document.getElementById('creator-data-' + creatorId);
+      if (template) {
+        content.innerHTML = template.innerHTML;
+        footer.classList.remove('hidden');
+        if (priceEl) {
+          priceEl.textContent = 'From ' + (window['creatorPrice' + creatorId] || '₹0');
+        }
+      }
+    }, 200);
+  }
+  
+  function closeCreatorPanel() {
+    const panel = document.getElementById('creator-panel');
+    const overlay = document.getElementById('creator-panel-overlay');
+    
+    if (!panel || !overlay) return;
+    
+    panel.classList.add('translate-x-full');
+    overlay.classList.add('opacity-0', 'invisible');
+    overlay.classList.remove('opacity-100', 'visible');
+    document.body.style.overflow = '';
+  }
+  
+  // Close on escape key
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      closeCreatorPanel();
+    }
+  });
+</script>
+

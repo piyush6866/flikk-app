@@ -1,0 +1,165 @@
+<div class="min-h-screen pt-20 pb-16" style="background-color: #faf8ff;">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Back Button -->
+    <%= link_to brand_creators_path, class: "inline-flex items-center gap-2 text-slate-600 hover:text-slate-900 mb-6" do %>
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+      </svg>
+      Back to Creators
+    <% end %>
+
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+      <!-- Header -->
+      <div class="p-6 border-b border-slate-100">
+        <div class="flex items-start justify-between">
+          <div class="flex items-center gap-5">
+            <!-- Avatar -->
+            <div class="relative">
+              <% if @creator.profile_photo.attached? %>
+                <%= image_tag rails_blob_url(@creator.profile_photo), class: "w-20 h-20 rounded-full object-cover ring-4 ring-indigo-100" %>
+              <% else %>
+                <div class="w-20 h-20 bg-gradient-to-br from-indigo-400 to-violet-500 rounded-full flex items-center justify-center text-white font-bold text-2xl ring-4 ring-indigo-100">
+                  <%= @creator.initials %>
+                </div>
+              <% end %>
+              <% if @creator.videos_completed >= 10 %>
+                <div class="absolute -bottom-1 -right-1 w-7 h-7 bg-indigo-600 rounded-full flex items-center justify-center ring-2 ring-white">
+                  <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                  </svg>
+                </div>
+              <% end %>
+            </div>
+            <div>
+              <div class="flex items-center gap-3 mb-1">
+                <h1 class="text-2xl font-bold text-slate-900"><%= @creator.name %></h1>
+                <button class="p-2 text-slate-400 hover:text-rose-500 transition-colors">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                  </svg>
+                </button>
+              </div>
+              <p class="text-slate-500">(0 reviews)</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="border-b border-slate-100">
+        <nav class="flex space-x-8 px-6" aria-label="Tabs">
+          <button class="whitespace-nowrap py-4 px-1 border-b-2 border-indigo-500 text-indigo-600 font-medium text-sm">
+            Overview
+          </button>
+          <button class="whitespace-nowrap py-4 px-1 border-b-2 border-transparent text-slate-500 hover:text-slate-700 font-medium text-sm">
+            Ad performance
+          </button>
+          <button class="whitespace-nowrap py-4 px-1 border-b-2 border-transparent text-slate-500 hover:text-slate-700 font-medium text-sm">
+            Organic performance
+          </button>
+        </nav>
+      </div>
+
+      <!-- Content -->
+      <div class="p-6">
+        <!-- Meta Account Notice -->
+        <div class="bg-blue-50 border border-blue-100 rounded-xl p-4 mb-6 flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <span class="text-sm text-blue-800">Connect your Meta account to access creator ad performance and more!</span>
+          </div>
+          <a href="#" class="text-sm font-medium text-blue-600 hover:text-blue-700">Learn more</a>
+        </div>
+
+        <!-- Performance Stats -->
+        <div class="grid grid-cols-3 gap-4 mb-8">
+          <div class="bg-slate-50 rounded-xl p-4">
+            <p class="text-sm text-slate-500 mb-1">ROAS</p>
+            <p class="text-2xl font-bold text-slate-400">-</p>
+          </div>
+          <div class="bg-slate-50 rounded-xl p-4">
+            <p class="text-sm text-slate-500 mb-1">CTR</p>
+            <p class="text-2xl font-bold text-slate-400">-</p>
+          </div>
+          <div class="bg-slate-50 rounded-xl p-4">
+            <p class="text-sm text-slate-500 mb-1">Hook Rate</p>
+            <p class="text-2xl font-bold text-slate-400">-</p>
+          </div>
+        </div>
+
+        <!-- Creator Bio -->
+        <% if @creator.bio.present? %>
+          <div class="mb-8">
+            <h3 class="font-semibold text-slate-900 mb-3">About</h3>
+            <p class="text-slate-600"><%= @creator.bio %></p>
+          </div>
+        <% end %>
+
+        <!-- Niches -->
+        <% if @creator.niches.present? %>
+          <div class="mb-8">
+            <h3 class="font-semibold text-slate-900 mb-3">Specializations</h3>
+            <div class="flex flex-wrap gap-2">
+              <% @creator.niches_array.each do |niche| %>
+                <span class="px-3 py-1.5 bg-indigo-50 text-indigo-700 text-sm font-medium rounded-full"><%= niche %></span>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+
+        <!-- Video Portfolio -->
+        <div class="mb-8">
+          <h3 class="font-semibold text-slate-900 mb-4">Sample Videos</h3>
+          <div class="grid grid-cols-3 gap-4">
+            <% if @creator.intro_video.attached? %>
+              <div class="relative aspect-[9/16] bg-slate-100 rounded-xl overflow-hidden group">
+                <video 
+                  class="w-full h-full object-cover"
+                  muted
+                  loop
+                  onmouseenter="this.play()"
+                  onmouseleave="this.pause(); this.currentTime=0;"
+                >
+                  <source src="<%= rails_blob_url(@creator.intro_video) %>" type="<%= @creator.intro_video.content_type %>">
+                </video>
+                <div class="absolute top-2 left-2">
+                  <span class="px-2 py-1 bg-indigo-600 text-white text-xs font-medium rounded-lg">Creator intro video</span>
+                </div>
+                <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/20">
+                  <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg">
+                    <svg class="w-5 h-5 text-slate-700 ml-1" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M8 5v14l11-7z"></path>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            <% else %>
+              <div class="aspect-[9/16] bg-slate-100 rounded-xl flex items-center justify-center">
+                <p class="text-sm text-slate-400">No videos yet</p>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer - Pricing & CTA -->
+      <div class="p-6 border-t border-slate-100 bg-slate-50">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm text-slate-500">Video price</p>
+            <div class="flex items-center gap-2">
+              <p class="text-2xl font-bold text-slate-900">From <%= @creator.formatted_price %></p>
+            </div>
+          </div>
+          <button class="px-8 py-3 bg-indigo-600 text-white font-semibold rounded-xl hover:bg-indigo-700 transition-colors">
+            Invite to brief
+          </button>
+        </div>
+        <p class="text-sm text-slate-500 mt-2 text-right">Invite the creator now, approve later.</p>
+      </div>
+    </div>
+  </div>
+</div>
+

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_12_19_231334) do
+ActiveRecord::Schema[7.1].define(version: 2025_12_19_233305) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -68,6 +68,14 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_19_231334) do
     t.integer "payout_amount", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "brand_feedback"
+    t.integer "creator_net_payout", default: 0
+    t.integer "brand_total_cost", default: 0
+    t.integer "platform_fee_creator", default: 0
+    t.integer "platform_fee_brand", default: 0
+    t.datetime "approved_at"
+    t.datetime "paid_at"
+    t.integer "revision_count", default: 0
     t.index ["campaign_id", "user_id"], name: "index_submissions_on_campaign_id_and_user_id", unique: true
     t.index ["campaign_id"], name: "index_submissions_on_campaign_id"
     t.index ["user_id"], name: "index_submissions_on_user_id"
@@ -85,6 +93,17 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_19_231334) do
     t.string "phone_number"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "bio"
+    t.string "location"
+    t.string "intro_video_url"
+    t.string "instagram_handle"
+    t.string "youtube_handle"
+    t.integer "creator_status", default: 0
+    t.string "niches"
+    t.decimal "rating", precision: 3, scale: 2, default: "0.0"
+    t.integer "videos_completed", default: 0
+    t.integer "price_per_video", default: 2500
+    t.index ["creator_status"], name: "index_users_on_creator_status"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end

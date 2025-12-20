@@ -6,18 +6,21 @@ class Creator::DashboardController < ApplicationController
     # All submissions for this creator
     @submissions = current_user.submissions.includes(:campaign).recent
 
-    # Active tasks (To-Do: needs upload or revision)
-    @active_tasks = @submissions.active
+    # Pending approval (waiting for brand to approve application)
+    @pending_approval = @submissions.pending_approval
 
-    # Under review (waiting for brand)
+    # Ready to upload (approved by brand, can now upload)
+    @ready_to_upload = @submissions.ready_to_upload
+
+    # Under review (content uploaded, waiting for brand review)
     @under_review = @submissions.under_review
 
-    # Completed tasks (approved or paid)
+    # Completed tasks (content approved or paid)
     @completed_tasks = @submissions.completed
 
-    # Earnings calculations
-    @total_earned = @submissions.where(status: :paid).sum(:payout_amount)
-    @pending_payout = @submissions.where(status: :approved).sum(:payout_amount)
+    # Earnings calculations (use creator_net_payout which is after 15% fee)
+    @total_earned = @submissions.where(status: :paid).sum(:creator_net_payout)
+    @pending_payout = @submissions.where(status: :content_approved).sum(:creator_net_payout)
 
     # Available campaigns (excluding already applied)
     applied_campaign_ids = @submissions.pluck(:campaign_id)

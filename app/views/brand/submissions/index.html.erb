@@ -1,0 +1,174 @@
+<div class="min-h-screen pt-20 pb-16" style="background-color: #faf8ff;">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
+      <div>
+        <h1 class="text-3xl font-bold text-slate-900 mb-2">Creator Applications</h1>
+        <p class="text-slate-600">Review applications and manage content submissions</p>
+      </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center">
+            <svg class="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+          </div>
+          <div>
+            <p class="text-2xl font-bold text-slate-900"><%= @applications_count %></p>
+            <p class="text-sm text-slate-500">Pending Applications</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+            <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
+            </svg>
+          </div>
+          <div>
+            <p class="text-2xl font-bold text-slate-900"><%= @in_progress_count %></p>
+            <p class="text-sm text-slate-500">In Progress</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center">
+            <svg class="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+          </div>
+          <div>
+            <p class="text-2xl font-bold text-slate-900"><%= @completed_count %></p>
+            <p class="text-sm text-slate-500">Completed</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+      <div class="border-b border-slate-100">
+        <nav class="flex space-x-8 px-6" aria-label="Tabs">
+          <%= link_to brand_submissions_path(tab: 'applications'), 
+              class: "whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm #{@tab == 'applications' ? 'border-indigo-500 text-indigo-600' : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'}" do %>
+            Applications
+            <% if @applications_count > 0 %>
+              <span class="ml-2 px-2 py-0.5 text-xs font-medium rounded-full bg-amber-100 text-amber-700"><%= @applications_count %></span>
+            <% end %>
+          <% end %>
+          <%= link_to brand_submissions_path(tab: 'in_progress'), 
+              class: "whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm #{@tab == 'in_progress' ? 'border-indigo-500 text-indigo-600' : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'}" do %>
+            In Progress
+            <% if @in_progress_count > 0 %>
+              <span class="ml-2 px-2 py-0.5 text-xs font-medium rounded-full bg-blue-100 text-blue-700"><%= @in_progress_count %></span>
+            <% end %>
+          <% end %>
+          <%= link_to brand_submissions_path(tab: 'completed'), 
+              class: "whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm #{@tab == 'completed' ? 'border-indigo-500 text-indigo-600' : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'}" do %>
+            Completed
+          <% end %>
+        </nav>
+      </div>
+
+      <div class="p-6">
+        <% if @submissions.any? %>
+          <div class="space-y-4">
+            <% @submissions.each do |submission| %>
+              <div class="bg-white border border-slate-200 rounded-xl p-5 hover:shadow-md transition-shadow">
+                <div class="flex items-start justify-between">
+                  <div class="flex items-center gap-4">
+                    <!-- Creator Avatar -->
+                    <div class="w-14 h-14 bg-gradient-to-br from-indigo-500 to-violet-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
+                      <%= submission.user.initials %>
+                    </div>
+                    <div>
+                      <div class="flex items-center gap-2">
+                        <h3 class="font-semibold text-slate-900"><%= submission.user.name %></h3>
+                        <span class="px-2 py-0.5 text-xs font-medium rounded-full bg-<%= submission.status_color %>-100 text-<%= submission.status_color %>-700">
+                          <%= submission.status_label %>
+                        </span>
+                      </div>
+                      <p class="text-sm text-slate-500">Applied for: <span class="font-medium text-slate-700"><%= submission.campaign.product_name %></span></p>
+                      <p class="text-xs text-slate-400 mt-1">
+                        <% if submission.user.location.present? %>
+                          <%= submission.user.location %> •
+                        <% end %>
+                        <%= time_ago_in_words(submission.created_at) %> ago
+                      </p>
+                    </div>
+                  </div>
+
+                  <div class="flex items-center gap-3">
+                    <div class="text-right mr-4">
+                      <p class="text-lg font-bold text-emerald-600"><%= submission.formatted_brand_cost %></p>
+                      <p class="text-xs text-slate-500">Total cost (incl. 10% fee)</p>
+                    </div>
+
+                    <% if submission.applied? %>
+                      <!-- Application Actions -->
+                      <%= button_to approve_creator_brand_submission_path(submission), method: :post, class: "px-4 py-2 bg-emerald-600 text-white font-medium rounded-lg hover:bg-emerald-700 transition-colors text-sm" do %>
+                        Approve
+                      <% end %>
+                      <%= button_to reject_creator_brand_submission_path(submission), method: :delete, class: "px-4 py-2 bg-white border border-slate-300 text-slate-700 font-medium rounded-lg hover:bg-slate-50 transition-colors text-sm", data: { confirm: "Are you sure you want to decline this application?" } do %>
+                        Decline
+                      <% end %>
+                    <% elsif submission.uploaded? %>
+                      <!-- Content Review Actions -->
+                      <%= link_to brand_submission_path(submission), class: "px-4 py-2 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 transition-colors text-sm" do %>
+                        Review Content
+                      <% end %>
+                    <% elsif submission.approved_to_upload? || submission.revision_requested? %>
+                      <span class="px-4 py-2 bg-slate-100 text-slate-600 font-medium rounded-lg text-sm">
+                        Waiting for Upload
+                      </span>
+                    <% elsif submission.content_approved? %>
+                      <span class="px-4 py-2 bg-emerald-100 text-emerald-700 font-medium rounded-lg text-sm flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        Approved
+                      </span>
+                    <% elsif submission.paid? %>
+                      <span class="px-4 py-2 bg-green-100 text-green-700 font-medium rounded-lg text-sm flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        Paid
+                      </span>
+                    <% end %>
+                  </div>
+                </div>
+
+                <% if submission.revision_requested? && submission.brand_feedback.present? %>
+                  <div class="mt-4 p-3 bg-rose-50 border border-rose-200 rounded-lg">
+                    <p class="text-sm font-medium text-rose-800 mb-1">Revision Feedback:</p>
+                    <p class="text-sm text-rose-700"><%= submission.brand_feedback %></p>
+                  </div>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+        <% else %>
+          <div class="text-center py-12">
+            <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg class="w-8 h-8 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
+              </svg>
+            </div>
+            <h3 class="text-lg font-semibold text-slate-900 mb-2">No submissions yet</h3>
+            <p class="text-slate-500">When creators apply to your campaigns, they'll appear here.</p>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+

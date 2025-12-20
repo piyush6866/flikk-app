@@ -23,7 +23,7 @@
     </div>
 
     <!-- Stats Grid -->
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+    <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
       <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100">
         <div class="flex items-center gap-3">
           <div class="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center">
@@ -32,8 +32,21 @@
             </svg>
           </div>
           <div>
-            <p class="text-2xl font-bold text-slate-900"><%= @active_tasks.count %></p>
-            <p class="text-xs text-slate-500">To Do</p>
+            <p class="text-2xl font-bold text-slate-900"><%= @pending_approval.count %></p>
+            <p class="text-xs text-slate-500">Pending</p>
+          </div>
+        </div>
+      </div>
+      <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-100">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
+            <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
+            </svg>
+          </div>
+          <div>
+            <p class="text-2xl font-bold text-slate-900"><%= @ready_to_upload.count %></p>
+            <p class="text-xs text-slate-500">Ready to Upload</p>
           </div>
         </div>
       </div>
@@ -82,22 +95,32 @@
     <!-- Tabs Navigation -->
     <div class="bg-white rounded-2xl shadow-sm border border-slate-100 mb-8" data-controller="tabs">
       <div class="border-b border-slate-100">
-        <nav class="flex gap-1 p-2">
+        <nav class="flex gap-1 p-2 overflow-x-auto">
           <button 
             data-tabs-target="tab" 
             data-action="click->tabs#switch" 
-            data-tab="todo"
-            class="tab-btn px-6 py-3 text-sm font-medium rounded-lg transition-colors bg-indigo-50 text-indigo-600">
-            To Do
-            <% if @active_tasks.any? %>
-              <span class="ml-2 px-2 py-0.5 text-xs bg-amber-100 text-amber-700 rounded-full"><%= @active_tasks.count %></span>
+            data-tab="pending"
+            class="tab-btn px-4 py-3 text-sm font-medium rounded-lg transition-colors bg-indigo-50 text-indigo-600 whitespace-nowrap">
+            Pending Approval
+            <% if @pending_approval.any? %>
+              <span class="ml-2 px-2 py-0.5 text-xs bg-amber-100 text-amber-700 rounded-full"><%= @pending_approval.count %></span>
+            <% end %>
+          </button>
+          <button 
+            data-tabs-target="tab" 
+            data-action="click->tabs#switch" 
+            data-tab="upload"
+            class="tab-btn px-4 py-3 text-sm font-medium rounded-lg transition-colors text-slate-600 hover:bg-slate-50 whitespace-nowrap">
+            Ready to Upload
+            <% if @ready_to_upload.any? %>
+              <span class="ml-2 px-2 py-0.5 text-xs bg-indigo-100 text-indigo-700 rounded-full"><%= @ready_to_upload.count %></span>
             <% end %>
           </button>
           <button 
             data-tabs-target="tab" 
             data-action="click->tabs#switch" 
             data-tab="review"
-            class="tab-btn px-6 py-3 text-sm font-medium rounded-lg transition-colors text-slate-600 hover:bg-slate-50">
+            class="tab-btn px-4 py-3 text-sm font-medium rounded-lg transition-colors text-slate-600 hover:bg-slate-50 whitespace-nowrap">
             Under Review
             <% if @under_review.any? %>
               <span class="ml-2 px-2 py-0.5 text-xs bg-blue-100 text-blue-700 rounded-full"><%= @under_review.count %></span>
@@ -107,7 +130,7 @@
             data-tabs-target="tab" 
             data-action="click->tabs#switch" 
             data-tab="completed"
-            class="tab-btn px-6 py-3 text-sm font-medium rounded-lg transition-colors text-slate-600 hover:bg-slate-50">
+            class="tab-btn px-4 py-3 text-sm font-medium rounded-lg transition-colors text-slate-600 hover:bg-slate-50 whitespace-nowrap">
             Completed
             <% if @completed_tasks.any? %>
               <span class="ml-2 px-2 py-0.5 text-xs bg-emerald-100 text-emerald-700 rounded-full"><%= @completed_tasks.count %></span>
@@ -116,23 +139,23 @@
         </nav>
       </div>
 
-      <!-- Tab Content: To Do -->
-      <div data-tabs-target="content" data-tab="todo" class="p-6">
-        <% if @active_tasks.any? %>
+      <!-- Tab Content: Pending Approval -->
+      <div data-tabs-target="content" data-tab="pending" class="p-6">
+        <% if @pending_approval.any? %>
           <div class="space-y-4">
-            <% @active_tasks.each do |submission| %>
-              <%= render 'creator/dashboard/submission_card', submission: submission, show_upload: true %>
+            <% @pending_approval.each do |submission| %>
+              <%= render 'creator/dashboard/submission_card', submission: submission %>
             <% end %>
           </div>
         <% else %>
           <div class="text-center py-12">
             <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
               <svg class="w-8 h-8 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
               </svg>
             </div>
-            <h3 class="text-lg font-semibold text-slate-900 mb-2">No Active Tasks</h3>
-            <p class="text-slate-500 mb-4">Browse available jobs and apply to start earning!</p>
+            <h3 class="text-lg font-semibold text-slate-900 mb-2">No Pending Applications</h3>
+            <p class="text-slate-500 mb-4">Apply to jobs and wait for brands to approve you!</p>
             <%= link_to campaigns_path, class: "inline-flex items-center gap-2 px-5 py-2.5 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 transition-colors" do %>
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
@@ -143,12 +166,33 @@
         <% end %>
       </div>
 
+      <!-- Tab Content: Ready to Upload -->
+      <div data-tabs-target="content" data-tab="upload" class="p-6 hidden">
+        <% if @ready_to_upload.any? %>
+          <div class="space-y-4">
+            <% @ready_to_upload.each do |submission| %>
+              <%= render 'creator/dashboard/submission_card', submission: submission %>
+            <% end %>
+          </div>
+        <% else %>
+          <div class="text-center py-12">
+            <div class="w-16 h-16 bg-indigo-50 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg class="w-8 h-8 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
+              </svg>
+            </div>
+            <h3 class="text-lg font-semibold text-slate-900 mb-2">No Videos to Upload</h3>
+            <p class="text-slate-500">When brands approve your application, you can upload your video here.</p>
+          </div>
+        <% end %>
+      </div>
+
       <!-- Tab Content: Under Review -->
       <div data-tabs-target="content" data-tab="review" class="p-6 hidden">
         <% if @under_review.any? %>
           <div class="space-y-4">
             <% @under_review.each do |submission| %>
-              <%= render 'creator/dashboard/submission_card', submission: submission, show_upload: false %>
+              <%= render 'creator/dashboard/submission_card', submission: submission %>
             <% end %>
           </div>
         <% else %>
@@ -170,7 +214,7 @@
         <% if @completed_tasks.any? %>
           <div class="space-y-4">
             <% @completed_tasks.each do |submission| %>
-              <%= render 'creator/dashboard/submission_card', submission: submission, show_upload: false %>
+              <%= render 'creator/dashboard/submission_card', submission: submission %>
             <% end %>
           </div>
         <% else %>

@@ -1,4 +1,4 @@
-<%# Submission Card with Progress Bar %>
+<%# Submission Card with Progress Bar - Updated for new workflow %>
 <div class="bg-slate-50 rounded-xl p-5 border border-slate-200">
   <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
     <!-- Campaign Info -->
@@ -26,15 +26,7 @@
       <div class="flex-1 min-w-0">
         <div class="flex items-center gap-2 flex-wrap mb-1">
           <h3 class="font-semibold text-slate-900 truncate"><%= submission.campaign.product_name %></h3>
-          <span class="px-2 py-0.5 text-xs font-medium rounded-full
-            <%= case submission.status
-                when 'started' then 'bg-amber-100 text-amber-700'
-                when 'submitted' then 'bg-blue-100 text-blue-700'
-                when 'approved' then 'bg-emerald-100 text-emerald-700'
-                when 'rejected' then 'bg-rose-100 text-rose-700'
-                when 'paid' then 'bg-green-100 text-green-700'
-                else 'bg-slate-100 text-slate-700'
-                end %>">
+          <span class="px-2 py-0.5 text-xs font-medium rounded-full bg-<%= submission.status_color %>-100 text-<%= submission.status_color %>-700">
             <%= submission.status_label %>
           </span>
         </div>
@@ -42,22 +34,23 @@
           <%= submission.campaign.scenario %> • <%= submission.campaign.duration_label %> • by <%= submission.campaign.user.brand_name %>
         </p>
         
-        <!-- Progress Bar -->
+        <!-- Progress Bar - 5 steps for new workflow -->
         <div class="flex items-center gap-2">
           <div class="flex-1 flex items-center gap-1">
-            <% (1..4).each do |step| %>
+            <% (1..submission.total_steps).each do |step| %>
               <div class="flex-1 h-1.5 rounded-full <%= step <= submission.progress_step ? 'bg-indigo-500' : 'bg-slate-200' %>"></div>
             <% end %>
           </div>
           <span class="text-xs text-slate-500 whitespace-nowrap">
-            Step <%= submission.progress_step %> of 4
+            Step <%= submission.progress_step %> of <%= submission.total_steps %>
           </span>
         </div>
-        <div class="flex items-center gap-4 mt-2 text-xs text-slate-500">
+        <div class="flex items-center gap-3 mt-2 text-xs text-slate-500">
           <span class="<%= submission.progress_step >= 1 ? 'text-indigo-600 font-medium' : '' %>">Applied</span>
-          <span class="<%= submission.progress_step >= 2 ? 'text-indigo-600 font-medium' : '' %>">Uploaded</span>
-          <span class="<%= submission.progress_step >= 3 ? 'text-indigo-600 font-medium' : '' %>">Reviewed</span>
-          <span class="<%= submission.progress_step >= 4 ? 'text-indigo-600 font-medium' : '' %>">Paid</span>
+          <span class="<%= submission.progress_step >= 2 ? 'text-indigo-600 font-medium' : '' %>">Approved</span>
+          <span class="<%= submission.progress_step >= 3 ? 'text-indigo-600 font-medium' : '' %>">Uploaded</span>
+          <span class="<%= submission.progress_step >= 4 ? 'text-indigo-600 font-medium' : '' %>">Reviewed</span>
+          <span class="<%= submission.progress_step >= 5 ? 'text-indigo-600 font-medium' : '' %>">Paid</span>
         </div>
       </div>
     </div>
@@ -65,34 +58,41 @@
     <!-- Price & Actions -->
     <div class="flex items-center gap-4 lg:flex-shrink-0">
       <div class="text-right">
-        <p class="text-xl font-bold text-emerald-600"><%= submission.formatted_payout %></p>
-        <p class="text-xs text-slate-500">Payout</p>
+        <p class="text-xl font-bold text-emerald-600"><%= submission.formatted_creator_net %></p>
+        <p class="text-xs text-slate-500">Your Earnings (after 15% fee)</p>
       </div>
       
-      <% if show_upload && submission.can_upload? %>
+      <% if submission.applied? %>
+        <div class="inline-flex items-center gap-2 px-4 py-2.5 bg-amber-50 text-amber-700 font-medium rounded-lg">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          Awaiting Approval
+        </div>
+      <% elsif submission.can_upload? %>
         <%= link_to edit_submission_path(submission), class: "inline-flex items-center gap-2 px-5 py-2.5 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 transition-colors" do %>
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
           </svg>
-          <% if submission.rejected? %>
+          <% if submission.revision_requested? %>
             Re-upload
           <% else %>
             Upload Content
           <% end %>
         <% end %>
-      <% elsif submission.submitted? %>
+      <% elsif submission.uploaded? %>
         <div class="inline-flex items-center gap-2 px-4 py-2.5 bg-blue-50 text-blue-700 font-medium rounded-lg">
           <svg class="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
           </svg>
           Awaiting Review
         </div>
-      <% elsif submission.approved? %>
+      <% elsif submission.content_approved? %>
         <div class="inline-flex items-center gap-2 px-4 py-2.5 bg-emerald-50 text-emerald-700 font-medium rounded-lg">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
           </svg>
-          Approved
+          Approved - Payout Pending
         </div>
       <% elsif submission.paid? %>
         <div class="inline-flex items-center gap-2 px-4 py-2.5 bg-green-50 text-green-700 font-medium rounded-lg">
@@ -105,18 +105,17 @@
     </div>
   </div>
   
-  <% if submission.rejected? %>
+  <% if submission.revision_requested? && submission.brand_feedback.present? %>
     <div class="mt-4 p-3 bg-rose-50 border border-rose-200 rounded-lg">
       <div class="flex items-start gap-2">
         <svg class="w-5 h-5 text-rose-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
         </svg>
         <div>
-          <p class="text-sm font-medium text-rose-800">Revision Requested</p>
-          <p class="text-sm text-rose-600">The brand has requested changes. Please re-upload your content.</p>
+          <p class="text-sm font-medium text-rose-800">Revision Requested by Brand</p>
+          <p class="text-sm text-rose-600 mt-1"><%= submission.brand_feedback %></p>
         </div>
       </div>
     </div>
   <% end %>
 </div>
-

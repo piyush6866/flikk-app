@@ -17,12 +17,12 @@ class SubmissionsController < ApplicationController
 
     @submission = current_user.submissions.build(
       campaign: @campaign,
-      status: :started,
+      status: :applied,  # New workflow: starts as "applied", waiting for brand approval
       payout_amount: @campaign.price
     )
 
     if @submission.save
-      redirect_to creator_dashboard_path, notice: "Successfully applied to '#{@campaign.product_name}'! Start creating your content."
+      redirect_to creator_dashboard_path, notice: "Successfully applied to '#{@campaign.product_name}'! The brand will review your application."
     else
       redirect_to campaigns_path, alert: "Unable to apply. Please try again."
     end
@@ -61,8 +61,8 @@ class SubmissionsController < ApplicationController
       return
     end
 
-    # Update status to submitted
-    @submission.status = :submitted
+    # Update status to uploaded (waiting for brand review)
+    @submission.status = :uploaded
 
     if @submission.save
       redirect_to creator_dashboard_path, notice: "Content submitted successfully! The brand will review it shortly."

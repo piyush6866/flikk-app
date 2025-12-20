@@ -17,9 +17,22 @@ Rails.application.routes.draw do
   # Submissions (Creator workflow)
   resources :submissions, only: [:show, :edit, :update]
 
-  # Brand dashboard
+  # Brand dashboard and management
   namespace :brand do
     get 'dashboard', to: 'dashboard#show'
+    
+    # Browse and manage creators
+    resources :creators, only: [:index, :show]
+    
+    # Manage submissions/applications
+    resources :submissions, only: [:index, :show] do
+      member do
+        post :approve_creator
+        delete :reject_creator
+        post :approve_content
+        post :request_revision
+      end
+    end
   end
 
   # Creator dashboard
