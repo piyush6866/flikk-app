@@ -1,158 +1,174 @@
-<div class="min-h-screen pt-20 pb-16 bg-slate-50">
-  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+<% if current_user.brand? %>
+<!-- BRAND WALLET PAGE (Billo-style) -->
+<div class="min-h-screen pt-20 pb-16" style="background-color: #faf8ff;">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <!-- Header -->
-    <div class="flex items-center justify-between mb-8">
-      <div>
-        <h1 class="text-2xl font-bold text-slate-900"><%= current_user.brand? ? 'Wallet' : 'Earnings' %></h1>
-        <p class="text-slate-500 text-sm"><%= current_user.brand? ? 'Manage your funds and view transaction history' : 'Track your earnings and withdrawal history' %></p>
-      </div>
-      <% if current_user.brand? %>
-        <button 
-          onclick="openAddFundsModal()"
-          class="inline-flex items-center gap-2 px-5 py-2.5 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 transition-colors"
-        >
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-          </svg>
-          Add Money
-        </button>
-      <% else %>
-        <button 
-          onclick="openWithdrawModal()"
-          class="inline-flex items-center gap-2 px-5 py-2.5 bg-emerald-600 text-white font-medium rounded-lg hover:bg-emerald-700 transition-colors"
-        >
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <h1 class="text-3xl font-bold text-slate-900 mb-8">Wallet</h1>
+
+    <!-- Top Section: Balance + Benefits -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-12">
+      <!-- Current Balance Card -->
+      <div class="bg-white rounded-2xl p-6 border border-slate-200">
+        <div class="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center mb-4">
+          <svg class="w-6 h-6 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
           </svg>
-          Withdraw
-        </button>
-      <% end %>
-    </div>
-
-    <!-- Balance Card -->
-    <div class="bg-white border border-slate-200 rounded-xl p-6 mb-6">
-      <div class="flex items-center justify-between">
-        <div>
-          <p class="text-sm text-slate-500 mb-1"><%= current_user.brand? ? 'Available Balance' : 'Available for Withdrawal' %></p>
-          <p class="text-3xl font-bold text-slate-900" id="wallet-balance"><%= current_user.formatted_wallet_balance %></p>
         </div>
-        <div class="w-14 h-14 <%= current_user.brand? ? 'bg-indigo-100' : 'bg-emerald-100' %> rounded-xl flex items-center justify-center">
-          <svg class="w-7 h-7 <%= current_user.brand? ? 'text-indigo-600' : 'text-emerald-600' %>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <% if current_user.brand? %>
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
-            <% else %>
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-            <% end %>
+        <div class="flex items-center gap-2 mb-2">
+          <h3 class="text-lg font-medium text-slate-700">Current balance</h3>
+          <button class="text-slate-400 hover:text-slate-600" title="Your available balance for hiring creators">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+          </button>
+        </div>
+        <p class="text-4xl font-bold text-indigo-600" id="wallet-balance"><%= current_user.formatted_wallet_balance %></p>
+      </div>
+
+      <!-- Benefits Card -->
+      <div class="lg:col-span-2 bg-white rounded-2xl p-6 border border-slate-200">
+        <div class="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center mb-4">
+          <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
           </svg>
         </div>
+        <h3 class="text-lg font-semibold text-slate-900 mb-4">Get better value with Flikk packs</h3>
+        <ul class="space-y-3">
+          <li class="flex items-start gap-3">
+            <svg class="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+            </svg>
+            <p class="text-slate-700"><span class="font-medium">Get more for your money.</span> Larger packs come with a bonus you can use to get extra videos.</p>
+          </li>
+          <li class="flex items-start gap-3">
+            <svg class="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+            </svg>
+            <p class="text-slate-700"><span class="font-medium">Use on your terms.</span> Buy a pack and use it for videos, editing, and more, with no subscriptions.</p>
+          </li>
+          <li class="flex items-start gap-3">
+            <svg class="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+            </svg>
+            <p class="text-slate-700"><span class="font-medium">Ready to use.</span> With your Flikk balance, you can place orders instantly and get videos faster.</p>
+          </li>
+        </ul>
       </div>
     </div>
 
-    <!-- Stats Row -->
-    <% if current_user.brand? %>
-      <!-- Brand Stats -->
-      <div class="grid grid-cols-3 gap-4 mb-8">
-        <div class="bg-white border border-slate-200 rounded-xl p-4">
-          <div class="flex items-center gap-3">
-            <div class="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center">
-              <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-              </svg>
-            </div>
+    <!-- Choose a Pack Section -->
+    <div class="mb-12">
+      <h2 class="text-2xl font-bold text-slate-900 mb-2">Choose a pack that works for you</h2>
+      <p class="text-slate-600 mb-8">No subscriptions, no automated charges. Each plan includes bonus funds applied instantly to your wallet that can be used within 12 months.</p>
+
+      <!-- Pack Cards -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- Basic Pack -->
+        <div class="bg-white rounded-2xl border border-slate-200 p-6 hover:border-indigo-300 hover:shadow-lg transition-all cursor-pointer pack-card" data-amount="500">
+          <h3 class="text-lg font-medium text-slate-700 mb-4">Basic</h3>
+          <div class="flex items-baseline gap-1 mb-6">
+            <span class="text-4xl font-bold text-slate-900">₹500</span>
+          </div>
+          <button onclick="selectPack(500)" class="w-full py-3 bg-slate-900 text-white font-medium rounded-lg hover:bg-slate-800 transition-colors">
+            Add ₹500
+          </button>
+        </div>
+
+        <!-- Essential Pack (Most Popular) -->
+        <div class="relative bg-white rounded-2xl border-2 border-indigo-500 p-6 shadow-lg cursor-pointer pack-card" data-amount="1000">
+          <div class="absolute -top-3 left-1/2 -translate-x-1/2">
+            <span class="px-4 py-1 bg-indigo-600 text-white text-sm font-medium rounded-full">Most popular</span>
+          </div>
+          <h3 class="text-lg font-medium text-slate-700 mb-4 mt-2">Essential</h3>
+          <div class="flex items-baseline gap-1 mb-2">
+            <span class="text-4xl font-bold text-slate-900">₹1,000</span>
+          </div>
+          <p class="text-indigo-600 font-medium mb-4">+₹100 bonus</p>
+          <button onclick="selectPack(1000, 100)" class="w-full py-3 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 transition-colors">
+            Add ₹1,000
+          </button>
+        </div>
+
+        <!-- Professional Pack -->
+        <div class="bg-white rounded-2xl border border-slate-200 p-6 hover:border-indigo-300 hover:shadow-lg transition-all cursor-pointer pack-card" data-amount="2500">
+          <h3 class="text-lg font-medium text-slate-700 mb-4">Professional</h3>
+          <div class="flex items-baseline gap-1 mb-2">
+            <span class="text-4xl font-bold text-slate-900">₹2,500</span>
+          </div>
+          <p class="text-indigo-600 font-medium mb-4">+₹300 bonus</p>
+          <button onclick="selectPack(2500, 300)" class="w-full py-3 bg-slate-900 text-white font-medium rounded-lg hover:bg-slate-800 transition-colors">
+            Add ₹2,500
+          </button>
+        </div>
+
+        <!-- Enterprise Pack -->
+        <div class="bg-white rounded-2xl border border-slate-200 p-6 hover:border-indigo-300 hover:shadow-lg transition-all cursor-pointer pack-card" data-amount="5000">
+          <h3 class="text-lg font-medium text-slate-700 mb-4">Enterprise</h3>
+          <div class="flex items-baseline gap-1 mb-2">
+            <span class="text-4xl font-bold text-slate-900">₹5,000</span>
+          </div>
+          <p class="text-indigo-600 font-medium mb-4">+₹700 bonus</p>
+          <button onclick="selectPack(5000, 700)" class="w-full py-3 bg-slate-900 text-white font-medium rounded-lg hover:bg-slate-800 transition-colors">
+            Add ₹5,000
+          </button>
+        </div>
+      </div>
+
+      <!-- Additional Options -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+        <!-- Premium Pack -->
+        <div class="bg-white rounded-2xl border border-slate-200 p-6 hover:border-indigo-300 hover:shadow-lg transition-all cursor-pointer pack-card" data-amount="10000">
+          <div class="flex items-center justify-between">
             <div>
-              <p class="text-xs text-slate-500">Total Added</p>
-              <p class="text-lg font-semibold text-slate-900">₹<%= number_with_delimiter(@total_credited) %></p>
+              <h3 class="text-lg font-medium text-slate-700 mb-2">Premium</h3>
+              <div class="flex items-baseline gap-2">
+                <span class="text-3xl font-bold text-slate-900">₹10,000</span>
+                <span class="text-indigo-600 font-medium">+₹1,500 bonus</span>
+              </div>
             </div>
+            <button onclick="selectPack(10000, 1500)" class="px-6 py-3 bg-slate-900 text-white font-medium rounded-lg hover:bg-slate-800 transition-colors">
+              Add ₹10,000
+            </button>
           </div>
         </div>
-        
-        <div class="bg-white border border-slate-200 rounded-xl p-4">
-          <div class="flex items-center gap-3">
-            <div class="w-10 h-10 bg-rose-100 rounded-lg flex items-center justify-center">
-              <svg class="w-5 h-5 text-rose-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path>
-              </svg>
+
+        <!-- Custom Amount -->
+        <div class="bg-white rounded-2xl border border-slate-200 p-6">
+          <div class="flex items-center justify-between">
+            <div class="flex-1 mr-4">
+              <h3 class="text-lg font-medium text-slate-700 mb-2">Custom Amount</h3>
+              <div class="relative">
+                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 font-medium">₹</span>
+                <input 
+                  type="number" 
+                  id="custom-amount" 
+                  class="w-full pl-8 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-lg font-medium"
+                  placeholder="Enter amount"
+                  min="500"
+                  step="100"
+                >
+              </div>
+              <p class="text-xs text-slate-500 mt-1">Minimum ₹500</p>
             </div>
-            <div>
-              <p class="text-xs text-slate-500">Total Spent</p>
-              <p class="text-lg font-semibold text-slate-900">₹<%= number_with_delimiter(@total_debited) %></p>
-            </div>
-          </div>
-        </div>
-        
-        <div class="bg-white border border-slate-200 rounded-xl p-4">
-          <div class="flex items-center gap-3">
-            <div class="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center">
-              <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-              </svg>
-            </div>
-            <div>
-              <p class="text-xs text-slate-500">Pending</p>
-              <p class="text-lg font-semibold text-slate-900">₹<%= number_with_delimiter(@pending_payments) %></p>
-            </div>
+            <button onclick="addCustomAmount()" class="px-6 py-3 bg-slate-900 text-white font-medium rounded-lg hover:bg-slate-800 transition-colors">
+              Add Funds
+            </button>
           </div>
         </div>
       </div>
-    <% else %>
-      <!-- Creator Stats -->
-      <div class="grid grid-cols-3 gap-4 mb-8">
-        <div class="bg-white border border-slate-200 rounded-xl p-4">
-          <div class="flex items-center gap-3">
-            <div class="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center">
-              <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-              </svg>
-            </div>
-            <div>
-              <p class="text-xs text-slate-500">Total Earned</p>
-              <p class="text-lg font-semibold text-slate-900">₹<%= number_with_delimiter(@total_earned) %></p>
-            </div>
-          </div>
-        </div>
-        
-        <div class="bg-white border border-slate-200 rounded-xl p-4">
-          <div class="flex items-center gap-3">
-            <div class="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center">
-              <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-              </svg>
-            </div>
-            <div>
-              <p class="text-xs text-slate-500">Pending</p>
-              <p class="text-lg font-semibold text-slate-900">₹<%= number_with_delimiter(@pending_payout) %></p>
-            </div>
-          </div>
-        </div>
-        
-        <div class="bg-white border border-slate-200 rounded-xl p-4">
-          <div class="flex items-center gap-3">
-            <div class="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
-              <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-              </svg>
-            </div>
-            <div>
-              <p class="text-xs text-slate-500">Withdrawn</p>
-              <p class="text-lg font-semibold text-slate-900">₹<%= number_with_delimiter(@total_withdrawn) %></p>
-            </div>
-          </div>
-        </div>
-      </div>
-    <% end %>
+    </div>
 
     <!-- Transaction History -->
-    <div class="bg-white border border-slate-200 rounded-xl overflow-hidden">
+    <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden">
       <div class="px-6 py-4 border-b border-slate-100">
-        <h2 class="font-semibold text-slate-900">Transaction History</h2>
+        <h2 class="text-xl font-semibold text-slate-900">Transaction History</h2>
       </div>
       
       <% if @transactions.any? %>
         <div class="divide-y divide-slate-100">
           <% @transactions.each do |transaction| %>
             <div class="px-6 py-4 hover:bg-slate-50 transition-colors cursor-pointer" 
-                 onclick="showTransactionDetails(<%= transaction.id %>)"
-                 data-transaction-id="<%= transaction.id %>">
+                 onclick="showTransactionDetails(<%= transaction.id %>)">
               <div class="flex items-center justify-between">
                 <div class="flex items-center gap-4">
                   <!-- Icon -->
@@ -161,17 +177,9 @@
                       <svg class="w-5 h-5 <%= transaction.icon_color %>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                       </svg>
-                    <% elsif transaction.debit? %>
-                      <svg class="w-5 h-5 <%= transaction.icon_color %>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path>
-                      </svg>
-                    <% elsif transaction.payout? %>
-                      <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                      </svg>
                     <% else %>
                       <svg class="w-5 h-5 <%= transaction.icon_color %>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path>
                       </svg>
                     <% end %>
                   </div>
@@ -180,22 +188,14 @@
                   <div>
                     <p class="font-medium text-slate-900"><%= transaction.description %></p>
                     <p class="text-sm text-slate-500"><%= transaction.created_at.strftime('%b %d, %Y • %I:%M %p') %></p>
-                    <% if transaction.related_submission %>
-                      <p class="text-xs text-slate-400 mt-0.5">
-                        <%= current_user.brand? ? "Creator: #{transaction.related_submission.user.name}" : "Brand: #{transaction.related_submission.campaign.user.brand_name}" %>
-                      </p>
-                    <% end %>
                   </div>
                 </div>
                 
                 <!-- Amount -->
                 <div class="text-right">
                   <p class="font-semibold <%= transaction.amount_color %>"><%= transaction.formatted_amount %></p>
-                  <% if (transaction.debit? || transaction.payout?) && transaction.related_submission %>
-                    <button 
-                      class="text-xs text-indigo-600 hover:text-indigo-700 mt-1"
-                      onclick="event.stopPropagation(); showTransactionDetails(<%= transaction.id %>)"
-                    >
+                  <% if transaction.debit? && transaction.related_submission %>
+                    <button class="text-xs text-indigo-600 hover:text-indigo-700 mt-1">
                       View breakdown →
                     </button>
                   <% end %>
@@ -212,120 +212,12 @@
             </svg>
           </div>
           <h3 class="font-medium text-slate-900 mb-1">No transactions yet</h3>
-          <p class="text-sm text-slate-500">
-            <% if current_user.brand? %>
-              Add money to your wallet to start hiring creators
-            <% else %>
-              Complete opportunities to start earning
-            <% end %>
-          </p>
+          <p class="text-sm text-slate-500">Add money to your wallet to start hiring creators</p>
         </div>
       <% end %>
     </div>
   </div>
 </div>
-
-<% if current_user.brand? %>
-<!-- Add Funds Modal (Brand Only) -->
-<div id="add-funds-modal" class="fixed inset-0 z-50 hidden" aria-modal="true">
-  <div class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm" onclick="closeAddFundsModal()"></div>
-  <div class="fixed inset-0 flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl shadow-xl max-w-md w-full p-6 relative">
-      <button onclick="closeAddFundsModal()" class="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-        </svg>
-      </button>
-      
-      <div class="text-center mb-6">
-        <div class="w-16 h-16 mx-auto mb-4 bg-indigo-100 rounded-full flex items-center justify-center">
-          <svg class="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-          </svg>
-        </div>
-        <h3 class="text-xl font-bold text-slate-900">Add Money to Wallet</h3>
-        <p class="text-sm text-slate-500 mt-1">Enter the amount you want to add</p>
-      </div>
-      
-      <div class="mb-6">
-        <label class="block text-sm font-medium text-slate-700 mb-2">Amount (₹)</label>
-        <div class="relative">
-          <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 font-medium text-lg">₹</span>
-          <input 
-            type="number" 
-            id="add-funds-amount" 
-            class="w-full pl-10 pr-4 py-3 text-lg font-medium bg-white border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-            placeholder="1,000"
-            min="100"
-            max="1000000"
-            step="100"
-          >
-        </div>
-        <p class="text-xs text-slate-500 mt-2">Minimum ₹100, Maximum ₹10,00,000</p>
-      </div>
-      
-      <!-- Quick amount buttons -->
-      <div class="grid grid-cols-4 gap-2 mb-6">
-        <button onclick="setAmount(500)" class="py-2 text-sm font-medium text-slate-700 bg-slate-100 rounded-lg hover:bg-slate-200 transition-colors">₹500</button>
-        <button onclick="setAmount(1000)" class="py-2 text-sm font-medium text-slate-700 bg-slate-100 rounded-lg hover:bg-slate-200 transition-colors">₹1,000</button>
-        <button onclick="setAmount(5000)" class="py-2 text-sm font-medium text-slate-700 bg-slate-100 rounded-lg hover:bg-slate-200 transition-colors">₹5,000</button>
-        <button onclick="setAmount(10000)" class="py-2 text-sm font-medium text-slate-700 bg-slate-100 rounded-lg hover:bg-slate-200 transition-colors">₹10,000</button>
-      </div>
-      
-      <button 
-        onclick="addFunds()"
-        id="add-funds-btn"
-        class="w-full py-3 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition-colors flex items-center justify-center gap-2"
-      >
-        <span>Add Money</span>
-      </button>
-    </div>
-  </div>
-</div>
-<% else %>
-<!-- Withdraw Modal (Creator Only) -->
-<div id="withdraw-modal" class="fixed inset-0 z-50 hidden" aria-modal="true">
-  <div class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm" onclick="closeWithdrawModal()"></div>
-  <div class="fixed inset-0 flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl shadow-xl max-w-md w-full p-6 relative">
-      <button onclick="closeWithdrawModal()" class="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-        </svg>
-      </button>
-      
-      <div class="text-center mb-6">
-        <div class="w-16 h-16 mx-auto mb-4 bg-emerald-100 rounded-full flex items-center justify-center">
-          <svg class="w-8 h-8 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-          </svg>
-        </div>
-        <h3 class="text-xl font-bold text-slate-900">Withdraw Earnings</h3>
-        <p class="text-sm text-slate-500 mt-1">Available: <%= current_user.formatted_wallet_balance %></p>
-      </div>
-      
-      <div class="p-4 bg-amber-50 border border-amber-200 rounded-lg mb-6">
-        <div class="flex items-start gap-3">
-          <svg class="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-          </svg>
-          <div>
-            <p class="text-sm font-medium text-amber-800">Coming Soon</p>
-            <p class="text-sm text-amber-700">Withdrawal feature will be available soon. Your earnings are safe and will be credited to your bank account once this feature is live.</p>
-          </div>
-        </div>
-      </div>
-      
-      <button 
-        onclick="closeWithdrawModal()"
-        class="w-full py-3 bg-slate-200 text-slate-700 font-semibold rounded-lg hover:bg-slate-300 transition-colors"
-      >
-        Close
-      </button>
-    </div>
-  </div>
-</div>
-<% end %>
 
 <!-- Transaction Details Modal -->
 <div id="transaction-details-modal" class="fixed inset-0 z-50 hidden" aria-modal="true">
@@ -347,33 +239,41 @@
   </div>
 </div>
 
+<!-- Loading/Processing Modal -->
+<div id="processing-modal" class="fixed inset-0 z-50 hidden" aria-modal="true">
+  <div class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm"></div>
+  <div class="fixed inset-0 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-xl p-8 text-center">
+      <div class="animate-spin w-12 h-12 border-4 border-indigo-600 border-t-transparent rounded-full mx-auto mb-4"></div>
+      <p class="text-lg font-medium text-slate-900">Adding funds...</p>
+      <p class="text-sm text-slate-500 mt-1">Please wait</p>
+    </div>
+  </div>
+</div>
+
 <script>
-<% if current_user.brand? %>
-function openAddFundsModal() {
-  document.getElementById('add-funds-modal').classList.remove('hidden');
-  document.body.classList.add('overflow-hidden');
+function selectPack(amount, bonus = 0) {
+  addFundsToWallet(amount, bonus);
 }
 
-function closeAddFundsModal() {
-  document.getElementById('add-funds-modal').classList.add('hidden');
-  document.body.classList.remove('overflow-hidden');
-}
-
-function setAmount(amount) {
-  document.getElementById('add-funds-amount').value = amount;
-}
-
-function addFunds() {
-  const amount = parseInt(document.getElementById('add-funds-amount').value);
-  const btn = document.getElementById('add-funds-btn');
+function addCustomAmount() {
+  const input = document.getElementById('custom-amount');
+  const amount = parseInt(input.value);
   
-  if (!amount || amount < 100) {
-    alert('Please enter a valid amount (minimum ₹100)');
+  if (!amount || amount < 500) {
+    alert('Minimum amount is ₹500');
+    input.focus();
     return;
   }
   
-  btn.disabled = true;
-  btn.innerHTML = '<svg class="animate-spin h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Adding...';
+  addFundsToWallet(amount, 0);
+}
+
+function addFundsToWallet(amount, bonus = 0) {
+  const modal = document.getElementById('processing-modal');
+  modal.classList.remove('hidden');
+  
+  const totalAmount = amount + bonus;
   
   fetch('<%= add_funds_wallet_path %>', {
     method: 'POST',
@@ -381,39 +281,25 @@ function addFunds() {
       'Content-Type': 'application/json',
       'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content
     },
-    body: JSON.stringify({ amount: amount })
+    body: JSON.stringify({ amount: totalAmount })
   })
   .then(response => response.json())
   .then(data => {
+    modal.classList.add('hidden');
     if (data.success) {
       document.getElementById('wallet-balance').textContent = data.formatted_balance;
-      closeAddFundsModal();
-      showToast('Money added successfully!', 'success');
-      setTimeout(() => location.reload(), 1000);
+      showToast(bonus > 0 ? `₹${amount.toLocaleString()} + ₹${bonus.toLocaleString()} bonus added!` : `₹${amount.toLocaleString()} added to wallet!`, 'success');
+      setTimeout(() => location.reload(), 1500);
     } else {
       alert(data.message || 'Failed to add funds');
     }
   })
   .catch(error => {
+    modal.classList.add('hidden');
     console.error('Error:', error);
     alert('Something went wrong. Please try again.');
-  })
-  .finally(() => {
-    btn.disabled = false;
-    btn.innerHTML = '<span>Add Money</span>';
   });
 }
-<% else %>
-function openWithdrawModal() {
-  document.getElementById('withdraw-modal').classList.remove('hidden');
-  document.body.classList.add('overflow-hidden');
-}
-
-function closeWithdrawModal() {
-  document.getElementById('withdraw-modal').classList.add('hidden');
-  document.body.classList.remove('overflow-hidden');
-}
-<% end %>
 
 function showTransactionDetails(transactionId) {
   const modal = document.getElementById('transaction-details-modal');
@@ -424,9 +310,7 @@ function showTransactionDetails(transactionId) {
   document.body.classList.add('overflow-hidden');
   
   fetch(`<%= wallet_path %>/transaction/${transactionId}`, {
-    headers: {
-      'Accept': 'application/json'
-    }
+    headers: { 'Accept': 'application/json' }
   })
   .then(response => response.json())
   .then(data => {
@@ -434,11 +318,11 @@ function showTransactionDetails(transactionId) {
       <div class="space-y-4">
         <div class="flex justify-between items-center py-2 border-b border-slate-100">
           <span class="text-slate-500">Amount</span>
-          <span class="font-semibold ${data.transaction_type === 'credit' || data.transaction_type === 'payout' ? 'text-emerald-600' : 'text-rose-600'}">${data.formatted_amount}</span>
+          <span class="font-semibold ${data.transaction_type === 'credit' ? 'text-emerald-600' : 'text-rose-600'}">${data.formatted_amount}</span>
         </div>
         <div class="flex justify-between items-center py-2 border-b border-slate-100">
           <span class="text-slate-500">Type</span>
-          <span class="font-medium text-slate-900 capitalize">${data.transaction_type}</span>
+          <span class="font-medium text-slate-900 capitalize">${data.transaction_type === 'credit' ? 'Wallet Top-up' : 'Payment'}</span>
         </div>
         <div class="flex justify-between items-center py-2 border-b border-slate-100">
           <span class="text-slate-500">Description</span>
@@ -459,10 +343,6 @@ function showTransactionDetails(transactionId) {
               <span class="text-slate-500">Campaign</span>
               <span class="text-slate-900">${data.submission.campaign_title}</span>
             </div>
-      `;
-      
-      <% if current_user.brand? %>
-      html += `
             <div class="flex justify-between">
               <span class="text-slate-500">Creator</span>
               <span class="text-slate-900">${data.submission.creator_name}</span>
@@ -479,29 +359,6 @@ function showTransactionDetails(transactionId) {
               <span class="font-medium text-slate-700">Total Charged</span>
               <span class="font-semibold text-slate-900">${data.submission.brand_total}</span>
             </div>
-      `;
-      <% else %>
-      html += `
-            <div class="flex justify-between">
-              <span class="text-slate-500">Brand</span>
-              <span class="text-slate-900">${data.submission.brand_name}</span>
-            </div>
-            <div class="flex justify-between">
-              <span class="text-slate-500">Gross Amount</span>
-              <span class="text-slate-900">${data.submission.gross_amount}</span>
-            </div>
-            <div class="flex justify-between">
-              <span class="text-slate-500">Platform Fee (15%)</span>
-              <span class="text-rose-600">-${data.submission.platform_fee}</span>
-            </div>
-            <div class="flex justify-between pt-2 border-t border-slate-200">
-              <span class="font-medium text-slate-700">Net Payout</span>
-              <span class="font-semibold text-emerald-600">${data.submission.net_payout}</span>
-            </div>
-      `;
-      <% end %>
-      
-      html += `
           </div>
         </div>
       `;
@@ -534,14 +391,8 @@ function showToast(message, type = 'success') {
   }, 3000);
 }
 
-// Close modals on escape
 document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') {
-    <% if current_user.brand? %>
-    closeAddFundsModal();
-    <% else %>
-    closeWithdrawModal();
-    <% end %>
     closeTransactionDetails();
   }
 });
@@ -557,3 +408,303 @@ document.addEventListener('keydown', function(e) {
   to { transform: translateX(100%); opacity: 0; }
 }
 </style>
+
+<% else %>
+<!-- CREATOR EARNINGS PAGE -->
+<div class="min-h-screen pt-20 pb-16 bg-slate-50">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-8">
+      <div>
+        <h1 class="text-2xl font-bold text-slate-900">Earnings</h1>
+        <p class="text-slate-500 text-sm">Track your earnings and withdrawal history</p>
+      </div>
+      <button 
+        onclick="openWithdrawModal()"
+        class="inline-flex items-center gap-2 px-5 py-2.5 bg-emerald-600 text-white font-medium rounded-lg hover:bg-emerald-700 transition-colors"
+      >
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        Withdraw
+      </button>
+    </div>
+
+    <!-- Balance Card -->
+    <div class="bg-white border border-slate-200 rounded-xl p-6 mb-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm text-slate-500 mb-1">Available for Withdrawal</p>
+          <p class="text-3xl font-bold text-slate-900" id="wallet-balance"><%= current_user.formatted_wallet_balance %></p>
+        </div>
+        <div class="w-14 h-14 bg-emerald-100 rounded-xl flex items-center justify-center">
+          <svg class="w-7 h-7 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats Row -->
+    <div class="grid grid-cols-3 gap-4 mb-8">
+      <div class="bg-white border border-slate-200 rounded-xl p-4">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center">
+            <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+          </div>
+          <div>
+            <p class="text-xs text-slate-500">Total Earned</p>
+            <p class="text-lg font-semibold text-slate-900">₹<%= number_with_delimiter(@total_earned) %></p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="bg-white border border-slate-200 rounded-xl p-4">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center">
+            <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+          </div>
+          <div>
+            <p class="text-xs text-slate-500">Pending</p>
+            <p class="text-lg font-semibold text-slate-900">₹<%= number_with_delimiter(@pending_payout) %></p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="bg-white border border-slate-200 rounded-xl p-4">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
+            <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+          </div>
+          <div>
+            <p class="text-xs text-slate-500">Withdrawn</p>
+            <p class="text-lg font-semibold text-slate-900">₹<%= number_with_delimiter(@total_withdrawn) %></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Transaction History -->
+    <div class="bg-white border border-slate-200 rounded-xl overflow-hidden">
+      <div class="px-6 py-4 border-b border-slate-100">
+        <h2 class="font-semibold text-slate-900">Transaction History</h2>
+      </div>
+      
+      <% if @transactions.any? %>
+        <div class="divide-y divide-slate-100">
+          <% @transactions.each do |transaction| %>
+            <div class="px-6 py-4 hover:bg-slate-50 transition-colors cursor-pointer" 
+                 onclick="showTransactionDetails(<%= transaction.id %>)">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-4">
+                  <div class="w-10 h-10 <%= transaction.icon_bg %> rounded-full flex items-center justify-center">
+                    <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                  </div>
+                  
+                  <div>
+                    <p class="font-medium text-slate-900"><%= transaction.description %></p>
+                    <p class="text-sm text-slate-500"><%= transaction.created_at.strftime('%b %d, %Y • %I:%M %p') %></p>
+                    <% if transaction.related_submission %>
+                      <p class="text-xs text-slate-400 mt-0.5">Brand: <%= transaction.related_submission.campaign.user.brand_name %></p>
+                    <% end %>
+                  </div>
+                </div>
+                
+                <div class="text-right">
+                  <p class="font-semibold <%= transaction.amount_color %>"><%= transaction.formatted_amount %></p>
+                  <% if transaction.payout? && transaction.related_submission %>
+                    <button class="text-xs text-indigo-600 hover:text-indigo-700 mt-1">
+                      View breakdown →
+                    </button>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <div class="px-6 py-12 text-center">
+          <div class="w-16 h-16 mx-auto mb-4 bg-slate-100 rounded-full flex items-center justify-center">
+            <svg class="w-8 h-8 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            </svg>
+          </div>
+          <h3 class="font-medium text-slate-900 mb-1">No earnings yet</h3>
+          <p class="text-sm text-slate-500">Complete opportunities to start earning</p>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<!-- Withdraw Modal -->
+<div id="withdraw-modal" class="fixed inset-0 z-50 hidden" aria-modal="true">
+  <div class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm" onclick="closeWithdrawModal()"></div>
+  <div class="fixed inset-0 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-xl max-w-md w-full p-6 relative">
+      <button onclick="closeWithdrawModal()" class="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+      
+      <div class="text-center mb-6">
+        <div class="w-16 h-16 mx-auto mb-4 bg-emerald-100 rounded-full flex items-center justify-center">
+          <svg class="w-8 h-8 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+        </div>
+        <h3 class="text-xl font-bold text-slate-900">Withdraw Earnings</h3>
+        <p class="text-sm text-slate-500 mt-1">Available: <%= current_user.formatted_wallet_balance %></p>
+      </div>
+      
+      <div class="p-4 bg-amber-50 border border-amber-200 rounded-lg mb-6">
+        <div class="flex items-start gap-3">
+          <svg class="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <div>
+            <p class="text-sm font-medium text-amber-800">Coming Soon</p>
+            <p class="text-sm text-amber-700">Withdrawal feature will be available soon. Your earnings are safe and will be credited to your bank account once this feature is live.</p>
+          </div>
+        </div>
+      </div>
+      
+      <button onclick="closeWithdrawModal()" class="w-full py-3 bg-slate-200 text-slate-700 font-semibold rounded-lg hover:bg-slate-300 transition-colors">
+        Close
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Transaction Details Modal -->
+<div id="transaction-details-modal" class="fixed inset-0 z-50 hidden" aria-modal="true">
+  <div class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm" onclick="closeTransactionDetails()"></div>
+  <div class="fixed inset-0 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-xl max-w-md w-full p-6 relative">
+      <button onclick="closeTransactionDetails()" class="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+      
+      <h3 class="text-lg font-bold text-slate-900 mb-4">Earning Details</h3>
+      
+      <div id="transaction-details-content">
+        <!-- Populated by JavaScript -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function openWithdrawModal() {
+  document.getElementById('withdraw-modal').classList.remove('hidden');
+  document.body.classList.add('overflow-hidden');
+}
+
+function closeWithdrawModal() {
+  document.getElementById('withdraw-modal').classList.add('hidden');
+  document.body.classList.remove('overflow-hidden');
+}
+
+function showTransactionDetails(transactionId) {
+  const modal = document.getElementById('transaction-details-modal');
+  const content = document.getElementById('transaction-details-content');
+  
+  content.innerHTML = '<div class="text-center py-8"><div class="animate-spin w-8 h-8 border-4 border-indigo-600 border-t-transparent rounded-full mx-auto"></div></div>';
+  modal.classList.remove('hidden');
+  document.body.classList.add('overflow-hidden');
+  
+  fetch(`<%= wallet_path %>/transaction/${transactionId}`, {
+    headers: { 'Accept': 'application/json' }
+  })
+  .then(response => response.json())
+  .then(data => {
+    let html = `
+      <div class="space-y-4">
+        <div class="flex justify-between items-center py-2 border-b border-slate-100">
+          <span class="text-slate-500">Amount Earned</span>
+          <span class="font-semibold text-emerald-600">${data.formatted_amount}</span>
+        </div>
+        <div class="flex justify-between items-center py-2 border-b border-slate-100">
+          <span class="text-slate-500">Description</span>
+          <span class="font-medium text-slate-900">${data.description}</span>
+        </div>
+        <div class="flex justify-between items-center py-2 border-b border-slate-100">
+          <span class="text-slate-500">Date</span>
+          <span class="text-slate-700">${data.created_at}</span>
+        </div>
+    `;
+    
+    if (data.submission) {
+      html += `
+        <div class="mt-4 p-4 bg-slate-50 rounded-lg">
+          <h4 class="font-semibold text-slate-900 mb-3">Earning Breakdown</h4>
+          <div class="space-y-2 text-sm">
+            <div class="flex justify-between">
+              <span class="text-slate-500">Campaign</span>
+              <span class="text-slate-900">${data.submission.campaign_title}</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-500">Brand</span>
+              <span class="text-slate-900">${data.submission.brand_name}</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-500">Gross Amount</span>
+              <span class="text-slate-900">${data.submission.gross_amount}</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-500">Platform Fee (15%)</span>
+              <span class="text-rose-600">-${data.submission.platform_fee}</span>
+            </div>
+            <div class="flex justify-between pt-2 border-t border-slate-200">
+              <span class="font-medium text-slate-700">Net Payout</span>
+              <span class="font-semibold text-emerald-600">${data.submission.net_payout}</span>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+    
+    html += '</div>';
+    content.innerHTML = html;
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    content.innerHTML = '<p class="text-center text-slate-500 py-8">Failed to load details</p>';
+  });
+}
+
+function closeTransactionDetails() {
+  document.getElementById('transaction-details-modal').classList.add('hidden');
+  document.body.classList.remove('overflow-hidden');
+}
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    closeWithdrawModal();
+    closeTransactionDetails();
+  }
+});
+</script>
+
+<style>
+@keyframes slideIn {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+@keyframes slideOut {
+  from { transform: translateX(0); opacity: 1; }
+  to { transform: translateX(100%); opacity: 0; }
+}
+</style>
+<% end %>
